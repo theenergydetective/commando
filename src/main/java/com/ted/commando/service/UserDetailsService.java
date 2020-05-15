@@ -30,7 +30,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
@@ -52,7 +55,8 @@ public class UserDetailsService implements org.springframework.security.core.use
         USERNAME(""),
         PASSWORD(""),
         ACTIVATION_KEY(""),
-        TIMEZONE("America/New_York");
+        TIMEZONE("America/New_York"),
+        SERVER_NAME("");
 
         final String defaultValue;
 
@@ -79,14 +83,22 @@ public class UserDetailsService implements org.springframework.security.core.use
     @PostConstruct
     void init() {
         LOGGER.debug("[init] Loading property file");
-        for (ServerProperties property: ServerProperties.values()){
+        for (ServerProperties property : ServerProperties.values()) {
             loadProperty(property);
+        }
+
+        //If the server name does not exist. Try to look up the ip address of the server.
+        if (properties.getProperty(ServerProperties.SERVER_NAME.name()).isEmpty()) {
+            String publicIp = getServerPublicIp();
+            LOGGER.info("[init] Server Property does not exist. Looking up public ip of server: {}", publicIp);
+            properties.setProperty(ServerProperties.SERVER_NAME.name(), publicIp);
+            writePropertyFile();
         }
 
     }
 
     //Forces default values even if the env file exists
-    private void loadProperty(ServerProperties property){
+    private void loadProperty(ServerProperties property) {
         String value = env.getProperty(property.name());
         if (value == null || value.isEmpty()) value = property.defaultValue;
         properties.put(property.name(), value);
@@ -116,21 +128,18 @@ public class UserDetailsService implements org.springframework.security.core.use
     }
 
 
-
-    private void writePropertyFile(){
+    private void writePropertyFile() {
 
         LOGGER.info("[writePropertyFile] Updating Properties file. {}", PROP_PATH);
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(PROP_PATH)) {
             properties.store(fileOutputStream, null);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             LOGGER.error("[updateAdminCredentials] Error writing {}", PROP_PATH, ex);
         }
-
     }
 
-
-    public void setAdminCredentials(String newUserName, String newPassword, String activationKey, String timeZone){
+    public void setAdminCredentials(String newUserName, String newPassword, String activationKey, String timeZone) {
         //Set the new username and encrypted password
         properties.setProperty(ServerProperties.USERNAME.name(), newUserName);
         properties.setProperty(ServerProperties.PASSWORD.name(), bCryptPasswordEncoder.encode(newPassword));
@@ -146,4 +155,24 @@ public class UserDetailsService implements org.springframework.security.core.use
     public String getTimezone() {
         return properties.getProperty(ServerProperties.TIMEZONE.name());
     }
+
+    public String getServerName() {
+        return properties.getProperty(ServerProperties.SERVER_NAME.name());
+    }
+
+    public String getServerPublicIp() {
+        //Try public ip
+        try {
+            URL whatismyip = new URL("http://checkip.amazonaws.com");
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    whatismyip.openStream()));
+            String publicIp = in.readLine(); //you get the IP as a String
+            publicIp = publicIp.trim();
+            return publicIp;
+        } catch (Exception ex) {
+            LOGGER.error("Error getting public IP", ex);
+            return "";
+        }
+    }
+
 }

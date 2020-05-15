@@ -84,7 +84,13 @@ public class UserDetailsServiceTest {
         }
 
         assertEquals(properties.getProperty("ACTIVATION_KEY"), userDetailsService.getActivationKey());
-
+        assertEquals("testKey", userDetailsService.getActivationKey());
+        assertEquals("America/New_York", userDetailsService.getTimezone());
+        assertFalse(userDetailsService.getServerName().isEmpty());
     }
 
+    @Test
+    public void getPublicIpTest(){
+        assertFalse(userDetailsService.getServerPublicIp().isEmpty());
+    }
 }
