@@ -29,7 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
-public class EnergyControlCenterDAO extends SimpleAbstractDAO{
+public class EnergyControlCenterDAO extends SimpleAbstractDAO {
 
     @Inject
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -42,10 +42,10 @@ public class EnergyControlCenterDAO extends SimpleAbstractDAO{
     };
 
 
-    private static String BASE_QUERY = "select " + generateFields("e.", FIELDS,0) + " from ecc e ";
+    private static String BASE_QUERY = "select " + generateFields("e.", FIELDS, 0) + " from ecc e ";
     private static String FIND_ONE = BASE_QUERY + " where e.id = :id";
 
-    private static String INSERT = "insert into ecc (" + generateFields("", FIELDS,0) + ") VALUES (" + generateFields(":", FIELDS,0) + ")";
+    private static String INSERT = "insert into ecc (" + generateFields("", FIELDS, 0) + ") VALUES (" + generateFields(":", FIELDS, 0) + ")";
     private static String UPDATE = "update ecc set " + generateSetFields(FIELDS, 1) + " where id = :id";
     private static String DELETE = "delete from ecc where id = :id";
 
@@ -61,7 +61,7 @@ public class EnergyControlCenterDAO extends SimpleAbstractDAO{
     };
 
 
-    private MapSqlParameterSource createMap(EnergyControlCenter dto){
+    private MapSqlParameterSource createMap(EnergyControlCenter dto) {
         MapSqlParameterSource map = new MapSqlParameterSource();
         map.addValue("id", dto.getId());
         map.addValue("security_key", dto.getSecurityKey());
@@ -98,7 +98,7 @@ public class EnergyControlCenterDAO extends SimpleAbstractDAO{
     }
 
     //Check if we need to process the batch
-    public void delete(String id){
+    public void delete(String id) {
         MapSqlParameterSource map = new MapSqlParameterSource();
         map.addValue("id", id);
         namedParameterJdbcTemplate.update(DELETE, map);

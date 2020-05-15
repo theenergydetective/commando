@@ -16,6 +16,7 @@
  */
 
 package com.ted.commando;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
@@ -25,6 +26,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 
 /**
  * Main Application Starting point
+ *
  * @author Pete Arvanitis (pete@petecode.com)
  */
 @ComponentScan

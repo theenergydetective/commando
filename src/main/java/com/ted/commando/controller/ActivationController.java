@@ -71,7 +71,7 @@ public class ActivationController {
 
             boolean validActivationKey = activationKey == null || activationKey.isEmpty() || activationKey.equals(activationRequest.unique);
 
-            if (validActivationKey){
+            if (validActivationKey) {
                 EnergyControlCenter ecc = energyControlCenterDAO.findOne(activationRequest.gateway);
                 if (null != ecc) {
                     LOGGER.info("[activate] ECC already activated: {}", ecc);

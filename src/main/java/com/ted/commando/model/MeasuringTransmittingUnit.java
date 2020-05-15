@@ -22,9 +22,12 @@ import java.math.BigDecimal;
 public class MeasuringTransmittingUnit {
     private String id;
     private String name;
-    private BigDecimal lastValue;
-    private BigDecimal rate;
-    private Long lastPost;
+    private BigDecimal rate = new BigDecimal(0.1);
+    private BigDecimal lastValue = new BigDecimal(0L);
+    private Long lastPost = 0L;
+    private BigDecimal lastDayValue = new BigDecimal(0L);
+    private Long lastDayPost = 0L;
+
 
     public String getId() {
         return id;
@@ -42,20 +45,20 @@ public class MeasuringTransmittingUnit {
         this.name = name;
     }
 
-    public BigDecimal getLastValue() {
-        return lastValue;
-    }
-
-    public void setLastValue(BigDecimal lastValue) {
-        this.lastValue = lastValue;
-    }
-
     public BigDecimal getRate() {
         return rate;
     }
 
     public void setRate(BigDecimal rate) {
         this.rate = rate;
+    }
+
+    public BigDecimal getLastValue() {
+        return lastValue;
+    }
+
+    public void setLastValue(BigDecimal lastValue) {
+        this.lastValue = lastValue;
     }
 
     public Long getLastPost() {
@@ -66,14 +69,32 @@ public class MeasuringTransmittingUnit {
         this.lastPost = lastPost;
     }
 
+    public BigDecimal getLastDayValue() {
+        return lastDayValue;
+    }
+
+    public void setLastDayValue(BigDecimal lastDayValue) {
+        this.lastDayValue = lastDayValue;
+    }
+
+    public Long getLastDayPost() {
+        return lastDayPost;
+    }
+
+    public void setLastDayPost(Long lastDayPost) {
+        this.lastDayPost = lastDayPost;
+    }
+
     @Override
     public String toString() {
-        return "MTU{" +
+        return "MeasuringTransmittingUnit{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", lastValue=" + lastValue +
                 ", rate=" + rate +
+                ", lastValue=" + lastValue +
                 ", lastPost=" + lastPost +
+                ", lastDayValue=" + lastDayValue +
+                ", lastDayPost=" + lastDayPost +
                 '}';
     }
 }

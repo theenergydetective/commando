@@ -47,7 +47,7 @@ public class OAuthServerConfig extends AuthorizationServerConfigurerAdapter {
     private TokenStore memoryTokenStore = new InMemoryTokenStore();
 
     @Bean
-    public TokenStore authTokenStore(){
+    public TokenStore authTokenStore() {
         return memoryTokenStore;
     }
 

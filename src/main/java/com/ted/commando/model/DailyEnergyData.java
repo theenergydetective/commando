@@ -59,7 +59,7 @@ public class DailyEnergyData {
 
     @Override
     public String toString() {
-        return "EnergyData{" +
+        return "DailyEnergyData{" +
                 "mtuId='" + mtuId + '\'' +
                 ", epochDate=" + epochDate +
                 ", energyValue=" + energyValue +

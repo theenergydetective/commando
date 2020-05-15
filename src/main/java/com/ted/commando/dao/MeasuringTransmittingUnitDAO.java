@@ -29,7 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
-public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO{
+public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
 
     @Inject
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -40,15 +40,18 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO{
             "name",
             "last_value",
             "last_post",
-            "energy_rate"
+            "energy_rate",
+            "last_day_value",
+            "last_day_post"
     };
 
 
-    private static String BASE_QUERY = "select " + generateFields("m.", FIELDS,0) + " from mtu m ";
+    private static String BASE_QUERY = "select " + generateFields("m.", FIELDS, 0) + " from mtu m ";
     private static String FIND_ONE = BASE_QUERY + " where m.id = :id";
-    private static String INSERT = "insert into mtu (" + generateFields("", FIELDS,0) + ") VALUES (" + generateFields(":", FIELDS,0) + ")";
+    private static String INSERT = "insert into mtu (" + generateFields("", FIELDS, 0) + ") VALUES (" + generateFields(":", FIELDS, 0) + ")";
     private static String UPDATE_SETTINGS = "update mtu set name=:name, energy_rate=:energy_rate  where id = :id";
     private static String UPDATE_LAST_POST = "update mtu set last_post=:last_post, last_value=:last_value  where id = :id";
+    private static String UPDATE_LAST_DAY = "update mtu set last_day_post=:last_day_post, last_day_value=:last_day_value  where id = :id";
     private static String DELETE = "delete from mtu where id = :id";
 
 
@@ -60,18 +63,23 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO{
             dto.setLastValue(rs.getBigDecimal("last_value"));
             dto.setName(rs.getString("name"));
             dto.setRate(rs.getBigDecimal("energy_rate"));
+            dto.setLastDayPost(rs.getLong("last_day_post"));
+            dto.setLastDayValue(rs.getBigDecimal("last_day_value"));
+
             return dto;
         }
     };
 
 
-    private MapSqlParameterSource createMap(MeasuringTransmittingUnit dto){
+    private MapSqlParameterSource createMap(MeasuringTransmittingUnit dto) {
         MapSqlParameterSource map = new MapSqlParameterSource();
         map.addValue("id", dto.getId());
         map.addValue("last_post", dto.getLastPost());
         map.addValue("last_value", dto.getLastValue());
         map.addValue("name", dto.getName());
         map.addValue("energy_rate", dto.getRate());
+        map.addValue("last_day_post", dto.getLastDayPost());
+        map.addValue("last_day_value", dto.getLastDayValue());
         return map;
     }
 
@@ -103,13 +111,18 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO{
         namedParameterJdbcTemplate.update(UPDATE_LAST_POST, createMap(dto));
     }
 
+    public void updateLastDayPost(MeasuringTransmittingUnit dto) {
+        LOGGER.debug("[updateLastPost] Updating {}", dto);
+        namedParameterJdbcTemplate.update(UPDATE_LAST_DAY, createMap(dto));
+    }
+
     public void updateSettings(MeasuringTransmittingUnit dto) {
         LOGGER.debug("[updateLastPost] Updating {}", dto);
         namedParameterJdbcTemplate.update(UPDATE_SETTINGS, createMap(dto));
     }
 
     //Check if we need to process the batch
-    public void delete(String id){
+    public void delete(String id) {
         MapSqlParameterSource map = new MapSqlParameterSource();
         map.addValue("id", id);
         namedParameterJdbcTemplate.update(DELETE, map);

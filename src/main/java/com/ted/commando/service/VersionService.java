@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 
 /**
  * Simple service to pull the version from the git commit
+ *
  * @author Pete Arvanitis (pete@petecode.com)
  */
 

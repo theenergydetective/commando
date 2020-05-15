@@ -44,14 +44,12 @@ public class OAuthResourceConfig extends ResourceServerConfigurerAdapter {
                 .anonymous()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/version").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/activate").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/activate").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/postData").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/icons/**").permitAll()
 
                 //Lock down everything else
-                .antMatchers( "/api/**").access("#oauth2.hasScope('api')");
+                .antMatchers("/api/**").access("#oauth2.hasScope('api')");
 
     }
 }

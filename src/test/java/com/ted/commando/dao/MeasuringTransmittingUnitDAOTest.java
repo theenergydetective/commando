@@ -80,8 +80,12 @@ public class MeasuringTransmittingUnitDAOTest {
         mtu.setLastPost(123456789L);
         mtu.setLastValue(new BigDecimal(200000.0));
         measuringTransmittingUnitDAO.updateLastPost(mtu);
-
         assertEquals(mtu.getLastPost(), measuringTransmittingUnitDAO.findOne(TEST_ID).getLastPost());
+
+        mtu.setLastDayPost(10000L);
+        mtu.setLastDayValue(new BigDecimal(300000.0));
+        measuringTransmittingUnitDAO.updateLastDayPost(mtu);
+        assertEquals(mtu.getLastDayPost(), measuringTransmittingUnitDAO.findOne(TEST_ID).getLastDayPost());
 
         measuringTransmittingUnitDAO.delete(mtu.getId());
         assertNull(measuringTransmittingUnitDAO.findOne(TEST_ID));
