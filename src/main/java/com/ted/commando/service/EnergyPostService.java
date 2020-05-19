@@ -18,7 +18,6 @@
 package com.ted.commando.service;
 
 
-import com.ted.commando.dao.DailyEnergyDataDAO;
 import com.ted.commando.dao.EnergyControlCenterDAO;
 import com.ted.commando.dao.MeasuringTransmittingUnitDAO;
 import com.ted.commando.model.*;
@@ -92,9 +91,9 @@ public class EnergyPostService {
         }
     }
 
-    public MeasuringTransmittingUnit findMTU(String serialNumber){
+    public MeasuringTransmittingUnit findMTU(String serialNumber) {
         MeasuringTransmittingUnit mtu = measuringTransmittingUnitDAO.findOne(serialNumber);
-        if (null == mtu){
+        if (null == mtu) {
             LOGGER.info("[processMTUPost] MTU Not Found. Adding");
             mtu = new MeasuringTransmittingUnit();
             mtu.setId(serialNumber);
@@ -107,9 +106,9 @@ public class EnergyPostService {
 
         MeasuringTransmittingUnit mtu = findMTU(mtuPost.getMtuSerial());
 
-        for (EnergyCumulativePost cumulativePost: mtuPost.getCumulativePostList()){
+        for (EnergyCumulativePost cumulativePost : mtuPost.getCumulativePostList()) {
 
-            if (mtu.getLastDayPost().equals(0L)){
+            if (mtu.getLastDayPost().equals(0L)) {
                 LOGGER.debug("[processMTUPost] No daily history for mtu:{}. Defaulting to current value", mtu);
                 mtu.setLastDayPost(cumulativePost.getTimestamp());
                 mtu.setLastDayValue(new BigDecimal(cumulativePost.getWatts()));
