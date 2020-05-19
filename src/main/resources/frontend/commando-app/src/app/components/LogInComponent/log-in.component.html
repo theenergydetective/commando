@@ -1,0 +1,41 @@
+<img class="logoBox" src="../assets/commando.svg" alt="TED Commando"/>
+
+
+<mat-card class="authBox" fxLayout="column">
+  <mat-card-title>Sign in to your account</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="form" (submit)="submit()">
+
+    <div fxLayout="column" style="padding:16px">
+        <mat-form-field>
+          <input matInput type="text" id="username" formControlName="username" placeholder="Username" required>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="password" id="password" formControlName="password" placeholder="Password" required>
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="row">
+        <div class="fill-space"></div>
+        <button mat-raised-button [disabled]="!form.valid" color="primary" type="submit"
+                class="btn btn-success">Submit
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+
+<mat-card class="errorCard" fxLayout="row" [fxHide]="hideError">
+  <mat-card-content style="width:100%; padding:0;margin:0" fxLayout="row"  fxLayoutAlign="space-between" >
+      <div fxLayout="row"  fxLayoutAlign="start center" >
+        <mat-icon style="color:red" svgIcon="warning" aria-hidden="true" aria-label="Invalid Username or Password"></mat-icon>
+        <div style="padding:8px">Invalid Username or Password</div>
+      </div>
+
+      <button mat-icon-button aria-label="close"  (click)="hideErrorBox()">
+        <mat-icon class="secondaryColorIcon">close</mat-icon>
+      </button>
+  </mat-card-content>
+</mat-card>

@@ -18,9 +18,9 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
-import {AuthService} from '../_services/auth/auth.service';
+import {AuthService} from '../services/auth.service';
 import {NGXLogger} from 'ngx-logger';
-import {User} from "../_models/user/user";
+
 
 @Injectable({
   providedIn: 'root',
@@ -43,10 +43,7 @@ export class UserManagementAuthGuard implements CanActivate {
 
     if (this.authService.userSession.isAuthenticated()) {
       this.logger.trace('[checkLogin} User Session is authenticated');
-      if (User.hasRole(this.authService.user, 'USERMANAGEMENT')) {
-        this.logger.trace('[checkLogin} User has USERMANAGEMENT role');
-        return true;
-      }
+      return true;
     }
 
     this.logger.trace('[checkLogin} User Session is NOT authenticated');

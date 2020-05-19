@@ -33,4 +33,5 @@ TED Commando is a simple web server application to allow TED 5000, TED Home, and
 - Clone or download the source code and extract it.
 - Start in the root Commando directory (same directory as pom.xml)
 - Be sure all of the pre-requisits are installed.
+- After node is installed, run **_`npm install`_** from the **_`commando/src/main/resources/frontend/command-app`_** directory.
 - Run the following from the command prompt: **_` mvn clean package install -DskipTests `_**
