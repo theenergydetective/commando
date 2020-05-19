@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020. Energy, Inc.
  *
  *      Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,4 +15,15 @@
  *
  */
 
-/* You can add global styles to this file, and also import other style files */
+
+
+export class OAuthResponse {
+  public refresh_token: string = null;
+  public access_token: string = null;
+  public expires_in: number = 0;
+  public scope: string = null;
+  public bearer: string = null;
+  public error: string;
+  public error_description: string;
+}
+

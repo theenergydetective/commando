@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020. Energy, Inc.
  *
  *      Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,4 +15,31 @@
  *
  */
 
-/* You can add global styles to this file, and also import other style files */
+export enum UserSessionState {
+  NO_AUTH,
+  AUTH_FAILED,
+  AUTHENTICATED,
+}
+
+export class UserSession {
+
+  public refreshToken: string = null;
+  public accessToken: string = null;
+  public expiration = 0;
+
+  public state: UserSessionState = UserSessionState.NO_AUTH;
+
+  constructor() {
+  }
+
+  public isExpired(): boolean {
+    const currentTime = new Date().getTime() / 1000;
+    return (this.expiration - 30) < currentTime;
+  }
+
+  public isAuthenticated(): boolean {
+    return this.state === UserSessionState.AUTHENTICATED;
+  }
+
+}
+
