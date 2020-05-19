@@ -25,7 +25,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,7 +46,14 @@ public class VersionServiceTest {
     VersionService versionService;
 
     @Test
-    public void testGetVersion(){
+    public void getVersionTest() throws Exception{
         assertNotNull(versionService.getVersion());
+    }
+
+    @Test
+    public void readFromInputStreamTest() throws Exception{
+        String version = "12345";
+        InputStream stream = new ByteArrayInputStream(version.getBytes(StandardCharsets.UTF_8));
+        assertEquals(version, versionService.readFromInputStream(stream).trim());
     }
 }

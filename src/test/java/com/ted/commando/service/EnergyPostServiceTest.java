@@ -49,6 +49,9 @@ public class EnergyPostServiceTest {
     @Mock
     EnergyControlCenterDAO energyControlCenterDAO;
 
+    @Mock
+    DailyEnergyDataService dailyEnergyDataService;
+
     @InjectMocks
     EnergyPostService energyPostService;
 
@@ -57,6 +60,7 @@ public class EnergyPostServiceTest {
         reset(measuringTransmittingUnitDAO);
         reset(dailyEnergyDataDAO);
         reset(energyControlCenterDAO);
+        reset(dailyEnergyDataService);
     }
 
     @Test
@@ -116,6 +120,7 @@ public class EnergyPostServiceTest {
         cumulativePost.setTimestamp(123456789L);
 
         energyPostService.processMTUPost(mtuPost);
+        verify(dailyEnergyDataService).processDailyEnergyData(any());
         verify(measuringTransmittingUnitDAO).updateLastPost(any());
         verify(measuringTransmittingUnitDAO).updateLastDayPost(any());
 

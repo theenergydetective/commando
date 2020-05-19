@@ -29,6 +29,8 @@ import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * Service for handling the access to daily energy data
@@ -40,15 +42,65 @@ import java.math.BigDecimal;
 public class DailyEnergyDataService {
     final static Logger LOGGER = LoggerFactory.getLogger(DailyEnergyDataService.class);
 
-    @Inject
-    DailyEnergyDataDAO dailyEnergyDataDAO;
+        @Inject
+        DailyEnergyDataDAO dailyEnergyDataDAO;
 
-    @Inject
-    UserDetailsService userDetailsService;
+        @Inject
+        UserDetailsService userDetailsService;
+
+        @Inject
+        MeasuringTransmittingUnitDAO measuringTransmittingUnitDAO;
 
 
     @Async
-    public void processDailyEnergyData(MeasuringTransmittingUnit measuringTransmittingUnit){
+    public void processDailyEnergyData(MeasuringTransmittingUnit mtu){
+        TimeZone timeZone = TimeZone.getTimeZone(userDetailsService.getTimezone());
+        LOGGER.debug("[processDailyEnergyData] Using timezone {}", timeZone);
+
+        //Make sure the clock has not jumped back giving us a weird timestamp (DST)
+        if (mtu.getLastPost().longValue() > mtu.getLastDayValue().longValue()){
+
+            Calendar calendar = Calendar.getInstance(timeZone);
+            calendar.setTimeInMillis(mtu.getLastDayPost() * 1000);
+            int lastDay = calendar.get(Calendar.DAY_OF_YEAR);
+            calendar.setTimeInMillis(mtu.getLastPost() * 1000);
+            int today = calendar.get(Calendar.DAY_OF_YEAR);
+
+            if (today > lastDay) {
+                int days = today - lastDay;
+                BigDecimal energyValue = mtu.getLastValue().subtract(mtu.getLastDayValue()).divide(new BigDecimal(days));
+                LOGGER.debug("[processDailyEnergyData] Daily Energy Value {} smoothing:{}", energyValue, days > 1);
+
+                calendar.setTimeInMillis(mtu.getLastDayPost() * 1000);
+
+                for (int i=0; i < days; i++){
+                    calendar.add(Calendar.DATE, 1);
+                    calendar.set(Calendar.HOUR_OF_DAY, 0);
+                    calendar.set(Calendar.MINUTE,0);
+                    calendar.set(Calendar.SECOND,0);
+                    calendar.set(Calendar.MILLISECOND,0);
+
+                    DailyEnergyData dailyEnergyData = new DailyEnergyData();
+                    dailyEnergyData.setMtuId(mtu.getId());
+                    dailyEnergyData.setEnergyValue(energyValue);
+                    dailyEnergyData.setEpochDate(calendar.getTimeInMillis()/1000);
+                    LOGGER.debug("[processDailyEnergyData] inserting daily data: {}", dailyEnergyData);
+                    dailyEnergyDataDAO.insert(dailyEnergyData);
+                }
+
+                //Update the last post value.
+                calendar.setTimeInMillis(mtu.getLastPost() * 1000);
+                calendar.set(Calendar.HOUR, 0);
+                calendar.set(Calendar.MINUTE,0);
+                calendar.set(Calendar.SECOND,0);
+                calendar.set(Calendar.MILLISECOND,0);
+                mtu.setLastDayPost(calendar.getTimeInMillis()/1000);
+                mtu.setLastDayValue(mtu.getLastValue());
+                measuringTransmittingUnitDAO.updateLastDayPost(mtu);
+
+            }
+
+        }
 
     }
 

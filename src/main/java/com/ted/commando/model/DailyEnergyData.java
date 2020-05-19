@@ -18,6 +18,7 @@
 package com.ted.commando.model;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class DailyEnergyData {
     private String mtuId;
@@ -55,6 +56,21 @@ public class DailyEnergyData {
 
     public void setEnergyValue(BigDecimal energyValue) {
         this.energyValue = energyValue;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DailyEnergyData)) return false;
+        DailyEnergyData that = (DailyEnergyData) o;
+        return Objects.equals(mtuId, that.mtuId) &&
+                Objects.equals(epochDate, that.epochDate) &&
+                Objects.equals(energyValue, that.energyValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mtuId, epochDate, energyValue);
     }
 
     @Override

@@ -61,7 +61,7 @@ public class VersionService {
         }
     }
 
-    private String readFromInputStream(InputStream inputStream)
+    protected String readFromInputStream(InputStream inputStream)
             throws IOException {
 
         if (inputStream == null) {

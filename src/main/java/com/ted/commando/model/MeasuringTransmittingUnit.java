@@ -18,6 +18,7 @@
 package com.ted.commando.model;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class MeasuringTransmittingUnit {
     private String id;
@@ -96,5 +97,24 @@ public class MeasuringTransmittingUnit {
                 ", lastDayValue=" + lastDayValue +
                 ", lastDayPost=" + lastDayPost +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MeasuringTransmittingUnit)) return false;
+        MeasuringTransmittingUnit that = (MeasuringTransmittingUnit) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(rate, that.rate) &&
+                Objects.equals(lastValue, that.lastValue) &&
+                Objects.equals(lastPost, that.lastPost) &&
+                Objects.equals(lastDayValue, that.lastDayValue) &&
+                Objects.equals(lastDayPost, that.lastDayPost);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, rate, lastValue, lastPost, lastDayValue, lastDayPost);
     }
 }
