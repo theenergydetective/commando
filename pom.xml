@@ -184,6 +184,8 @@
 
         <plugins>
 
+
+
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -197,7 +199,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <!--<executable>true</executable>-->
+                    <executable>true</executable>
                     <excludes>
                         <exclude>
                             <groupId>javax.ws.rs</groupId>
@@ -279,6 +281,29 @@
                         <always>false</always>
                         <dirty>-dirty</dirty>
                     </gitDescribe>
+                </configuration>
+            </plugin>
+
+
+            <!-- The following plugin will build the angular code with the maven compilation -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>ng</executable>
+                    <workingDirectory>src/main/resources/frontend/commando-app</workingDirectory>
+                    <arguments>
+                        <argument>build</argument>
+                    </arguments>
                 </configuration>
             </plugin>
 
