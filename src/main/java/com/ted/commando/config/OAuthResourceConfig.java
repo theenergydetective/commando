@@ -45,6 +45,9 @@ public class OAuthResourceConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/version").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/admin").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/admin/tz").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/admin").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/activate").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/postData").permitAll()
 

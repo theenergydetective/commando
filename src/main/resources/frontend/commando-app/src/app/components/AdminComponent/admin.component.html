@@ -1,0 +1,77 @@
+<div class="logoBox" fxLayout="row" fxLayoutAlign="space-around">
+  <img class="logoImage" src="../../../assets/commando-logo.png" alt="TED Commando"/>
+</div>
+
+<mat-card class="authBox" fxLayout="column">
+  <mat-card-content>
+    <form [formGroup]="form" (submit)="submit()">
+
+      <div class="title">Administrator Setup</div>
+      <div class="caption">
+        Please type in the username and password you will be using as the Administrator for this
+        system. <b>This password can not be recovered online</b>. If you forget your password,
+        you will need to follow the <b>Admin Instructions</b> to reset the password directly
+        on the server.
+      </div>
+
+    <div fxLayout="column" style="padding:16px;">
+        <mat-form-field>
+          <mat-label>Username</mat-label>
+          <input matInput type="text" id="username" formControlName="username" placeholder="Username" required>
+        </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Confirm Username</mat-label>
+        <input matInput type="text" id="confirmUsername" formControlName="confirmUsername" placeholder="Confirm Username" required>
+      </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input matInput type="password" id="password" formControlName="password" placeholder="Password" required>
+        </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Confirm Password</mat-label>
+        <input matInput type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm Password" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Activation Key</mat-label>
+        <input matInput maxlength="10" type="text" id="activationKey" formControlName="activationKey" placeholder="Activation Key">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Timezone</mat-label>
+        <mat-select formControlName="timezone" id="timezone">
+          <mat-option *ngFor="let tz of timezones" [value]="tz">
+            {{tz}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+
+    </div>
+
+      <div fxLayout="row" fxLayoutAlign="space-around">
+        <button mat-raised-button [disabled]="!form.valid" color="accent" type="submit"
+                class="btn btn-success">Create
+        </button>
+      </div>
+
+    </form>
+  </mat-card-content>
+</mat-card>
+
+
+<mat-card class="errorCard" fxLayout="row" [fxHide]="hideError">
+  <mat-card-content style="width:100%; padding:0;margin:0" fxLayout="row"  fxLayoutAlign="space-between" >
+      <div fxLayout="row"  fxLayoutAlign="start center" >
+        <mat-icon style="color:red" svgIcon="warning" aria-hidden="true" aria-label="Invalid Username or Password"></mat-icon>
+        <div style="padding:8px">Invalid Username or Password</div>
+      </div>
+
+      <button mat-icon-button aria-label="close"  (click)="hideErrorBox()">
+        <mat-icon class="secondaryColorIcon">close</mat-icon>
+      </button>
+  </mat-card-content>
+</mat-card>

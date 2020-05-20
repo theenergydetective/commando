@@ -1,14 +1,14 @@
-<img class="logoBox" src="../assets/commando.svg" alt="TED Commando"/>
-
+<div class="logoBox" fxLayout="row" fxLayoutAlign="space-around">
+  <img class="logoImage" src="../../../assets/commando-logo.png" alt="TED Commando"/>
+</div>
 
 <mat-card class="authBox" fxLayout="column">
-  <mat-card-title>Sign in to your account</mat-card-title>
   <mat-card-content>
     <form [formGroup]="form" (submit)="submit()">
 
-    <div fxLayout="column" style="padding:16px">
+    <div fxLayout="column" style="padding:16px;">
         <mat-form-field>
-          <input matInput type="text" id="username" formControlName="username" placeholder="Username" required>
+          <input matInput type="text" id="username" formControlName="username" placeholder="Email" required>
         </mat-form-field>
 
         <mat-form-field>
@@ -16,12 +16,12 @@
         </mat-form-field>
       </div>
 
-      <div fxLayout="row">
-        <div class="fill-space"></div>
-        <button mat-raised-button [disabled]="!form.valid" color="primary" type="submit"
+      <div fxLayout="row" fxLayoutAlign="space-around">
+        <button mat-raised-button [disabled]="!form.valid" color="accent" type="submit"
                 class="btn btn-success">Submit
         </button>
       </div>
+
     </form>
   </mat-card-content>
 </mat-card>

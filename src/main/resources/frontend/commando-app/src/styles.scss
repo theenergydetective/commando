@@ -9,14 +9,36 @@
 // Be sure that you only ever include this mixin once!
 @include mat-core();
 
+
+$mat-main: (
+  primaryColor: #009688,
+  primaryLightColor: #B2DFDB,
+  primaryDarkColor: #00796B,
+  contrast: (
+    primaryColor: $light-primary-text,
+    primaryLightColor: $dark-primary-text,
+    primaryDarkColor: $light-primary-text
+  )
+);
+
+$mat-accent: (
+  secondaryColor: #2962FF,
+  secondaryLightColor: #2962FF,
+  secondaryDarkColor: #2962FF,
+  contrast: (
+    secondaryColor: $light-primary-text,
+    secondaryLightColor: $dark-primary-text,
+    secondaryDarkColor: $light-primary-text,
+  )
+);
+
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$commando-app-primary: mat-palette($mat-indigo);
-$commando-app-accent: mat-palette($mat-pink, A200, A100, A400);
-
-// The warn palette is optional (defaults to red).
-$commando-app-warn: mat-palette($mat-red);
+$commando-app-primary: mat-palette($mat-main, primaryColor);
+$commando-app-primary-light: mat-palette($mat-main, primaryLightColor);
+$commando-app-accent: mat-palette($mat-accent, secondaryDarkColor);
+$commando-app-warn: mat-palette($mat-red, A700);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $commando-app-theme: mat-light-theme($commando-app-primary, $commando-app-accent, $commando-app-warn);
@@ -45,5 +67,9 @@ $commando-app-theme: mat-light-theme($commando-app-primary, $commando-app-accent
 
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body { height: 100%}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: mat-color($commando-app-primary-light);
+}

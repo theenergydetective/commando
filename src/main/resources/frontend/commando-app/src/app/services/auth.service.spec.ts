@@ -24,6 +24,7 @@ import {UserSessionState} from '../models/user-session';
 import {LoggerConfig, NGXLogger, NGXLoggerHttpService, NgxLoggerLevel, NGXMapperService} from 'ngx-logger';
 import {NGXLoggerHttpServiceMock, NGXMapperServiceMock} from 'ngx-logger/testing';
 import {DatePipe} from "@angular/common";
+import {AdminRequest} from "../models/admin-request";
 
 describe('AuthService', () => {
   let httpClient: HttpClient;
@@ -118,7 +119,28 @@ describe('AuthService', () => {
     expect(service.userSession.state).toBe(0); // NO_AUTH. Workaround for a known Jasmine typescript bug.
   });
 
+  it('can get timezones', () => {
+    const tz:Array<string> = ['1','2','3'];
+    const service: AuthService = TestBed.get(AuthService);
+    service.getTimeZones();
+    const req = httpTestingController.expectOne('/api/admin/tz');
+    expect(req.request.method).toEqual('GET');
+    req.flush(tz);
+    httpTestingController.verify();
+  });
 
+
+  it('can get admin request', () => {
+    const ar:AdminRequest = new AdminRequest();
+    ar.adminSetup = true;
+
+    const service: AuthService = TestBed.get(AuthService);
+    service.getAdminRequest()
+    const req = httpTestingController.expectOne('/api/admin');
+    expect(req.request.method).toEqual('GET');
+    req.flush(ar);
+    httpTestingController.verify();
+  });
 });
 
 

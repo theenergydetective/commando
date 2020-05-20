@@ -17,6 +17,7 @@
 
 package com.ted.commando.service;
 
+import com.ted.commando.model.AdminRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,5 +93,36 @@ public class UserDetailsServiceTest {
     @Test
     public void getPublicIpTest(){
         assertFalse(userDetailsService.getServerPublicIp().isEmpty());
+    }
+
+
+    @Test
+    public void getAdminRequestRequiredTest(){
+        when(env.getProperty(UserDetailsService.ServerProperties.PASSWORD.name())).thenReturn(null);
+        userDetailsService.init(); //Force reload of properties
+        assertTrue(userDetailsService.getAdminRequestRequired().getAdminSetup());
+
+        when(env.getProperty(UserDetailsService.ServerProperties.PASSWORD.name())).thenReturn("FAKEPASS");
+        userDetailsService.init(); //Force reload of properties
+        assertFalse(userDetailsService.getAdminRequestRequired().getAdminSetup());
+    }
+
+    @Test
+    public void setAdminRequestTest(){
+
+        AdminRequest adminRequest = new AdminRequest();
+        adminRequest.setPassword("TESTPASS");
+        adminRequest.setUsername("TESTUSER");
+        adminRequest.setActivationKey(null);
+        adminRequest.setTimezone("America/New_York");
+
+        when(env.getProperty(UserDetailsService.ServerProperties.PASSWORD.name())).thenReturn(null);
+        userDetailsService.init(); //Force reload of properties
+        assertTrue(userDetailsService.setAdminRequest(adminRequest));
+
+        when(env.getProperty(UserDetailsService.ServerProperties.PASSWORD.name())).thenReturn("TESTPASS");
+        userDetailsService.init(); //Force reload of properties
+        assertFalse(userDetailsService.setAdminRequest(adminRequest));
+
     }
 }

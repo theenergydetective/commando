@@ -14,12 +14,13 @@ import {LayoutModule} from '@angular/cdk/layout';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {HttpClientModule} from '@angular/common/http';
 import {Component, Input} from '@angular/core';
-import {LogInComponent} from "./log-in.component";
+import {AdminComponent} from "./admin.component";
 import {DatePipe} from "@angular/common";
-import {AdminRequest} from "../../models/admin-request";
+import {MatSelectModule} from "@angular/material/select";
 
 
-describe('LogInComponent', () => {
+
+describe('AdminComponent', () => {
 
   @Component({
     selector: 'mat-icon',
@@ -31,8 +32,8 @@ describe('LogInComponent', () => {
     @Input() fontIcon: any;
   }
 
-  let component: LogInComponent;
-  let fixture: ComponentFixture<LogInComponent>;
+  let component: AdminComponent;
+  let fixture: ComponentFixture<AdminComponent>;
 
   class MockAuthService {
     login() {
@@ -44,14 +45,15 @@ describe('LogInComponent', () => {
     logOut() {
     }
 
-    getAdminRequest(){
-      return new Promise(ar=>{ar(new AdminRequest())})
+
+    getTimeZones(){
+      return new Promise(tz=>{tz([])});
     }
   }
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LogInComponent],
+      declarations: [AdminComponent],
       imports: [
         // LoggerTestingModule
         HttpClientModule,
@@ -61,10 +63,12 @@ describe('LogInComponent', () => {
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
+        MatSelectModule,
         FormsModule,
         ReactiveFormsModule,
         FlexLayoutModule,
-        LayoutModule,
+        LayoutModule
+
       ],
       providers: [
         DatePipe,
@@ -88,7 +92,7 @@ describe('LogInComponent', () => {
       });
 
 
-    fixture = TestBed.createComponent(LogInComponent);
+    fixture = TestBed.createComponent(AdminComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     // Inject the mocks for testing

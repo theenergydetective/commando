@@ -1,1 +1,18 @@
 @import '~@angular/material/theming';
+
+.logoBox {
+  width:100%;
+  margin: 32px auto 32px;
+}
+
+.logoImage {
+  width:333px;
+  height:150px;
+}
+
+
+.authBox{
+  width:300px;
+  margin:auto;
+  padding:16px;
+}

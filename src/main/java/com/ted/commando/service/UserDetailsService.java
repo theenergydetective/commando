@@ -17,6 +17,7 @@
 
 package com.ted.commando.service;
 
+import com.ted.commando.model.AdminRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.PropertySource;
@@ -100,6 +101,7 @@ public class UserDetailsService implements org.springframework.security.core.use
     //Forces default values even if the env file exists
     private void loadProperty(ServerProperties property) {
         String value = env.getProperty(property.name());
+        LOGGER.debug("[loadProperty] Loaded:{} value:{}", property.name(), value);
         if (value == null || value.isEmpty()) value = property.defaultValue;
         properties.put(property.name(), value);
 
@@ -141,6 +143,7 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     public void setAdminCredentials(String newUserName, String newPassword, String activationKey, String timeZone) {
         //Set the new username and encrypted password
+        if (activationKey ==null || activationKey.trim().isEmpty()) activationKey = "";
         properties.setProperty(ServerProperties.USERNAME.name(), newUserName);
         properties.setProperty(ServerProperties.PASSWORD.name(), bCryptPasswordEncoder.encode(newPassword));
         properties.setProperty(ServerProperties.ACTIVATION_KEY.name(), activationKey);
@@ -172,6 +175,31 @@ public class UserDetailsService implements org.springframework.security.core.use
         } catch (Exception ex) {
             LOGGER.error("Error getting public IP", ex);
             return "";
+        }
+    }
+
+    public AdminRequest getAdminRequestRequired(){
+        String password = properties.getProperty(ServerProperties.PASSWORD.name());
+        AdminRequest adminRequest = new AdminRequest();
+        adminRequest.setAdminSetup(password == null || password.trim().isEmpty());
+        if (adminRequest.getAdminSetup()) {
+            adminRequest.setActivationKey(properties.getProperty(ServerProperties.ACTIVATION_KEY.name()));
+            adminRequest.setTimezone(properties.getProperty(ServerProperties.TIMEZONE.name()));
+            adminRequest.setUsername(properties.getProperty(ServerProperties.USERNAME.name()));
+        }
+        return adminRequest;
+    }
+
+    public boolean setAdminRequest(AdminRequest adminRequest){
+        //Only do it if there is no password set.
+        String password = properties.getProperty(ServerProperties.PASSWORD.name());
+        if (password == null || password.isEmpty()){
+            LOGGER.warn("[setAdminRequest] Updating Server Credentials: {}", adminRequest);
+            setAdminCredentials(adminRequest.getUsername(), adminRequest.getPassword(), adminRequest.getActivationKey(), getTimezone());
+            return true;
+        } else {
+            LOGGER.warn("[setAdminRequest] PASSWORD RESET ATTEMPT WHEN PASSWORD ALREADY EXISTS.");
+            return false;
         }
     }
 

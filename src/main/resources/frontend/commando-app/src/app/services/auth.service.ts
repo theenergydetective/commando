@@ -20,6 +20,7 @@ import {UserSession, UserSessionState} from '../models/user-session';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {NGXLogger} from 'ngx-logger';
 import {OAuthResponse} from '../models/oauth-response';
+import {AdminRequest} from "../models/admin-request";
 
 @Injectable({
   providedIn: 'root'
@@ -175,7 +176,6 @@ export class AuthService implements OnDestroy {
   }
 
 
-
   public logOut() {
     this.logger.info('[logout] Logging out user');
     this.userSession.state = UserSessionState.NO_AUTH;
@@ -194,6 +194,41 @@ export class AuthService implements OnDestroy {
         this.refreshAccessToken();
       }
     }
+  }
+
+
+  /**
+   * Returns a list of timezones
+   */
+  public getTimeZones() {
+    this.logger.info('[getTimeZones] Looking up timezones');
+    return new Promise(tzResult => {
+      const response = this.http.get('/api/admin/tz');
+      response.subscribe((data: Array<String>) => {
+          tzResult(data);
+        },
+        error => {
+          this.logger.warn('[getTimeZones] Get Error: ' + JSON.stringify(error));
+          tzResult([]);
+        });
+    });
+  }
+
+  /**
+   * Polls the server to see if it needs to be configured for first time admin setup
+   */
+  public getAdminRequest() {
+    this.logger.info('[getAdminRequest] Looking up admin Request');
+    return new Promise(arResult => {
+      const response = this.http.get('/api/admin');
+      response.subscribe((data: AdminRequest) => {
+          arResult(data);
+        },
+        error => {
+          this.logger.warn('[getAdminRequest] Get Error: ' + JSON.stringify(error));
+          arResult([]);
+        });
+    });
   }
 }
 

@@ -44,13 +44,15 @@ import {MatRadioModule} from "@angular/material/radio";
 import {MatRippleModule} from "@angular/material/core";
 import {MatChipsModule} from "@angular/material/chips";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {AdminComponent} from "./components/AdminComponent";
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LogInComponent,
-    HomeComponent
+    HomeComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
@@ -83,6 +85,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     }),
     BrowserAnimationsModule,
     ReactiveFormsModule,
+
 
   ],
   providers: [DatePipe],

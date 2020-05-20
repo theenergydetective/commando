@@ -14,6 +14,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {HttpClientModule} from '@angular/common/http';
 import {Component, Input} from '@angular/core';
 import {HomeComponent} from "./home.component";
+import {DatePipe} from "@angular/common";
 
 
 describe('HomeComponent', () => {
@@ -61,6 +62,7 @@ describe('HomeComponent', () => {
         LayoutModule,
       ],
       providers: [
+        DatePipe,
         NGXLogger,
         FormBuilder,
         {provide: AuthService, useClass: MockAuthService},

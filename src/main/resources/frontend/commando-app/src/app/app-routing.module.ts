@@ -20,6 +20,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from "./guards/auth.guard";
 import {HomeComponent} from "./components/HomeComponent";
 import {LogInComponent} from "./components/LogInComponent";
+import {AdminComponent} from "./components/AdminComponent";
 
 const routes: Routes = [
   {
@@ -30,6 +31,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LogInComponent,
+  },
+  {
+    path: 'admin',
+    component: AdminComponent,
   },
   { path: '**', redirectTo: '' }
 ];

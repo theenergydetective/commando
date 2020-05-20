@@ -1,0 +1,39 @@
+@import '~@angular/material/theming';
+@import 'src/styles';
+
+// Create a config with the default typography levels.
+// Create a config with the default typography levels.
+$config: mat-typography-config();
+$default-padding: 5px;
+$double-padding: $default-padding * 2;
+$default-min-height: 30px;
+
+
+.logoBox {
+  width:100%;
+  margin: 32px auto 32px;
+}
+
+.logoImage {
+  width:333px;
+  height:150px;
+}
+
+
+.authBox{
+  width:calc(100% - 64px);
+  max-width:600px;
+  margin:auto;
+  padding:16px;
+}
+
+.title{
+  font-size: mat-font-size($config, title);
+  font-family: mat-font-family($config);
+  margin-bottom:16px;
+}
+
+.instructions{
+  font-size: mat-font-size($config, caption);
+  font-family: mat-font-family($config);
+}
