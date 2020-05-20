@@ -53,11 +53,11 @@ import java.util.Properties;
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     enum ServerProperties {
-        USERNAME(""),
-        PASSWORD(""),
-        ACTIVATION_KEY(""),
-        TIMEZONE("America/New_York"),
-        SERVER_NAME("");
+        COMMANDO_USERNAME("admin"),
+        COMMANDO_PASSWORD(""),
+        COMMANDO_ACTIVATION_KEY(""),
+        COMMANDO_TIMEZONE("America/New_York"),
+        COMMANDO_DOMAIN("");
 
         final String defaultValue;
 
@@ -89,10 +89,10 @@ public class UserDetailsService implements org.springframework.security.core.use
         }
 
         //If the server name does not exist. Try to look up the ip address of the server.
-        if (properties.getProperty(ServerProperties.SERVER_NAME.name()).isEmpty()) {
+        if (properties.getProperty(ServerProperties.COMMANDO_DOMAIN.name()).isEmpty()) {
             String publicIp = getServerPublicIp();
             LOGGER.info("[init] Server Property does not exist. Looking up public ip of server: {}", publicIp);
-            properties.setProperty(ServerProperties.SERVER_NAME.name(), publicIp);
+            properties.setProperty(ServerProperties.COMMANDO_DOMAIN.name(), publicIp);
             writePropertyFile();
         }
 
@@ -111,12 +111,15 @@ public class UserDetailsService implements org.springframework.security.core.use
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         LOGGER.trace("[loadUserByUsername]]: {}", username);
 
-        String adminUsername = properties.getProperty(ServerProperties.USERNAME.name());
-        String adminPassword = properties.getProperty(ServerProperties.PASSWORD.name());
+        String adminUsername = properties.getProperty(ServerProperties.COMMANDO_USERNAME.name());
+        String adminPassword = properties.getProperty(ServerProperties.COMMANDO_PASSWORD.name());
 
-        if (!adminUsername.equals(username) || adminPassword.isEmpty()) {
-            LOGGER.warn("[loadUserByUsername] Admin not configured: {}", username);
-            throw new UsernameNotFoundException("Admin not configured. Invalid user: " + username);
+        if (username == null || !adminUsername.equals(username.toLowerCase()) || adminPassword.isEmpty()) {
+            if (adminPassword.isEmpty()){
+                LOGGER.warn("[loadUserByUsername] ***ADMIN NOT CONFIGURED***");
+            }
+            LOGGER.warn("[loadUserByUsername] Invalid User: {}", username);
+            throw new UsernameNotFoundException("Invalid user: " + username);
         }
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();
@@ -141,26 +144,28 @@ public class UserDetailsService implements org.springframework.security.core.use
         }
     }
 
-    public void setAdminCredentials(String newUserName, String newPassword, String activationKey, String timeZone) {
-        //Set the new username and encrypted password
-        if (activationKey ==null || activationKey.trim().isEmpty()) activationKey = "";
-        properties.setProperty(ServerProperties.USERNAME.name(), newUserName);
-        properties.setProperty(ServerProperties.PASSWORD.name(), bCryptPasswordEncoder.encode(newPassword));
-        properties.setProperty(ServerProperties.ACTIVATION_KEY.name(), activationKey);
-        properties.setProperty(ServerProperties.TIMEZONE.name(), timeZone);
-        writePropertyFile();
+    public void setAdminCredentials(AdminRequest adminRequest) {
+        if (adminRequest != null) {
+            //Set the new username and encrypted password
+            properties.setProperty(ServerProperties.COMMANDO_USERNAME.name(), adminRequest.getUsername().trim().toLowerCase());
+            properties.setProperty(ServerProperties.COMMANDO_PASSWORD.name(), bCryptPasswordEncoder.encode(adminRequest.getPassword()));
+            properties.setProperty(ServerProperties.COMMANDO_ACTIVATION_KEY.name(), adminRequest.getActivationKey());
+            properties.setProperty(ServerProperties.COMMANDO_TIMEZONE.name(), adminRequest.getTimezone());
+            properties.setProperty(ServerProperties.COMMANDO_DOMAIN.name(), adminRequest.getDomain());
+            writePropertyFile();
+        }
     }
 
     public String getActivationKey() {
-        return properties.getProperty(ServerProperties.ACTIVATION_KEY.name());
+        return properties.getProperty(ServerProperties.COMMANDO_ACTIVATION_KEY.name());
     }
 
     public String getTimezone() {
-        return properties.getProperty(ServerProperties.TIMEZONE.name());
+        return properties.getProperty(ServerProperties.COMMANDO_TIMEZONE.name());
     }
 
     public String getServerName() {
-        return properties.getProperty(ServerProperties.SERVER_NAME.name());
+        return properties.getProperty(ServerProperties.COMMANDO_DOMAIN.name());
     }
 
     public String getServerPublicIp() {
@@ -179,23 +184,25 @@ public class UserDetailsService implements org.springframework.security.core.use
     }
 
     public AdminRequest getAdminRequestRequired(){
-        String password = properties.getProperty(ServerProperties.PASSWORD.name());
+        String password = properties.getProperty(ServerProperties.COMMANDO_PASSWORD.name());
         AdminRequest adminRequest = new AdminRequest();
         adminRequest.setAdminSetup(password == null || password.trim().isEmpty());
+
         if (adminRequest.getAdminSetup()) {
-            adminRequest.setActivationKey(properties.getProperty(ServerProperties.ACTIVATION_KEY.name()));
-            adminRequest.setTimezone(properties.getProperty(ServerProperties.TIMEZONE.name()));
-            adminRequest.setUsername(properties.getProperty(ServerProperties.USERNAME.name()));
+            adminRequest.setDomain(properties.getProperty(ServerProperties.COMMANDO_DOMAIN.name()));
+            adminRequest.setActivationKey(properties.getProperty(ServerProperties.COMMANDO_ACTIVATION_KEY.name()));
+            adminRequest.setTimezone(properties.getProperty(ServerProperties.COMMANDO_TIMEZONE.name()));
+            adminRequest.setUsername(properties.getProperty(ServerProperties.COMMANDO_USERNAME.name()));
         }
         return adminRequest;
     }
 
     public boolean setAdminRequest(AdminRequest adminRequest){
         //Only do it if there is no password set.
-        String password = properties.getProperty(ServerProperties.PASSWORD.name());
+        String password = properties.getProperty(ServerProperties.COMMANDO_PASSWORD.name());
         if (password == null || password.isEmpty()){
             LOGGER.warn("[setAdminRequest] Updating Server Credentials: {}", adminRequest);
-            setAdminCredentials(adminRequest.getUsername(), adminRequest.getPassword(), adminRequest.getActivationKey(), getTimezone());
+            setAdminCredentials(adminRequest);
             return true;
         } else {
             LOGGER.warn("[setAdminRequest] PASSWORD RESET ATTEMPT WHEN PASSWORD ALREADY EXISTS.");

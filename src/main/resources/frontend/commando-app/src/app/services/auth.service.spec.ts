@@ -141,6 +141,18 @@ describe('AuthService', () => {
     req.flush(ar);
     httpTestingController.verify();
   });
+
+  it('can post admin request', () => {
+    const ar:AdminRequest = new AdminRequest();
+    ar.adminSetup = true;
+
+    const service: AuthService = TestBed.get(AuthService);
+    service.postAdminRequest(ar)
+    const req = httpTestingController.expectOne('/api/admin');
+    expect(req.request.method).toEqual('POST');
+    req.flush(ar);
+    httpTestingController.verify();
+  });
 });
 
 

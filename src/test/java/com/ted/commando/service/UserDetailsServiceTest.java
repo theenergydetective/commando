@@ -50,8 +50,8 @@ public class UserDetailsServiceTest {
     @Before
     public void setup(){
         reset(env);
-        when(env.getProperty(UserDetailsService.ServerProperties.USERNAME.name())).thenReturn("ADMIN");
-        when(env.getProperty(UserDetailsService.ServerProperties.PASSWORD.name())).thenReturn("PASSWORD");
+        when(env.getProperty(UserDetailsService.ServerProperties.COMMANDO_USERNAME.name())).thenReturn("ADMIN");
+        when(env.getProperty(UserDetailsService.ServerProperties.COMMANDO_PASSWORD.name())).thenReturn("PASSWORD");
         userDetailsService.init();
     }
 
@@ -73,7 +73,15 @@ public class UserDetailsServiceTest {
 
     @Test
     public void updateAdminCredentialsTest(){
-        userDetailsService.setAdminCredentials("admin", "password", "testKey", "America/New_York");
+
+        AdminRequest  adminRequest = new AdminRequest();
+        adminRequest.setUsername("admin");
+        adminRequest.setPassword("password");
+        adminRequest.setDomain("domain");
+        adminRequest.setTimezone("America/New_York");
+        adminRequest.setActivationKey("testKey");
+
+        userDetailsService.setAdminCredentials(adminRequest);
 
         //Load Property file.
         Properties properties = new Properties();
@@ -98,11 +106,11 @@ public class UserDetailsServiceTest {
 
     @Test
     public void getAdminRequestRequiredTest(){
-        when(env.getProperty(UserDetailsService.ServerProperties.PASSWORD.name())).thenReturn(null);
+        when(env.getProperty(UserDetailsService.ServerProperties.COMMANDO_PASSWORD.name())).thenReturn(null);
         userDetailsService.init(); //Force reload of properties
         assertTrue(userDetailsService.getAdminRequestRequired().getAdminSetup());
 
-        when(env.getProperty(UserDetailsService.ServerProperties.PASSWORD.name())).thenReturn("FAKEPASS");
+        when(env.getProperty(UserDetailsService.ServerProperties.COMMANDO_PASSWORD.name())).thenReturn("FAKEPASS");
         userDetailsService.init(); //Force reload of properties
         assertFalse(userDetailsService.getAdminRequestRequired().getAdminSetup());
     }
@@ -116,11 +124,11 @@ public class UserDetailsServiceTest {
         adminRequest.setActivationKey(null);
         adminRequest.setTimezone("America/New_York");
 
-        when(env.getProperty(UserDetailsService.ServerProperties.PASSWORD.name())).thenReturn(null);
+        when(env.getProperty(UserDetailsService.ServerProperties.COMMANDO_PASSWORD.name())).thenReturn(null);
         userDetailsService.init(); //Force reload of properties
         assertTrue(userDetailsService.setAdminRequest(adminRequest));
 
-        when(env.getProperty(UserDetailsService.ServerProperties.PASSWORD.name())).thenReturn("TESTPASS");
+        when(env.getProperty(UserDetailsService.ServerProperties.COMMANDO_PASSWORD.name())).thenReturn("TESTPASS");
         userDetailsService.init(); //Force reload of properties
         assertFalse(userDetailsService.setAdminRequest(adminRequest));
 

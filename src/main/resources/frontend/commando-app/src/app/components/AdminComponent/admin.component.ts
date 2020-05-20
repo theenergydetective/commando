@@ -5,6 +5,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserSession, UserSessionState} from '../../models/user-session';
 import {Router} from '@angular/router';
 import {MustMatch} from "../../helpers/must-match.validator";
+import {AdminRequest} from "../../models/admin-request";
 
 @Component({
   selector: 'app-admin',
@@ -14,7 +15,6 @@ import {MustMatch} from "../../helpers/must-match.validator";
 
 export class AdminComponent implements OnInit, AfterViewInit, OnDestroy  {
   form: FormGroup;
-  hideError = true;
   timezones:Array<string> = [];
 
   constructor(private authService: AuthService,
@@ -32,6 +32,7 @@ export class AdminComponent implements OnInit, AfterViewInit, OnDestroy  {
       password: [null, Validators.required],
       confirmUsername: [null, [Validators.required]],
       confirmPassword: [null, Validators.required],
+      domain: [null, Validators.required],
       activationKey: [''],
       timezone: [null, Validators.required],
     }, {
@@ -51,11 +52,18 @@ export class AdminComponent implements OnInit, AfterViewInit, OnDestroy  {
     this.form.get('confirmUsername').setValue('');
     this.form.get('confirmPassword').setValue('');
     this.form.get('activationKey').setValue('');
+    this.form.get('domain').setValue('');
 
     //this.form.get('timezone').setValue('America/New_York');
     this.authService.getTimeZones().then((tzList:Array<string>)=>{
       this.timezones = tzList;
-      this.form.get('timezone').setValue('America/New_York');
+      this.authService.getAdminRequest().then((ar:AdminRequest)=>{
+        this.form.get('timezone').setValue(ar.timezone);
+        this.form.get('domain').setValue(ar.domain);
+        this.form.get('username').setValue(ar.username);
+        this.form.get('confirmUsername').setValue(ar.username);
+        this.form.get('activationKey').setValue(ar.activationKey);
+      });
     })
 
   }
@@ -63,20 +71,17 @@ export class AdminComponent implements OnInit, AfterViewInit, OnDestroy  {
   ngOnDestroy() {
   }
 
-
    submit() {
-    const username = this.form.get('username').value;
-    const password = this.form.get('password').value;
-    const timezone = this.form.get('timezone').value;
-    const activationKey = this.form.get('activationKey').value;
-
-
-
-  }
-
-
-  hideErrorBox() {
-    this.hideError = true;
+    let adminRequest:AdminRequest = new AdminRequest();
+    adminRequest.username = this.form.get('username').value;
+    adminRequest.password = this.form.get('password').value;
+    adminRequest.timezone = this.form.get('timezone').value;
+    adminRequest.activationKey = this.form.get('activationKey').value;
+    adminRequest.domain = this.form.get('domain').value;
+    this.authService.postAdminRequest(adminRequest)
+      .then(ar=>{
+        this.router.navigate(['/login']);
+      });
   }
 
 

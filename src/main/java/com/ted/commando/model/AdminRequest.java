@@ -25,6 +25,7 @@ public class AdminRequest {
     private String password;
     private String timezone;
     private String activationKey = "";
+    private String domain="";
     private Boolean adminSetup = false;
 
     public String getUsername() {
@@ -60,11 +61,20 @@ public class AdminRequest {
     }
 
     public String getActivationKey() {
-        return activationKey;
+        if (activationKey == null) return "";
+        return activationKey.trim();
     }
 
     public void setActivationKey(String activationKey) {
         this.activationKey = activationKey;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 
     @Override
@@ -74,6 +84,7 @@ public class AdminRequest {
                 ", password='" + password + '\'' +
                 ", timezone='" + timezone + '\'' +
                 ", activationKey='" + activationKey + '\'' +
+                ", domain='" + domain + '\'' +
                 ", adminSetup=" + adminSetup +
                 '}';
     }

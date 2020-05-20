@@ -59,10 +59,16 @@ export class LogInComponent implements OnInit, AfterViewInit, OnDestroy  {
       .then((userSession: UserSession) => {
         this.logger.debug('[submit] Login Result: ' + JSON.stringify(userSession, null, 2));
         switch (userSession.state) {
+          case UserSessionState.AUTHENTICATED:{
+            this.hideError = true;
+            this.router.navigate(['/']);
+            break;
+          }
           case UserSessionState.AUTH_FAILED:{
             // Trigger invalid username/password error
             this.logger.warn('[submit] Invalid credentials');
             this.hideError = false;
+            break;
           }
         }
       });

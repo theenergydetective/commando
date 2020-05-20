@@ -21,5 +21,6 @@ export class AdminRequest {
   public timezone: string = 'America/New_York';
   public activationKey: string = '';
   public adminSetup: boolean = false;
+  public domain:string = '';
 }
 

@@ -230,6 +230,30 @@ export class AuthService implements OnDestroy {
         });
     });
   }
+
+  /***
+   * Polls the server to see if it needs to be configured for first time admin setup
+   * @param adminRequest
+   */
+  public postAdminRequest(adminRequest:AdminRequest) {
+    this.logger.info('[postAdminRequest] Looking up admin Request');
+
+
+    return new Promise(arResult => {
+
+      const response = this.http.post('/api/admin',
+        JSON.stringify(adminRequest),
+        {headers:new HttpHeaders({'Content-Type': 'application/json'})});
+
+      response.subscribe((data: AdminRequest) => {
+          arResult(data);
+        },
+        error => {
+          this.logger.warn('[postAdminRequest] Get Error: ' + JSON.stringify(error));
+          arResult(null);
+        });
+    });
+  }
 }
 
 
