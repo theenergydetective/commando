@@ -17,6 +17,7 @@ import {Component, Input} from '@angular/core';
 import {AdminComponent} from "./admin.component";
 import {DatePipe} from "@angular/common";
 import {MatSelectModule} from "@angular/material/select";
+import {MockAuthService} from "../../mocks/mock-auth-service";
 
 
 
@@ -35,21 +36,6 @@ describe('AdminComponent', () => {
   let component: AdminComponent;
   let fixture: ComponentFixture<AdminComponent>;
 
-  class MockAuthService {
-    login() {
-    }
-
-    getUser() {
-    }
-
-    logOut() {
-    }
-
-
-    getTimeZones(){
-      return new Promise(tz=>{tz([])});
-    }
-  }
 
   beforeEach(() => {
     TestBed.configureTestingModule({

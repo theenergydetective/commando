@@ -45,49 +45,56 @@ import {MatRippleModule} from "@angular/material/core";
 import {MatChipsModule} from "@angular/material/chips";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {AdminComponent} from "./components/AdminComponent";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {ConfirmDialogComponent} from "./components/confirm-dialog";
 
 
 @NgModule({
+  entryComponents:[
+    ConfirmDialogComponent
+  ],
   declarations: [
     AppComponent,
     LogInComponent,
     HomeComponent,
-    AdminComponent
+    AdminComponent,
+    ConfirmDialogComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    FlexLayoutModule,
-    LayoutModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatSnackBarModule,
-    MatListModule,
-    MatDialogModule,
-    MatCardModule,
-    MatTableModule,
-    MatSelectModule,
-    MatRadioModule,
-    MatRippleModule,
-    MatChipsModule,
-    HttpClientModule,
-    LoggerModule.forRoot({
-      // serverLoggingUrl: '/api/logs',
-      level: NgxLoggerLevel.DEBUG, // TODO: Switch to WARN on production
-      serverLogLevel: NgxLoggerLevel.ERROR,
-      disableConsoleLogging: false, // TODO: enable in production
-      enableSourceMaps: true // TODO: Disable in production
-    }),
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        FlexLayoutModule,
+        LayoutModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatSnackBarModule,
+        MatListModule,
+        MatDialogModule,
+        MatCardModule,
+        MatTableModule,
+        MatSelectModule,
+        MatRadioModule,
+        MatRippleModule,
+        MatChipsModule,
+        HttpClientModule,
+        LoggerModule.forRoot({
+            // serverLoggingUrl: '/api/logs',
+            level: NgxLoggerLevel.DEBUG, // TODO: Switch to WARN on production
+            serverLogLevel: NgxLoggerLevel.ERROR,
+            disableConsoleLogging: false, // TODO: enable in production
+            enableSourceMaps: true // TODO: Disable in production
+        }),
+        BrowserAnimationsModule,
+        ReactiveFormsModule,
+        MatSidenavModule,
 
 
-  ],
+    ],
   providers: [DatePipe],
   bootstrap: [AppComponent]
 })

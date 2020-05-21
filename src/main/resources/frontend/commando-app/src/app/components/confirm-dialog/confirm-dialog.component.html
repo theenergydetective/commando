@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>{{titleString}}</h1>
+
+<div mat-dialog-content>
+  <p style="max-width:400px">{{bodyString}}</p>
+</div>
+
+<div mat-dialog-actions>
+  <div class="fill-space"></div>
+  <button mat-button (click)="onCloseClick()">Close</button>
+  <button color="accent" mat-button (click)="onClickConfirm()">Confirm</button>
+</div>

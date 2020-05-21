@@ -15,6 +15,8 @@ import {HttpClientModule} from '@angular/common/http';
 import {Component, Input} from '@angular/core';
 import {HomeComponent} from "./home.component";
 import {DatePipe} from "@angular/common";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MockAuthService} from "../../mocks/mock-auth-service";
 
 
 describe('HomeComponent', () => {
@@ -33,16 +35,6 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
 
-  class MockAuthService {
-    login() {
-    }
-
-    getUser() {
-    }
-
-    logOut() {
-    }
-  }
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -55,6 +47,7 @@ describe('HomeComponent', () => {
         MatCardModule,
         MatFormFieldModule,
         MatIconModule,
+        MatDialogModule,
         MatInputModule,
         FormsModule,
         ReactiveFormsModule,

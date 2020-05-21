@@ -1,2 +1,7 @@
 @import '~@angular/material/theming';
 
+$config: mat-typography-config();
+$default-padding: 5px;
+$double-padding: $default-padding * 2;
+$default-min-height: 30px;
+

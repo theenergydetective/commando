@@ -73,3 +73,7 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-color: mat-color($commando-app-primary-light);
 }
+
+.fill-space {
+  flex: 1 1 auto;
+}

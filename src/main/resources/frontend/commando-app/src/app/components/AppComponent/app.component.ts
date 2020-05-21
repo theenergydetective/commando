@@ -20,8 +20,8 @@ export class AppComponent {
   ) {
 
     // TODO:Register icons used by the app if needed
-    // iconRegistry.addSvgIcon('warning', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/warning-24px.svg'));
-    // iconRegistry.addSvgIcon('close', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/close-24px.svg'));
+    iconRegistry.addSvgIcon('warning', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/warning-24px.svg'));
+    iconRegistry.addSvgIcon('close', sanitizer.bypassSecurityTrustResourceUrl('assets/icons/close-24px.svg'));
 
 
   }

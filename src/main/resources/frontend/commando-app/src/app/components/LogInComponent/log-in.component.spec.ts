@@ -17,6 +17,7 @@ import {Component, Input} from '@angular/core';
 import {LogInComponent} from "./log-in.component";
 import {DatePipe} from "@angular/common";
 import {AdminRequest} from "../../models/admin-request";
+import {MockAuthService} from "../../mocks/mock-auth-service";
 
 
 describe('LogInComponent', () => {
@@ -34,20 +35,6 @@ describe('LogInComponent', () => {
   let component: LogInComponent;
   let fixture: ComponentFixture<LogInComponent>;
 
-  class MockAuthService {
-    login() {
-    }
-
-    getUser() {
-    }
-
-    logOut() {
-    }
-
-    getAdminRequest(){
-      return new Promise(ar=>{ar(new AdminRequest())})
-    }
-  }
 
   beforeEach(() => {
     TestBed.configureTestingModule({

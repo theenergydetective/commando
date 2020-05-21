@@ -81,8 +81,9 @@ public class EnergyPostService {
         return true;
     }
 
-    @Async
+    //@Async
     public void processEnergyPost(EnergyPost energyPost) {
+        LOGGER.debug("[processEnergyPost] Processing: {}", energyPost);
         for (EnergyMTUPost mtuPost : energyPost.getMtuList()) {
             processMTUPost(mtuPost);
         }
@@ -97,12 +98,14 @@ public class EnergyPostService {
             LOGGER.info("[processMTUPost] MTU Not Found. Adding");
             mtu = new MeasuringTransmittingUnit();
             mtu.setId(serialNumber);
+            mtu.setName(serialNumber);
             measuringTransmittingUnitDAO.insert(mtu);
         }
         return mtu;
     }
 
     public void processMTUPost(EnergyMTUPost mtuPost) {
+        LOGGER.debug("[processMTUPost] Processing {}", mtuPost);
 
         MeasuringTransmittingUnit mtu = findMTU(mtuPost.getMtuSerial());
 
