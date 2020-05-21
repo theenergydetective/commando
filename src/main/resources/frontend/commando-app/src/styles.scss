@@ -132,3 +132,13 @@ body {
   font-weight: bolder;
   text-decoration: underline;
 }
+
+.clickableItem{
+  cursor:pointer;
+  cursor:hand;
+}
+
+.clickableItem:hover{
+  background-color: $accent;
+  color:white;
+}

@@ -24,6 +24,7 @@ import {ConfirmDialogComponent} from "../confirm-dialog";
 import {MatDialog} from "@angular/material/dialog";
 import {MtuService} from "../../services/mtu.service";
 import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-unit";
+import {ActivationDetails} from "../../models/activation-details";
 
 @Component({
   selector: 'app-home',
@@ -48,9 +49,17 @@ export class HomeComponent implements AfterContentInit {
 
 
   ngAfterContentInit(): void {
-    this.mtuService.findAllMTU().then((r:Array<MeasuringTransmittingUnit>)=>{
-      //this.mtuList = r;
-    })
+
+    this.authService.verifyAccessToken().then(r=>{
+      if (r){
+        this.mtuService.findAllMTU().then((r:Array<MeasuringTransmittingUnit>)=>{
+          this.mtuList = r;
+        });
+      } else {
+        this.authService.logOut();
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
 

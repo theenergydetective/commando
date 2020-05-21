@@ -62,6 +62,7 @@ $default-min-height: 30px;
 
 .mtuTable {
   width:calc(100% - 32px);
+  border-collapse: collapse;
   margin:auto;
 }
 

@@ -98,7 +98,7 @@
   <div class="activationCard mat-elevation-z2" fxLayout="column" fxLayoutAlign="start center">
     <div class="title" style="margin:auto">Posting Devices</div>
 
-    <table class="mtuTable">
+    <table class="mtuTable" callpadding="0" cllspacing="0">
       <tr>
         <th>Serial Number</th>
         <th>Name</th>
@@ -108,20 +108,14 @@
         <th></th>
       </tr>
 
-      <tr *ngFor="let device of mtuList">
+      <tr *ngFor="let device of mtuList" class="clickableItem" (click)="onDeviceEdit(device)">
         <td>{{device.id}}</td>
         <td>{{device.name}}</td>
         <td>${{device.rate}}/kWh</td>
         <td>{{device.timezone}}</td>
         <td>{{formatLastPost(device.lastPost)}}</td>
         <td>
-          <button
-            type="button"
-            aria-label="Toggle sidenav"
-            mat-icon-button
-            (click)="onDeviceEdit(device)">
             <mat-icon class="accentIcon" aria-label="Side nav toggle icon">edit</mat-icon>
-          </button>
         </td>
       </tr>
     </table>
