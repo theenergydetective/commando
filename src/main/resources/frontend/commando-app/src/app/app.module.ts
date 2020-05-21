@@ -48,7 +48,8 @@ import {AdminComponent} from "./components/AdminComponent";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {ConfirmDialogComponent} from "./components/confirm-dialog";
 import {MenuComponent} from "./components/menu/menu.component";
-import {ActivationComponent} from "./components/ActivationComponent";
+import {ServerSettingsComponent} from "./components/ServerSettingsComponent";
+
 
 @NgModule({
   entryComponents:[
@@ -59,7 +60,7 @@ import {ActivationComponent} from "./components/ActivationComponent";
     LogInComponent,
     HomeComponent,
     AdminComponent,
-    ActivationComponent,
+    ServerSettingsComponent,
     ConfirmDialogComponent,
     MenuComponent
   ],

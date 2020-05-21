@@ -37,13 +37,13 @@ import {MockAuthService} from "../../mocks/mock-auth-service";
 import {MtuService} from "../../services/mtu.service";
 import {MockMtuService} from "../../mocks/mock-mtu-service";
 import {MenuComponent} from "../menu/menu.component";
-import {ActivationComponent} from "./activation.component";
+import {ServerSettingsComponent} from "./server-settings.component";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatListModule} from "@angular/material/list";
 
 
-describe('ActivationComponent', () => {
+describe('ServerSettingsComponent', () => {
 
   @Component({
     selector: 'mat-icon',
@@ -56,13 +56,13 @@ describe('ActivationComponent', () => {
     @Input() fontIcon: any;
   }
 
-  let component: ActivationComponent;
-  let fixture: ComponentFixture<ActivationComponent>;
+  let component: ServerSettingsComponent;
+  let fixture: ComponentFixture<ServerSettingsComponent>;
 
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ActivationComponent,MenuComponent],
+      declarations: [ServerSettingsComponent,MenuComponent],
       imports: [
         // LoggerTestingModule
         HttpClientModule,
@@ -104,9 +104,10 @@ describe('ActivationComponent', () => {
       });
 
 
-    fixture = TestBed.createComponent(ActivationComponent);
+    fixture = TestBed.createComponent(ServerSettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
     // Inject the mocks for testing
     // httpClient = TestBed.get(HttpClient);
     // httpTestingController = TestBed.get(HttpTestingController);
@@ -124,9 +125,6 @@ describe('ActivationComponent', () => {
 
     let lastPostGood = component.formatLastPost(new Date().getTime()/1000);
     expect('Never Posted' != lastPostGood).toBeTruthy();
-
-
-
   });
 
 

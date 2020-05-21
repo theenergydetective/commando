@@ -27,12 +27,12 @@ import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-uni
 import {ActivationDetails} from "../../models/activation-details";
 
 @Component({
-  selector: 'app-activation',
-  templateUrl: './activation.component.html',
-  styleUrls: ['./activation.component.scss']
+  selector: 'app-server-settings',
+  templateUrl: './server-settings.component.html',
+  styleUrls: ['./server-settings.component.scss']
 })
 
-export class ActivationComponent implements AfterContentInit {
+export class ServerSettingsComponent implements AfterContentInit {
   form: FormGroup;
 
   public mtuList:Array<MeasuringTransmittingUnit> = [];

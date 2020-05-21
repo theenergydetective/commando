@@ -15,4 +15,4 @@
  *
  */
 
-export * from './activation.component';
+export * from './server-settings.component';

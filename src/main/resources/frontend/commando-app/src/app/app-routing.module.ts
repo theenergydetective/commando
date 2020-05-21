@@ -21,7 +21,8 @@ import {AuthGuard} from "./guards/auth.guard";
 import {HomeComponent} from "./components/HomeComponent";
 import {LogInComponent} from "./components/LogInComponent";
 import {AdminComponent} from "./components/AdminComponent";
-import {ActivationComponent} from "./components/ActivationComponent";
+import {ServerSettingsComponent} from "./components/ServerSettingsComponent";
+
 
 const routes: Routes = [
   {
@@ -30,8 +31,9 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'activation',
-    component: ActivationComponent,
+    path: '' +
+      '',
+    component: ServerSettingsComponent,
     canActivate: [AuthGuard]
   },
   {
