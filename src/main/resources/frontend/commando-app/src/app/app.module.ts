@@ -43,7 +43,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatRippleModule} from "@angular/material/core";
 import {MatChipsModule} from "@angular/material/chips";
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AdminComponent} from "./components/AdminComponent";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {ConfirmDialogComponent} from "./components/confirm-dialog";

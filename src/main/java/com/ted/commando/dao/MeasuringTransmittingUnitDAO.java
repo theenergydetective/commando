@@ -27,6 +27,7 @@ import org.springframework.stereotype.Repository;
 import javax.inject.Inject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
@@ -48,6 +49,7 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
 
     private static String BASE_QUERY = "select " + generateFields("m.", FIELDS, 0) + " from mtu m ";
     private static String FIND_ONE = BASE_QUERY + " where m.id = :id";
+    private static String FIND_ALL = BASE_QUERY + " order by name asc";
     private static String INSERT = "insert into mtu (" + generateFields("", FIELDS, 0) + ") VALUES (" + generateFields(":", FIELDS, 0) + ")";
     private static String UPDATE_SETTINGS = "update mtu set name=:name, energy_rate=:energy_rate  where id = :id";
     private static String UPDATE_LAST_POST = "update mtu set last_post=:last_post, last_value=:last_value  where id = :id";
@@ -128,4 +130,7 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
         namedParameterJdbcTemplate.update(DELETE, map);
     }
 
+    public List<MeasuringTransmittingUnit> findAll() {
+        return namedParameterJdbcTemplate.query(FIND_ALL, rowMapper);
+    }
 }
