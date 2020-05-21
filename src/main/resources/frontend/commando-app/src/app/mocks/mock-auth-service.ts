@@ -16,6 +16,8 @@
  */
 
 import {AdminRequest} from "../models/admin-request";
+import {HttpHeaders} from "@angular/common/http";
+import {ActivationDetails} from "../models/activation-details";
 
 /***
  * Simple mock for the auth service used for testing.
@@ -30,12 +32,25 @@ export class MockAuthService {
   logOut() {
   }
 
-  getAdminRequest(){
-    return new Promise(ar=>{ar(new AdminRequest())})
+  public getAuthorizedHttpOptions() {
+    return {
+      headers: new HttpHeaders({Authorization: 'Bearer 12345', FWTOKEN: '12345', 'Content-Type': 'application/json',})
+    };
   }
 
+  getAdminRequest(){
+    return new Promise(r=>{r(new AdminRequest())})
+  }
+
+  getActivationDetails(){
+    return new Promise(r=>{r(new ActivationDetails())})
+  }
 
   getTimeZones(){
-    return new Promise(tz=>{tz([])});
+    return new Promise(r=>{r([])});
+  }
+
+  verifyAccessToken(){
+    return new Promise(r=>{r(true)});
   }
 }

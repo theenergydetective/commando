@@ -84,6 +84,10 @@ $commando-app-theme: mat-light-theme($commando-app-primary, $commando-app-accent
 
 /* You can add global styles to this file, and also import other style files */
 
+// Create a config with the default typography levels.
+$config: mat-typography-config();
+$accent: mat-color($commando-app-accent);
+
 html, body { height: 100%}
 body {
   margin: 0;
@@ -93,4 +97,38 @@ body {
 
 .fill-space {
   flex: 1 1 auto;
+}
+.title{
+    font-size: mat-font-size($config, title);
+    font-family: mat-font-family($config);
+    //color: $dark-secondary-text;
+    color: $dark-primary-text;
+}
+
+
+.instructions{
+  font-size: mat-font-size($config, caption);
+  font-family: mat-font-family($config);
+  //color: $dark-secondary-text;
+  color: $dark-primary-text;
+}
+
+.whiteIcon{
+  color:white;
+}
+
+.redIcon{
+  color:red;
+}
+
+.accentIcon{
+  color:$accent;
+}
+
+.actionLink{
+  color:$accent;
+  cursor:pointer;
+  cursor:hand;
+  font-weight: bolder;
+  text-decoration: underline;
 }

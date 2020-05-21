@@ -84,7 +84,7 @@ public class TestDataGenerator {
         calendar.set(Calendar.MILLISECOND, 0);
     }
 
-    @Ignore
+    //@Ignore
     @Test
     public void readFromInputStreamTest() throws Exception{
         cleanUpData();

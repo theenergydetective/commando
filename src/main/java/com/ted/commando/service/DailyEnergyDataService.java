@@ -55,6 +55,9 @@ public class DailyEnergyDataService {
     @Async
     public void processDailyEnergyData(MeasuringTransmittingUnit mtu) {
         TimeZone timeZone = TimeZone.getTimeZone(userDetailsService.getTimezone());
+        if (mtu.getTimezone() != null && !mtu.getTimezone().isEmpty()) {
+            timeZone = TimeZone.getTimeZone(mtu.getTimezone());
+        }
         LOGGER.debug("[processDailyEnergyData] Using timezone {}", timeZone);
 
         //Make sure the clock has not jumped back giving us a weird timestamp (DST)

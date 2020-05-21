@@ -18,6 +18,7 @@
 package com.ted.commando.controller;
 
 import com.ted.commando.dao.EnergyControlCenterDAO;
+import com.ted.commando.model.ActivationDetails;
 import com.ted.commando.model.ActivationRequest;
 import com.ted.commando.model.ActivationResponse;
 import com.ted.commando.model.EnergyControlCenter;
@@ -57,8 +58,7 @@ public class ActivationController {
      * @return the activation response in xml
      * @throws Exception
      */
-    @RequestMapping(value = "/activate",
-            consumes = "application/xml",
+    @RequestMapping(consumes = "application/xml",
             method = RequestMethod.POST)
     public
     @ResponseBody
@@ -102,6 +102,14 @@ public class ActivationController {
             response.sendError(500);
             return null;
         }
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ActivationDetails getActivationDetails(){
+        return userDetailsService.getActivationDetails();
     }
 
 }

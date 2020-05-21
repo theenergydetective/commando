@@ -30,18 +30,20 @@ import {LayoutModule} from '@angular/cdk/layout';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {HttpClientModule} from '@angular/common/http';
 import {Component, Input} from '@angular/core';
-import {HomeComponent} from "./home.component";
+
 import {DatePipe} from "@angular/common";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MockAuthService} from "../../mocks/mock-auth-service";
 import {MtuService} from "../../services/mtu.service";
 import {MockMtuService} from "../../mocks/mock-mtu-service";
 import {MenuComponent} from "../menu/menu.component";
+import {ActivationComponent} from "./activation.component";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatListModule} from "@angular/material/list";
 
 
-describe('HomeComponent', () => {
+describe('ActivationComponent', () => {
 
   @Component({
     selector: 'mat-icon',
@@ -54,16 +56,13 @@ describe('HomeComponent', () => {
     @Input() fontIcon: any;
   }
 
-  let component: HomeComponent;
-  let fixture: ComponentFixture<HomeComponent>;
+  let component: ActivationComponent;
+  let fixture: ComponentFixture<ActivationComponent>;
 
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        HomeComponent,
-        MenuComponent
-      ],
+      declarations: [ActivationComponent,MenuComponent],
       imports: [
         // LoggerTestingModule
         HttpClientModule,
@@ -73,9 +72,10 @@ describe('HomeComponent', () => {
         MatFormFieldModule,
         MatIconModule,
         MatDialogModule,
-        MatSidenavModule,
-        MatToolbarModule,
         MatInputModule,
+        MatToolbarModule,
+        MatListModule,
+        MatSidenavModule,
         FormsModule,
         ReactiveFormsModule,
         FlexLayoutModule,
@@ -104,7 +104,7 @@ describe('HomeComponent', () => {
       });
 
 
-    fixture = TestBed.createComponent(HomeComponent);
+    fixture = TestBed.createComponent(ActivationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     // Inject the mocks for testing
@@ -117,5 +117,18 @@ describe('HomeComponent', () => {
   it('should compile', () => {
     expect(component).toBeTruthy();
   });
+
+  it('can show last post', () => {
+    let lastPostBad = component.formatLastPost(0);
+    expect('Never Posted' == lastPostBad).toBeTruthy();
+
+    let lastPostGood = component.formatLastPost(new Date().getTime()/1000);
+    expect('Never Posted' != lastPostGood).toBeTruthy();
+
+
+
+  });
+
+
 
 });

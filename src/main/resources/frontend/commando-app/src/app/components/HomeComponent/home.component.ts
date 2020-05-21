@@ -15,13 +15,15 @@
  *
  */
 
-import {Component} from '@angular/core';
+import {AfterContentInit, Component} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {NGXLogger} from 'ngx-logger';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
 import {ConfirmDialogComponent} from "../confirm-dialog";
 import {MatDialog} from "@angular/material/dialog";
+import {MtuService} from "../../services/mtu.service";
+import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-unit";
 
 @Component({
   selector: 'app-home',
@@ -29,11 +31,14 @@ import {MatDialog} from "@angular/material/dialog";
   styleUrls: ['./home.component.scss']
 })
 
-export class HomeComponent  {
+export class HomeComponent implements AfterContentInit {
   form: FormGroup;
-  hideError = true;
+
+  public mtuList:Array<MeasuringTransmittingUnit> = [];
+
 
   constructor(private authService: AuthService,
+              private mtuService:MtuService,
               private formBuilder: FormBuilder,
               private router: Router,
               public dialog: MatDialog,
@@ -42,24 +47,12 @@ export class HomeComponent  {
   }
 
 
-  onLogout() {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Confirm Logout',
-        body: 'Are you sure you want to log out?'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result != null && result) {
-        this.authService.logOut();
-        this.router.navigate(['/login']);
-      }
-    });
-
+  ngAfterContentInit(): void {
+    this.mtuService.findAllMTU().then((r:Array<MeasuringTransmittingUnit>)=>{
+      //this.mtuList = r;
+    })
   }
 
-  onEditClick() {
-    this.router.navigate(['/edit']);
-  }
+
+
 }

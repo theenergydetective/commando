@@ -24,22 +24,51 @@ $default-min-height: 30px;
 
 .content {
   width:100%;
-  padding-top:16px;
-}
-
-.mtuList {
-  background-color: white;
-  width: calc(100% - 32px);
-  max-width:600px;
-  padding:16px;
-  margin:auto;
 }
 
 .instructions {
   text-align: center;
+  margin-top:16px;
+  margin-bottom:16px;
 }
 
-.noActivate{
 
+.activationCard{
+  background-color: white;
+  width:calc(100% - 32px);
+  max-width:1024px;
+  margin: 16px auto auto;
+  padding:16px;
 }
 
+.noKey{
+  font-size: mat-font-size($config, caption);
+  font-family: mat-font-family($config);
+  color: $dark-secondary-text;
+  font-style:italic;
+}
+
+.activationTable{
+  border-collapse: collapse;
+  margin:auto;
+}
+
+.activationTable th td{
+  padding-bottom: 16px;
+}
+.activationTable th{
+  padding-right:16px;
+}
+
+.mtuTable {
+  width:calc(100% - 32px);
+  margin:auto;
+}
+
+.mtuTable th{
+  font-size: mat-font-size($config, caption);
+  font-family: mat-font-family($config);
+  color: $dark-secondary-text;
+  font-weight: normal;
+  text-align: left;
+}

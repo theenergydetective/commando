@@ -44,7 +44,7 @@ public class AdminController {
     @RequestMapping(method = GET)
     public
     @ResponseBody
-    AdminRequest getAdminRequest(){
+    AdminRequest getAdminRequest() {
         return userDetailsService.getAdminRequestRequired();
     }
 
@@ -61,12 +61,20 @@ public class AdminController {
     }
 
 
-    @RequestMapping(value="tz", method = GET)
+    @RequestMapping(value = "tz", method = GET)
     public
     @ResponseBody
-    String[] getTimeZones()
-    {
+    String[] getTimeZones() {
         return TimeZone.getAvailableIDs();
+    }
+
+
+    @RequestMapping(value = "reset", method = GET)
+    public
+    @ResponseBody
+    String resetAdminSettings() {
+        userDetailsService.adminReset();
+        return "RESET";
     }
 
 

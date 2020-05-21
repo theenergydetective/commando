@@ -21,6 +21,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {NGXLogger} from 'ngx-logger';
 import {OAuthResponse} from '../models/oauth-response';
 import {AdminRequest} from "../models/admin-request";
+import {ActivationDetails} from "../models/activation-details";
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,7 @@ export class AuthService implements OnDestroy {
   };
 
   public userSession: UserSession = new UserSession();
+  public tzList: Array<string> = [];
   public redirectUrl: string;
   private intervalTimer: number;
 
@@ -59,8 +61,8 @@ export class AuthService implements OnDestroy {
 
     }
     this.logger.trace('[constructor] Loaded Session: ' + JSON.stringify(this.userSession, null, 2));
-
     this.intervalTimer = window.setInterval(this.checkTokenRefresh.bind(this), 1000);
+
   }
 
   ngOnDestroy() {
@@ -134,33 +136,34 @@ export class AuthService implements OnDestroy {
   public refreshAccessToken() {
     this.logger.info('[refreshAccessToken] Attempting token refresh for ' + this.userSession.refreshToken);
 
-    const body = new HttpParams()
-      .set('grant_type', 'refresh_token')
-      .set('client_id', 'web')
-      .set('scope', 'api')
-      .set('refresh_token', this.userSession.refreshToken);
+      const body = new HttpParams()
+        .set('grant_type', 'refresh_token')
+        .set('client_id', 'web')
+        .set('scope', 'api')
+        .set('refresh_token', this.userSession.refreshToken);
 
-    const response = this.http.post('/oauth/token', body.toString(), this.FORM_HTTP_OPTIONS);
-    response.subscribe((data: OAuthResponse) => {
-        const oauthResponse = data;
-        this.logger.debug('[refreshAccessToken] Response: ' + JSON.stringify(oauthResponse));
-        if (oauthResponse.error) {
-          this.logger.warn('[refreshAccessToken] Refresh failed: ' + JSON.stringify(oauthResponse));
-          this.failUserSession();
-        } else {
-          this.logger.debug('[refreshAccessToken] Refresh Succeeded: ' + JSON.stringify(oauthResponse));
-          if ((oauthResponse.refresh_token != undefined) && (oauthResponse.refresh_token != null) && (oauthResponse.refresh_token.length) != 0) {
-            this.userSession.refreshToken = oauthResponse.refresh_token;
+      const response = this.http.post('/oauth/token', body.toString(), this.FORM_HTTP_OPTIONS);
+      response.subscribe((data: OAuthResponse) => {
+          const oauthResponse = data;
+          this.logger.debug('[refreshAccessToken] Response: ' + JSON.stringify(oauthResponse));
+          if (oauthResponse.error) {
+            this.logger.warn('[refreshAccessToken] Refresh failed: ' + JSON.stringify(oauthResponse));
+            this.failUserSession();
+          } else {
+            this.logger.debug('[refreshAccessToken] Refresh Succeeded: ' + JSON.stringify(oauthResponse));
+            if ((oauthResponse.refresh_token != undefined) && (oauthResponse.refresh_token != null) && (oauthResponse.refresh_token.length) != 0) {
+              this.userSession.refreshToken = oauthResponse.refresh_token;
+            }
+            this.userSession.accessToken = oauthResponse.access_token;
+            this.userSession.expiration = ((new Date()).getTime() / 1000) + oauthResponse.expires_in;
+            this.saveUserSession();
           }
-          this.userSession.accessToken = oauthResponse.access_token;
-          this.userSession.expiration = ((new Date()).getTime() / 1000) + oauthResponse.expires_in;
-          this.saveUserSession();
-        }
-      },
-      error => {
-        this.logger.warn('[refreshAccessToken] Authorization Error: ' + JSON.stringify(error));
-        this.failUserSession();
-      });
+        },
+        error => {
+          this.logger.warn('[refreshAccessToken] Authorization Error: ' + JSON.stringify(error));
+          this.failUserSession();
+        });
+
   }
 
   /**
@@ -187,7 +190,7 @@ export class AuthService implements OnDestroy {
 
 
   private checkTokenRefresh() {
-    this.logger.trace('[checkTokenRefresh] Checking token refresh');
+    this.logger.trace('[checkTokenRefresh] Checking token refresh: ' + JSON.stringify(this.userSession));
     if (this.userSession.isAuthenticated()) {
       if (this.userSession.isExpired()) {
         this.logger.debug('[checkTokenRefresh] Refreshing OAUTH Token');
@@ -203,14 +206,20 @@ export class AuthService implements OnDestroy {
   public getTimeZones() {
     this.logger.info('[getTimeZones] Looking up timezones');
     return new Promise(tzResult => {
-      const response = this.http.get('/api/admin/tz');
-      response.subscribe((data: Array<String>) => {
-          tzResult(data);
-        },
-        error => {
-          this.logger.warn('[getTimeZones] Get Error: ' + JSON.stringify(error));
-          tzResult([]);
-        });
+      if (this.tzList.length > 0){
+        //Cache the timezones locally since these won't change much.
+        tzResult(this.tzList);
+      } else {
+        const response = this.http.get('/api/admin/tz');
+        response.subscribe((data: Array<string>) => {
+            this.tzList = data;
+            tzResult(data);
+          },
+          error => {
+            this.logger.warn('[getTimeZones] Get Error: ' + JSON.stringify(error));
+            tzResult([]);
+          });
+      }
     });
   }
 
@@ -254,6 +263,44 @@ export class AuthService implements OnDestroy {
         });
     });
   }
+
+  /**
+   * Gets the activation details from the server
+   */
+  getActivationDetails() {
+    this.logger.info('[getActivationDetails] Looking up activation details');
+    return new Promise(adResult => {
+      const response = this.http.get('/api/activate', this.getAuthorizedHttpOptions());
+      response.subscribe((data: AdminRequest) => {
+          adResult(data);
+        },
+        error => {
+          this.logger.warn('[getActivationDetails] Get Error: ' + JSON.stringify(error));
+          adResult(new ActivationDetails());
+
+        });
+    });
+  }
+
+  /**
+   * Gets the activation details from the server
+   */
+  verifyAccessToken() {
+    this.logger.info('[verifyAccessToken] Looking up activation details');
+    return new Promise(adResult => {
+      const response = this.http.get('/api/version/ping', this.getAuthorizedHttpOptions());
+      response.subscribe(data => {
+          adResult(true);
+        },
+        error => {
+          this.logger.warn('[verifyAccessToken] Get Error: ' + JSON.stringify(error));
+          adResult(false);
+        });
+    });
+  }
+
+
+
 }
 
 

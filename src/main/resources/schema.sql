@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS ecc (
 CREATE TABLE IF NOT EXISTS mtu (
     id varchar(45)  NOT NULL,
     name varchar(45)  NOT NULL,
+    timezone varchar(45)  NOT NULL,
     last_value decimal(32,4) unsigned NOT NULL DEFAULT '0',
     last_post bigint(20) unsigned NOT NULL DEFAULT '0',
     energy_rate decimal(22,19) unsigned NOT NULL DEFAULT '0.10',

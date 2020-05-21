@@ -92,7 +92,6 @@ public class UserDetailsServiceTest {
             fail();
         }
 
-        assertEquals(properties.getProperty("ACTIVATION_KEY"), userDetailsService.getActivationKey());
         assertEquals("testKey", userDetailsService.getActivationKey());
         assertEquals("America/New_York", userDetailsService.getTimezone());
         assertFalse(userDetailsService.getServerName().isEmpty());
@@ -131,6 +130,20 @@ public class UserDetailsServiceTest {
         when(env.getProperty(UserDetailsService.ServerProperties.COMMANDO_PASSWORD.name())).thenReturn("TESTPASS");
         userDetailsService.init(); //Force reload of properties
         assertFalse(userDetailsService.setAdminRequest(adminRequest));
+    }
 
+    @Test
+    public void getActivationDetailsTest(){
+        when(env.getProperty(UserDetailsService.ServerProperties.COMMANDO_DOMAIN.name())).thenReturn("test.com");
+        userDetailsService.init();
+        assertEquals("test.com", userDetailsService.getActivationDetails().getDomain());
+    }
+
+    @Test
+    public void adminResetTest(){
+        when(env.getProperty(UserDetailsService.ServerProperties.COMMANDO_PASSWORD.name())).thenReturn("TESTPASSWORD");
+        userDetailsService.init();
+        userDetailsService.adminReset();
+        assertTrue(userDetailsService.getAdminRequestRequired().getAdminSetup());
     }
 }

@@ -18,6 +18,7 @@
 package com.ted.commando.controller;
 
 import com.ted.commando.dao.EnergyControlCenterDAO;
+import com.ted.commando.model.ActivationDetails;
 import com.ted.commando.model.ActivationRequest;
 import com.ted.commando.model.ActivationResponse;
 import com.ted.commando.model.EnergyControlCenter;
@@ -107,4 +108,10 @@ public class ActivationControllerTest {
 
     }
 
+    @Test
+    public void getActivationDetailsTest(){
+        when(userDetailsService.getActivationDetails()).thenReturn(new ActivationDetails());
+        assertNotNull(activationController.getActivationDetails());
+        verify(userDetailsService).getActivationDetails();
+    }
 }

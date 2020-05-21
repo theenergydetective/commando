@@ -76,4 +76,10 @@ public class AdminControllerTest {
     public void getTimeZonesTest() throws Exception{
         assertNotNull(adminController.getTimeZones());
     }
+
+    @Test
+    public void resetAdminSettingsTest(){
+        assertEquals("RESET", adminController.resetAdminSettings());
+        verify(userDetailsService).adminReset();
+    }
 }

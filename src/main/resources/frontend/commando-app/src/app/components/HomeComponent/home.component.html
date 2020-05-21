@@ -15,19 +15,46 @@
   ~
   -->
 
-<mat-toolbar color="primary">
-  <button mat-icon-button aria-label="close"  (click)="onLogout()">
-    <mat-icon class="whiteIcon">close</mat-icon>
-  </button>
-  <div>Billing</div>
-  <div class="fill-space"></div>
-  <button mat-button (click)="onEditClick()">EDIT</button>
-</mat-toolbar>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+               [attr.role]="'navigation'"
+               [mode]="'side'"
+               [opened]="false"
+  >
+    <mat-toolbar>Menu</mat-toolbar>
+    <app-menu></app-menu>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()">
+        <mat-icon style="color:white" aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span style="color:white">Billing</span>
+      <div class="fill-space"></div>
+    </mat-toolbar>
+    <!-- Add Content Here -->
+  </mat-sidenav-content>
+</mat-sidenav-container>
 
-<div class="content">
-  <h1>Billing Content Goes Here</h1>
+<div *ngIf="mtuList.length == 0" class="content">
 
+  <div class="mtuList" fxLayout="row" fxLayoutAlign="start center">
+    <mat-icon class="redIcon">warning</mat-icon>
+    <div style="padding-left:8px">No MTU or Spyders have been activated against this server. Please refer to the
+      <span class="actionLink" routerLink="/activation">instructions</span> on how to activate the mtu or spyder.
+    </div>
+  </div>
+</div>
 
+<div *ngIf="mtuList.length != 0" class="content">
+  <div class="mtuList">
+    <div class="instructions">Please select which MTUs and Spyders you would like to include on your billing report.
+    </div>
+  </div>
 </div>
 
 

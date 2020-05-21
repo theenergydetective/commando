@@ -21,11 +21,17 @@ import {AuthGuard} from "./guards/auth.guard";
 import {HomeComponent} from "./components/HomeComponent";
 import {LogInComponent} from "./components/LogInComponent";
 import {AdminComponent} from "./components/AdminComponent";
+import {ActivationComponent} from "./components/ActivationComponent";
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'activation',
+    component: ActivationComponent,
     canActivate: [AuthGuard]
   },
   {

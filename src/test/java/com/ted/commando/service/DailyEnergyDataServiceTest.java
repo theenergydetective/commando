@@ -65,7 +65,7 @@ public class DailyEnergyDataServiceTest {
     public void processDailyEnergyDataTest(){
         String LATZ = "America/Los_Angeles";
         String NYTZ = "America/New_York";
-
+        when(userDetailsService.getTimezone()).thenReturn(NYTZ);
 
         MeasuringTransmittingUnit mtu = new MeasuringTransmittingUnit();
         mtu.setId("TESTMTU");
@@ -73,21 +73,18 @@ public class DailyEnergyDataServiceTest {
         mtu.setLastDayValue(new BigDecimal(100000));
         mtu.setLastPost(1589860800L);
         mtu.setLastValue(new BigDecimal(150000));
+        mtu.setTimezone(NYTZ);
 
-        when(userDetailsService.getTimezone()).thenReturn(NYTZ);
         dailyEnergyDataService.processDailyEnergyData(mtu);
         verify(measuringTransmittingUnitDAO).updateLastDayPost(any());
         verify(dailyEnergyDataDAO).insert(any());
 
-
-        when(userDetailsService.getTimezone()).thenReturn(LATZ);
+        mtu.setTimezone(LATZ);
         reset(measuringTransmittingUnitDAO);
         reset(dailyEnergyDataDAO);
         dailyEnergyDataService.processDailyEnergyData(mtu);
         verify(measuringTransmittingUnitDAO, times(0)).updateLastDayPost(any());
         verify(dailyEnergyDataDAO, times(0)).insert(any());
-
-
 
         //Verify smoothing
         mtu.setLastPost(1589860800L);
@@ -111,7 +108,7 @@ public class DailyEnergyDataServiceTest {
         dailyEnergyData.setMtuId("TESTMTU");
         dailyEnergyData.setEpochDate(1589860800L);
 
-        when(userDetailsService.getTimezone()).thenReturn(NYTZ);
+        mtu.setTimezone(NYTZ);
         reset(measuringTransmittingUnitDAO);
         reset(dailyEnergyDataDAO);
         dailyEnergyDataService.processDailyEnergyData(mtu);

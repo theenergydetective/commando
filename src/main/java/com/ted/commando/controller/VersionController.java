@@ -37,4 +37,9 @@ public class VersionController {
         return versionService.getVersion();
     }
 
+    @RequestMapping(value="ping", method = GET)
+    public String getPing() {
+        return versionService.getVersion();
+    }
+
 }

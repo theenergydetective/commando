@@ -1,0 +1,134 @@
+<!--
+  ~ Copyright (c) 2020. Energy, Inc.
+  ~
+  ~      Licensed under the Apache License, Version 2.0 (the "License");
+  ~      you may not use this file except in compliance with the License.
+  ~      You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~      Unless required by applicable law or agreed to in writing, software
+  ~      distributed under the License is distributed on an "AS IS" BASIS,
+  ~      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~      See the License for the specific language governing permissions and
+  ~      limitations under the License.
+  ~
+  -->
+
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+               [attr.role]="'navigation'"
+               [mode]="'side'"
+               [opened]="false"
+  >
+    <mat-toolbar>Menu</mat-toolbar>
+    <app-menu></app-menu>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()">
+        <mat-icon style="color:white" aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span style="color:white">Server Settings</span>
+      <div class="fill-space"></div>
+    </mat-toolbar>
+    <!-- Add Content Here -->
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<div class="activationCard mat-elevation-z2" fxLayout="column" fxLayoutAlign="start center">
+
+  <div class="title">Activation Settings</div>
+  <div class="instructions">To have your TED system being posting to this server, please follow the device instructions
+    for activating third party posting. You will be prompted for two values:
+  </div>
+
+  <table class="activationTable">
+    <tr>
+      <th>Activation URL:</th>
+      <td>http://{{activationDetails.domain}}/api/activate</td>
+      <td>
+        <button
+          type="button"
+          aria-label="Toggle sidenav"
+          mat-icon-button
+          (click)="copyUrl()">
+          <mat-icon class="accentIcon" aria-label="Side nav toggle icon">file_copy</mat-icon>
+        </button>
+      </td>
+    </tr>
+
+    <tr *ngIf="activationDetails.activationKey.length > 0">
+      <th>Activation Key:</th>
+      <td>{{activationDetails.activationKey}}</td>
+      <td>
+        <button
+          type="button"
+          aria-label="Toggle sidenav"
+          mat-icon-button
+          (click)="copyKey()">
+          <mat-icon class="accentIcon" aria-label="Side nav toggle icon">file_copy</mat-icon>
+        </button>
+      </td>
+    </tr>
+
+    <tr *ngIf="activationDetails.activationKey.length == 0">
+      <th>Activation Key:</th>
+      <td colspan="2"><span class="noKey">No activation key specified. Leave field blank.</span></td>
+    </tr>
+  </table>
+
+</div>
+
+
+<div *ngIf="mtuList.length == 0" class="content">
+  <div class="activationCard mat-elevation-z2" fxLayout="row" fxLayoutAlign="start center">
+    <mat-icon class="redIcon">warning</mat-icon>
+    <div style="padding-left:8px">No MTU or Spyders have been activated against this server. Please refer to the
+      <span class="actionLink" routerLink="/activation">instructions</span> on how to activate the mtu or spyder.
+    </div>
+  </div>
+</div>
+
+<div *ngIf="mtuList.length != 0" class="content">
+  <div class="activationCard mat-elevation-z2" fxLayout="column" fxLayoutAlign="start center">
+    <div class="title" style="margin:auto">Posting Devices</div>
+
+    <table class="mtuTable">
+      <tr>
+        <th>Serial Number</th>
+        <th>Name</th>
+        <th>Energy Rate</th>
+        <th>Timezone</th>
+        <th>Last Post</th>
+        <th></th>
+      </tr>
+
+      <tr *ngFor="let device of mtuList">
+        <td>{{device.id}}</td>
+        <td>{{device.name}}</td>
+        <td>${{device.rate}}/kWh</td>
+        <td>{{device.timezone}}</td>
+        <td>{{formatLastPost(device.lastPost)}}</td>
+        <td>
+          <button
+            type="button"
+            aria-label="Toggle sidenav"
+            mat-icon-button
+            (click)="onDeviceEdit(device)">
+            <mat-icon class="accentIcon" aria-label="Side nav toggle icon">edit</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+</div>
+
+
+
+

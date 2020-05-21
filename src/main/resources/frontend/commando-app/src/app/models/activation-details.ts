@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020. Energy, Inc.
  *
  *      Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,31 +15,10 @@
  *
  */
 
-@import '~@angular/material/theming';
-
-$config: mat-typography-config();
-$default-padding: 5px;
-$double-padding: $default-padding * 2;
-$default-min-height: 30px;
-
-.content {
-  width:100%;
-  padding-top:16px;
+export class ActivationDetails {
+  public timezone: string = 'America/New_York';
+  public activationKey: string = '';
+  public domain:string = '';
 }
 
-.mtuList {
-  background-color: white;
-  width: calc(100% - 32px);
-  max-width:600px;
-  padding:16px;
-  margin:auto;
-}
-
-.instructions {
-  text-align: center;
-}
-
-.noActivate{
-
-}
 

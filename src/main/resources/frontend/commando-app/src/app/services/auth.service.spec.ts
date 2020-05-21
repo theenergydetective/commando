@@ -25,6 +25,7 @@ import {LoggerConfig, NGXLogger, NGXLoggerHttpService, NgxLoggerLevel, NGXMapper
 import {NGXLoggerHttpServiceMock, NGXMapperServiceMock} from 'ngx-logger/testing';
 import {DatePipe} from "@angular/common";
 import {AdminRequest} from "../models/admin-request";
+import {ActivationDetails} from "../models/activation-details";
 
 describe('AuthService', () => {
   let httpClient: HttpClient;
@@ -122,6 +123,7 @@ describe('AuthService', () => {
   it('can get timezones', () => {
     const tz:Array<string> = ['1','2','3'];
     const service: AuthService = TestBed.get(AuthService);
+    service.tzList = [];
     service.getTimeZones();
     const req = httpTestingController.expectOne('/api/admin/tz');
     expect(req.request.method).toEqual('GET');
@@ -145,12 +147,22 @@ describe('AuthService', () => {
   it('can post admin request', () => {
     const ar:AdminRequest = new AdminRequest();
     ar.adminSetup = true;
-
     const service: AuthService = TestBed.get(AuthService);
     service.postAdminRequest(ar)
     const req = httpTestingController.expectOne('/api/admin');
     expect(req.request.method).toEqual('POST');
     req.flush(ar);
+    httpTestingController.verify();
+  });
+
+  it('can get activation details', () => {
+    const ad:ActivationDetails = new ActivationDetails();
+
+    const service: AuthService = TestBed.get(AuthService);
+    service.getActivationDetails();
+    const req = httpTestingController.expectOne('/api/activate');
+    expect(req.request.method).toEqual('GET');
+    req.flush(ad);
     httpTestingController.verify();
   });
 });

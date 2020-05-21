@@ -49,6 +49,9 @@ public class EnergyPostService {
     @Inject
     EnergyControlCenterDAO energyControlCenterDAO;
 
+    @Inject
+    UserDetailsService userDetailsService;
+
     /***
      * Validates that the ECC exists and has a valid security key
      * @param energyPost
@@ -99,6 +102,7 @@ public class EnergyPostService {
             mtu = new MeasuringTransmittingUnit();
             mtu.setId(serialNumber);
             mtu.setName(serialNumber);
+            mtu.setTimezone(userDetailsService.getTimezone());
             measuringTransmittingUnitDAO.insert(mtu);
         }
         return mtu;

@@ -39,6 +39,7 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
     public static final String[] FIELDS = {
             "id",
             "name",
+            "timezone",
             "last_value",
             "last_post",
             "energy_rate",
@@ -67,7 +68,7 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
             dto.setRate(rs.getBigDecimal("energy_rate"));
             dto.setLastDayPost(rs.getLong("last_day_post"));
             dto.setLastDayValue(rs.getBigDecimal("last_day_value"));
-
+            dto.setTimezone(rs.getString("timezone"));
             return dto;
         }
     };
@@ -82,6 +83,7 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
         map.addValue("energy_rate", dto.getRate());
         map.addValue("last_day_post", dto.getLastDayPost());
         map.addValue("last_day_value", dto.getLastDayValue());
+        map.addValue("timezone", dto.getTimezone());
         return map;
     }
 

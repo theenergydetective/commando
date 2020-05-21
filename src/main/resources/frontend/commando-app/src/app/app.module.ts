@@ -47,7 +47,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AdminComponent} from "./components/AdminComponent";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {ConfirmDialogComponent} from "./components/confirm-dialog";
-
+import {MenuComponent} from "./components/menu/menu.component";
+import {ActivationComponent} from "./components/ActivationComponent";
 
 @NgModule({
   entryComponents:[
@@ -58,7 +59,9 @@ import {ConfirmDialogComponent} from "./components/confirm-dialog";
     LogInComponent,
     HomeComponent,
     AdminComponent,
-    ConfirmDialogComponent
+    ActivationComponent,
+    ConfirmDialogComponent,
+    MenuComponent
   ],
     imports: [
         BrowserModule,

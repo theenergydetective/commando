@@ -17,6 +17,7 @@
 
 package com.ted.commando.service;
 
+import com.ted.commando.model.ActivationDetails;
 import com.ted.commando.model.AdminRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,7 @@ import java.util.Properties;
 @PropertySource(value = "file:/opt/data/commando.user.properties", ignoreResourceNotFound = true)
 @Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
+
 
     enum ServerProperties {
         COMMANDO_USERNAME("admin"),
@@ -114,7 +116,7 @@ public class UserDetailsService implements org.springframework.security.core.use
         String adminUsername = properties.getProperty(ServerProperties.COMMANDO_USERNAME.name());
         String adminPassword = properties.getProperty(ServerProperties.COMMANDO_PASSWORD.name());
 
-        if (username == null || !adminUsername.equals(username.toLowerCase()) || adminPassword.isEmpty()) {
+        if (username == null || !adminUsername.toLowerCase().equals(username.toLowerCase()) || adminPassword.isEmpty()) {
             if (adminPassword.isEmpty()){
                 LOGGER.warn("[loadUserByUsername] ***ADMIN NOT CONFIGURED***");
             }
@@ -208,6 +210,20 @@ public class UserDetailsService implements org.springframework.security.core.use
             LOGGER.warn("[setAdminRequest] PASSWORD RESET ATTEMPT WHEN PASSWORD ALREADY EXISTS.");
             return false;
         }
+    }
+
+    public ActivationDetails getActivationDetails() {
+        ActivationDetails activationDetails = new ActivationDetails();
+        activationDetails.setDomain(properties.getProperty(ServerProperties.COMMANDO_DOMAIN.name()));
+        activationDetails.setActivationKey(properties.getProperty(ServerProperties.COMMANDO_ACTIVATION_KEY.name()));
+        activationDetails.setTimezone(properties.getProperty(ServerProperties.COMMANDO_TIMEZONE.name()));
+        return activationDetails;
+    }
+
+    public void adminReset(){
+        LOGGER.warn("[adminReset] The ADMIN settings are being reset.");
+        properties.setProperty(ServerProperties.COMMANDO_PASSWORD.name(), "");
+        writePropertyFile();
     }
 
 }

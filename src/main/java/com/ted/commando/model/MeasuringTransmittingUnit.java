@@ -28,7 +28,7 @@ public class MeasuringTransmittingUnit {
     private Long lastPost = 0L;
     private BigDecimal lastDayValue = new BigDecimal(0L);
     private Long lastDayPost = 0L;
-
+    private String timezone = "America/New_York";
 
     public String getId() {
         return id;
@@ -86,6 +86,14 @@ public class MeasuringTransmittingUnit {
         this.lastDayPost = lastDayPost;
     }
 
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
     @Override
     public String toString() {
         return "MeasuringTransmittingUnit{" +
@@ -96,6 +104,7 @@ public class MeasuringTransmittingUnit {
                 ", lastPost=" + lastPost +
                 ", lastDayValue=" + lastDayValue +
                 ", lastDayPost=" + lastDayPost +
+                ", timezone='" + timezone + '\'' +
                 '}';
     }
 
@@ -110,11 +119,12 @@ public class MeasuringTransmittingUnit {
                 Objects.equals(lastValue, that.lastValue) &&
                 Objects.equals(lastPost, that.lastPost) &&
                 Objects.equals(lastDayValue, that.lastDayValue) &&
-                Objects.equals(lastDayPost, that.lastDayPost);
+                Objects.equals(lastDayPost, that.lastDayPost) &&
+                Objects.equals(timezone, that.timezone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, rate, lastValue, lastPost, lastDayValue, lastDayPost);
+        return Objects.hash(id, name, rate, lastValue, lastPost, lastDayValue, lastDayPost, timezone);
     }
 }

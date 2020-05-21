@@ -48,7 +48,6 @@ public class PostDataController {
      * Receive and process a single energy post from an ECC or MTU
      *
      * @param energyPost
-     * @param request
      * @param response
      * @throws Exception
      */
