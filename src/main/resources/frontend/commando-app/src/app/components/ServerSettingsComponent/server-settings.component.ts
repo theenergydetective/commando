@@ -18,9 +18,7 @@
 import {AfterContentInit, Component} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {NGXLogger} from 'ngx-logger';
-import {FormBuilder, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
-import {ConfirmDialogComponent} from "../confirm-dialog";
 import {MatDialog} from "@angular/material/dialog";
 import {MtuService} from "../../services/mtu.service";
 import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-unit";
@@ -33,15 +31,12 @@ import {ActivationDetails} from "../../models/activation-details";
 })
 
 export class ServerSettingsComponent implements AfterContentInit {
-  form: FormGroup;
-
   public mtuList:Array<MeasuringTransmittingUnit> = [];
   public activationDetails: ActivationDetails = new ActivationDetails();
 
 
   constructor(private authService: AuthService,
               private mtuService:MtuService,
-              private formBuilder: FormBuilder,
               private router: Router,
               public dialog: MatDialog,
               private logger: NGXLogger) {

@@ -54,4 +54,20 @@ public class MeasuringTransmittingUnitController {
         return measuringTransmittingUnitDAO.findAll();
     }
 
+    @RequestMapping(value="{id}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    MeasuringTransmittingUnit getMTU(@PathVariable("id") String id){
+        return measuringTransmittingUnitDAO.findOne(id);
+    }
+
+
+    @RequestMapping(method = RequestMethod.POST)
+    public
+    @ResponseBody
+    MeasuringTransmittingUnit setMTU(@RequestBody MeasuringTransmittingUnit mtu){
+        measuringTransmittingUnitDAO.updateSettings(mtu);
+        return measuringTransmittingUnitDAO.findOne(mtu.getId());
+    }
+
 }

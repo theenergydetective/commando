@@ -49,6 +49,43 @@ export class MtuService {
     });
   }
 
+
+  /**
+   * Looks up the record for a single mtu
+   * @param deviceId mtu serial number
+   */
+  public findOne(deviceId:string) {
+    this.logger.debug('[findOne] Looking up mtu with id:' + deviceId);
+    return new Promise(mtuResult => {
+      const response = this.http.get('/api/mtu/' + deviceId, this.authService.getAuthorizedHttpOptions());
+      response.subscribe((data: MeasuringTransmittingUnit) => {
+          mtuResult(data);
+        },
+        error => {
+          this.logger.warn('[findOne] Get Error: ' + JSON.stringify(error));
+          mtuResult(new MeasuringTransmittingUnit());
+        });
+    });
+  }
+
+
+  /**
+   * Updates the mtu settings (name, rate, tz)
+   * @param mtu
+   */
+  public updateSettings(mtu:MeasuringTransmittingUnit) {
+    this.logger.debug('[updateSettings] Updating MTU:'  + JSON.stringify(mtu));
+    return new Promise(mtuResult => {
+      const response = this.http.post('/api/mtu', JSON.stringify(mtu), this.authService.getAuthorizedHttpOptions());
+      response.subscribe((data: MeasuringTransmittingUnit) => {
+          mtuResult(data);
+        },
+        error => {
+          this.logger.warn('[updateSettings] Get Error: ' + JSON.stringify(error));
+          mtuResult(new MeasuringTransmittingUnit());
+        });
+    });
+  }
 }
 
 

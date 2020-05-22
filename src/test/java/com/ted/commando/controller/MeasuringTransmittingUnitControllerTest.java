@@ -22,6 +22,7 @@ import com.ted.commando.dao.MeasuringTransmittingUnitDAO;
 import com.ted.commando.model.ActivationRequest;
 import com.ted.commando.model.ActivationResponse;
 import com.ted.commando.model.EnergyControlCenter;
+import com.ted.commando.model.MeasuringTransmittingUnit;
 import com.ted.commando.service.KeyService;
 import com.ted.commando.service.UserDetailsService;
 import org.junit.Before;
@@ -58,6 +59,23 @@ public class MeasuringTransmittingUnitControllerTest {
     public void getMTUsTest(){
         when(measuringTransmittingUnitDAO.findAll()).thenReturn(new ArrayList<>());
         assertNotNull(measuringTransmittingUnitController.getMTUs());
+    }
+
+    @Test
+    public void getMTUTest(){
+        when(measuringTransmittingUnitDAO.findOne(anyString())).thenReturn(new MeasuringTransmittingUnit());
+        assertNotNull(measuringTransmittingUnitController.getMTU("TEST"));
+        verify(measuringTransmittingUnitDAO).findOne("TEST");
+    }
+
+    @Test
+    public void setMTUTest(){
+        MeasuringTransmittingUnit measuringTransmittingUnit = new MeasuringTransmittingUnit();
+        measuringTransmittingUnit.setId("TEST");
+        when(measuringTransmittingUnitDAO.findOne(anyString())).thenReturn(measuringTransmittingUnit);
+        assertNotNull(measuringTransmittingUnitController.setMTU(measuringTransmittingUnit));
+        verify(measuringTransmittingUnitDAO).updateSettings(measuringTransmittingUnit);
+        verify(measuringTransmittingUnitDAO).findOne("TEST");
     }
 
 }

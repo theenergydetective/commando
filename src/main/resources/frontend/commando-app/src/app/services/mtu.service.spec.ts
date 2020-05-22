@@ -77,6 +77,29 @@ describe('MtuService', () => {
     httpTestingController.verify();
   });
 
+  it('can find mtu', () => {
+    let mtu:MeasuringTransmittingUnit =new MeasuringTransmittingUnit();
+    mtu.id = 'TEST';
+    const service: MtuService = TestBed.get(MtuService);
+    service.findOne('TEST');
+    const req = httpTestingController.expectOne('/api/mtu/TEST');
+    expect(req.request.method).toEqual('GET');
+    req.flush(mtu);
+    httpTestingController.verify();
+  });
+
+
+  it('can post mtu', () => {
+    let mtu:MeasuringTransmittingUnit =new MeasuringTransmittingUnit();
+    mtu.id = 'TEST';
+    const service: MtuService = TestBed.get(MtuService);
+    service.updateSettings(mtu);
+    const req = httpTestingController.expectOne('/api/mtu');
+    expect(req.request.method).toEqual('POST');
+    req.flush(mtu);
+    httpTestingController.verify();
+  });
+
 
 });
 

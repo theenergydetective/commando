@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2020. Energy, Inc.
  *
  *      Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,27 +15,4 @@
  *
  */
 
-import {MeasuringTransmittingUnit} from "../models/measuring-transmitting-unit";
-
-/***
- * Simple mock for the mtu service used for testing.
- */
-export class MockMtuService {
-
-  findAllMTU(){
-    return new Promise(r=>{
-      let m:Array<MeasuringTransmittingUnit> = [];
-      r(m)
-    })
-  }
-
-
-  findOne(id:string){
-    return new Promise(r=>{r(new MeasuringTransmittingUnit())});
-  }
-
-  updateSettings(mtu:MeasuringTransmittingUnit){
-    return new Promise(r=>{r(new MeasuringTransmittingUnit())});
-  }
-
-}
+export * from './device-edit.component';

@@ -22,6 +22,7 @@ import {HomeComponent} from "./components/HomeComponent";
 import {LogInComponent} from "./components/LogInComponent";
 import {AdminComponent} from "./components/AdminComponent";
 import {ServerSettingsComponent} from "./components/ServerSettingsComponent";
+import {DeviceEditComponent} from "./components/DeviceEditComponent";
 
 
 const routes: Routes = [
@@ -33,6 +34,11 @@ const routes: Routes = [
   {
     path: 'serverSettings' ,
     component: ServerSettingsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'edit/:deviceId' ,
+    component: DeviceEditComponent,
     canActivate: [AuthGuard]
   },
   {

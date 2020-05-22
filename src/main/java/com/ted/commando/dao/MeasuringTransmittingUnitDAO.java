@@ -35,7 +35,6 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
     @Inject
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-
     public static final String[] FIELDS = {
             "id",
             "name",
@@ -52,7 +51,7 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
     private static String FIND_ONE = BASE_QUERY + " where m.id = :id";
     private static String FIND_ALL = BASE_QUERY + " order by name asc";
     private static String INSERT = "insert into mtu (" + generateFields("", FIELDS, 0) + ") VALUES (" + generateFields(":", FIELDS, 0) + ")";
-    private static String UPDATE_SETTINGS = "update mtu set name=:name, energy_rate=:energy_rate  where id = :id";
+    private static String UPDATE_SETTINGS = "update mtu set name=:name, energy_rate=:energy_rate,timezone=:timezone  where id = :id";
     private static String UPDATE_LAST_POST = "update mtu set last_post=:last_post, last_value=:last_value  where id = :id";
     private static String UPDATE_LAST_DAY = "update mtu set last_day_post=:last_day_post, last_day_value=:last_day_value  where id = :id";
     private static String DELETE = "delete from mtu where id = :id";

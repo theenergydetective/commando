@@ -1,0 +1,68 @@
+<!--
+  ~ Copyright (c) 2020. Energy, Inc.
+  ~
+  ~      Licensed under the Apache License, Version 2.0 (the "License");
+  ~      you may not use this file except in compliance with the License.
+  ~      You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~      Unless required by applicable law or agreed to in writing, software
+  ~      distributed under the License is distributed on an "AS IS" BASIS,
+  ~      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~      See the License for the specific language governing permissions and
+  ~      limitations under the License.
+  ~
+  -->
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="onClose()">
+        <mat-icon style="color:white" aria-label="Side nav toggle icon">close</mat-icon>
+      </button>
+      <span style="color:white">Device Edit: {{deviceId}}</span>
+      <div class="fill-space"></div>
+    </mat-toolbar>
+
+<div class="activationCard mat-elevation-z2" fxLayout="column" fxLayoutAlign="start start">
+
+  <div class="title">Device Settings</div>
+  <form [formGroup]="form" (submit)="submit()"  style="width:100%;margin-top:16px;">
+
+    <div fxLayout="row" fxLayoutAlign="space-evenly" style="width:100%">
+      <mat-form-field>
+        <input matInput type="text" id="name" formControlName="name" placeholder="Name" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput type="number" id="rate" formControlName="rate" placeholder="Energy Rate" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Timezone</mat-label>
+        <mat-select formControlName="timezone" id="timezone">
+          <mat-option *ngFor="let tz of timezones" [value]="tz">
+            {{tz}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end" style="padding-right: 16px">
+
+      <button mat-button [disabled]="!form.valid" color="accent" type="submit"
+              class="btn btn-success">Save
+      </button>
+    </div>
+
+  </form>
+
+
+
+</div>
+
+
+
+

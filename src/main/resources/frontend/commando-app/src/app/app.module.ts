@@ -49,6 +49,8 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {ConfirmDialogComponent} from "./components/confirm-dialog";
 import {MenuComponent} from "./components/menu/menu.component";
 import {ServerSettingsComponent} from "./components/ServerSettingsComponent";
+import {DeviceEditComponent} from "./components/DeviceEditComponent";
+
 
 
 @NgModule({
@@ -60,6 +62,7 @@ import {ServerSettingsComponent} from "./components/ServerSettingsComponent";
     LogInComponent,
     HomeComponent,
     AdminComponent,
+    DeviceEditComponent,
     ServerSettingsComponent,
     ConfirmDialogComponent,
     MenuComponent
