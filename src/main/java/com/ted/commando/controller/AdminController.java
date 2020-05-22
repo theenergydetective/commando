@@ -17,18 +17,15 @@
 
 package com.ted.commando.controller;
 
-import com.ted.commando.model.ActivationRequest;
-import com.ted.commando.model.ActivationResponse;
 import com.ted.commando.model.AdminRequest;
 import com.ted.commando.service.UserDetailsService;
-import com.ted.commando.service.VersionService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TimeZone;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;

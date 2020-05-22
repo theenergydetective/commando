@@ -20,11 +20,9 @@ import {AuthService} from '../../services/auth.service';
 import {NGXLogger} from 'ngx-logger';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ConfirmDialogComponent} from "../confirm-dialog";
 import {MatDialog} from "@angular/material/dialog";
 import {MtuService} from "../../services/mtu.service";
 import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-unit";
-import {ActivationDetails} from "../../models/activation-details";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -39,6 +37,14 @@ export class DeviceEditComponent implements OnInit, AfterContentInit {
   public deviceId:string = '';
   public timezones: Array<string>=[];
   public mtu:MeasuringTransmittingUnit = new MeasuringTransmittingUnit();
+  public months:Array<string>=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  public month: string = this.months[new Date().getMonth()];
+  public year: string = new Date().getFullYear().toString();
+
+
+  public years:Array<string>=[];
+
+
 
 
   constructor(private authService: AuthService,
@@ -49,6 +55,12 @@ export class DeviceEditComponent implements OnInit, AfterContentInit {
               public dialog: MatDialog,
               private _snackBar: MatSnackBar,
               private logger: NGXLogger) {
+
+    let y = new Date().getFullYear();
+    for (let i=0; i < 10; i++){
+      this.years.push(y.toString());
+      y--;
+    }
 
   }
 
@@ -114,5 +126,14 @@ export class DeviceEditComponent implements OnInit, AfterContentInit {
          this._snackBar.dismiss();
        });
      });
+  }
+
+  onNewMonth() {
+    this.logger.debug("[onNewMonth] " + this.month + ' selected');
+
+  }
+
+  onNewYear() {
+    this.logger.debug("[onNewYear] " + this.year + ' selected');
   }
 }

@@ -17,20 +17,13 @@
 
 package com.ted.commando.controller;
 
-import com.ted.commando.dao.EnergyControlCenterDAO;
 import com.ted.commando.dao.MeasuringTransmittingUnitDAO;
-import com.ted.commando.model.ActivationRequest;
-import com.ted.commando.model.ActivationResponse;
-import com.ted.commando.model.EnergyControlCenter;
 import com.ted.commando.model.MeasuringTransmittingUnit;
-import com.ted.commando.service.KeyService;
-import com.ted.commando.service.UserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /***

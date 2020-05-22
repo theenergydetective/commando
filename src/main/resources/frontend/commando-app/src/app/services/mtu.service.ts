@@ -15,12 +15,9 @@
  *
  */
 
-import {Injectable, OnDestroy} from '@angular/core';
-import {UserSession, UserSessionState} from '../models/user-session';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {NGXLogger} from 'ngx-logger';
-import {OAuthResponse} from '../models/oauth-response';
-import {AdminRequest} from "../models/admin-request";
 import {AuthService} from "./auth.service";
 import {MeasuringTransmittingUnit} from "../models/measuring-transmitting-unit";
 

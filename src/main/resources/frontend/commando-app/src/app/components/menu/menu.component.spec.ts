@@ -15,19 +15,14 @@
  *
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MenuComponent } from './menu.component';
+import {MenuComponent} from './menu.component';
 import {HttpClientModule} from "@angular/common/http";
 import {MatDialogModule} from "@angular/material/dialog";
 import {RouterTestingModule} from "@angular/router/testing";
 import {DatePipe} from "@angular/common";
 import {LoggerConfig, NGXLogger, NGXLoggerHttpService, NgxLoggerLevel, NGXMapperService} from "ngx-logger";
-import {FormBuilder} from "@angular/forms";
-import {AuthService} from "../../services/auth.service";
-import {MockAuthService} from "../../mocks/mock-auth-service";
-import {MtuService} from "../../services/mtu.service";
-import {MockMtuService} from "../../mocks/mock-mtu-service";
 import {NGXLoggerHttpServiceMock, NGXMapperServiceMock} from "ngx-logger/testing";
 
 describe('MenuComponent', () => {

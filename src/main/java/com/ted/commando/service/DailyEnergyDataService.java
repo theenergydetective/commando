@@ -22,6 +22,7 @@ import com.ted.commando.dao.DailyEnergyDataDAO;
 import com.ted.commando.dao.MeasuringTransmittingUnitDAO;
 import com.ted.commando.model.DailyEnergyData;
 import com.ted.commando.model.MeasuringTransmittingUnit;
+import com.ted.commando.util.FormatUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -29,7 +30,10 @@ import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -107,4 +111,30 @@ public class DailyEnergyDataService {
 
     }
 
+    public List<DailyEnergyData> findByIdDate(String mtuId, String startDate, String endDate) {
+        if (startDate == null || endDate == null) return dailyEnergyDataDAO.findByMtu(mtuId);
+
+        MeasuringTransmittingUnit mtu = measuringTransmittingUnitDAO.findOne(mtuId);
+        TimeZone mtuTimeZone = TimeZone.getTimeZone(mtu.getTimezone());
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy");
+        simpleDateFormat.setTimeZone(mtuTimeZone);
+
+        List<DailyEnergyData>  dailyEnergyData= dailyEnergyDataDAO.findByIdDate(mtuId,
+                FormatUtil.parseStringDate(startDate, mtuTimeZone ),
+                FormatUtil.parseStringDate(endDate, mtuTimeZone));
+
+        for (DailyEnergyData data: dailyEnergyData){
+            long epochMs = data.getEpochDate() * 1000L;
+            data.setFormattedDate(simpleDateFormat.format(new Date(epochMs)));
+        }
+
+        return  dailyEnergyData;
+    }
+
+    public DailyEnergyData update(DailyEnergyData dailyEnergyData) {
+        LOGGER.info("[update] Updating {}", dailyEnergyData);
+        dailyEnergyDataDAO.update(dailyEnergyData);
+        return dailyEnergyData;
+    }
 }

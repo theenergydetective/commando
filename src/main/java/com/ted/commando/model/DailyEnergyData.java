@@ -24,6 +24,7 @@ public class DailyEnergyData {
     private String mtuId;
     private Long epochDate;
     private BigDecimal energyValue;
+    private String formattedDate;
 
     public DailyEnergyData() {
     }
@@ -57,6 +58,15 @@ public class DailyEnergyData {
     public void setEnergyValue(BigDecimal energyValue) {
         this.energyValue = energyValue;
     }
+
+    public String getFormattedDate() {
+        return formattedDate;
+    }
+
+    public void setFormattedDate(String formattedDate) {
+        this.formattedDate = formattedDate;
+    }
+
 
     @Override
     public boolean equals(Object o) {

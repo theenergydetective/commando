@@ -65,4 +65,27 @@
 
 
 
+<div class="activationCard mat-elevation-z2" fxLayout="column" fxLayoutAlign="start start">
+  <div fxLayout="row" fxLayoutAlign="start center" style="width:100%">
+    <div class="title">Device History</div>
+    <div class="fill-space"></div>
+
+    <mat-select [(value)]="month" id="month" (valueChange)="onNewMonth()" style="width:100px">
+      <mat-option *ngFor="let m of months" [value]="m">
+        {{m}}
+      </mat-option>
+    </mat-select>
+    <mat-select [(value)]="year" id="year" (valueChange)="onNewYear()" style="width:100px;margin-left:8px">
+      <mat-option *ngFor="let y of years" [value]="y">
+        {{y}}
+      </mat-option>
+    </mat-select>
+  </div>
+
+
+
+
+
+</div>
+
 

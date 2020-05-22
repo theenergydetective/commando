@@ -78,6 +78,8 @@ public class DailyEnergyDataDAOTest {
         assertEquals(5, dailyEnergyDataDAO.findByMtu(TEST_ID).size());
         assertEquals(6000.0 , dailyEnergyDataDAO.sumTotalEnergy(TEST_ID, 1, 4).doubleValue(), 1.0);
 
+        assertEquals(3, dailyEnergyDataDAO.findByIdDate(TEST_ID, 1L, 4L).size());
+
         DailyEnergyData dailyEnergyData = dailyEnergyDataDAO.findOne(TEST_ID, 1L);
         dailyEnergyData.setEnergyValue(new BigDecimal(100000.0));
         dailyEnergyDataDAO.update(dailyEnergyData);

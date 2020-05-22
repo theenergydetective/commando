@@ -45,6 +45,7 @@ public class DailyEnergyDataDAO extends SimpleAbstractDAO {
     private static String BASE_QUERY = "select " + generateFields("ed.", FIELDS, 0) + " from daily_energy_data ed ";
     private static String FIND_ONE = BASE_QUERY + " where ed.mtu_id=:mtu_id and ed.epoch_date=:epoch_date";
     private static String FIND_BY_MTU = BASE_QUERY + " where mtu_id = :mtu_id order by epoch_date desc";
+    private static String FIND_BY_MTU_DATE = BASE_QUERY + " where mtu_id = :mtu_id and epoch_date >= :start_date and epoch_date < :end_date order by epoch_date desc";
 
     private static String FIND_TOTAL_ENERGY = "select sum(energy_value) from daily_energy_data where mtu_id = :mtu_id and epoch_date >= :start and epoch_date < :end";
 
@@ -127,4 +128,11 @@ public class DailyEnergyDataDAO extends SimpleAbstractDAO {
         namedParameterJdbcTemplate.update(UPDATE, createMap(dto));
     }
 
+    public List<DailyEnergyData> findByIdDate(String mtuId, Long startDate, Long endDate) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("mtu_id", mtuId);
+        parameterSource.addValue("start_date", startDate);
+        parameterSource.addValue("end_date", endDate);
+        return namedParameterJdbcTemplate.query(FIND_BY_MTU_DATE, parameterSource, rowMapper);
+    }
 }

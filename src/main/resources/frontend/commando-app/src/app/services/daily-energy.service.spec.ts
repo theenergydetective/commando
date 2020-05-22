@@ -21,10 +21,10 @@ import {HttpClient} from '@angular/common/http';
 import {LoggerConfig, NGXLogger, NGXLoggerHttpService, NgxLoggerLevel, NGXMapperService} from 'ngx-logger';
 import {NGXLoggerHttpServiceMock, NGXMapperServiceMock} from 'ngx-logger/testing';
 import {DatePipe} from "@angular/common";
-import {MtuService} from "./mtu.service";
-import {MeasuringTransmittingUnit} from "../models/measuring-transmitting-unit";
+import {DailyEnergyService} from "./daily-energy.service";
+import {DailyEnergyData} from "../models/daily-energy-data";
 
-describe('MtuService', () => {
+describe('DailyEnergyService', () => {
   let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
 
@@ -53,51 +53,31 @@ describe('MtuService', () => {
   });
 
   it('should be created', () => {
-    const service: MtuService = TestBed.get(MtuService);
+    const service: DailyEnergyService = TestBed.get(DailyEnergyService);
     expect(service).toBeTruthy();
   });
 
 
-  it('can find mtus', () => {
-    let mtuArray:Array<MeasuringTransmittingUnit> = [];
-    for (let i=0; i < 10; i++){
-      let mtu:MeasuringTransmittingUnit = new MeasuringTransmittingUnit();
-      mtu.id ='TEST' + i;
-      mtu.name = mtu.id;
-      mtuArray.push(mtu);
-    }
-
-    const service: MtuService = TestBed.get(MtuService);
-    service.findAllMTU();
-    const req = httpTestingController.expectOne('/api/mtu');
+  it('can find dailyenergydata by range', () => {
+    let ded:Array<DailyEnergyData> = [];
+    const service: DailyEnergyService = TestBed.get(DailyEnergyService);
+    let startDate:Date = new Date(2020, 1, 1);
+    let endDate:Date = new Date(2020, 1, 28);
+    service.findByIdDate('TEST', startDate, endDate);
+    const req = httpTestingController.expectOne('/api/dailyEnergyData/TEST?startDate=2020-02-01&endDate=2020-02-28');
     expect(req.request.method).toEqual('GET');
-    req.flush(mtuArray);
+    req.flush(ded);
     httpTestingController.verify();
   });
 
-  it('can find mtu', () => {
-    let mtu:MeasuringTransmittingUnit =new MeasuringTransmittingUnit();
-    mtu.id = 'TEST';
-    const service: MtuService = TestBed.get(MtuService);
-    service.findOne('TEST');
-    const req = httpTestingController.expectOne('/api/mtu/TEST');
-    expect(req.request.method).toEqual('GET');
-    req.flush(mtu);
-    httpTestingController.verify();
-  });
-
-
-  it('can post mtu', () => {
-    let mtu:MeasuringTransmittingUnit =new MeasuringTransmittingUnit();
-    mtu.id = 'TEST';
-    const service: MtuService = TestBed.get(MtuService);
-    service.updateSettings(mtu);
-    const req = httpTestingController.expectOne('/api/mtu');
+  it('can post dailyenergydata', () => {
+    const service: DailyEnergyService = TestBed.get(DailyEnergyService);
+    service.update(new DailyEnergyData());
+    const req = httpTestingController.expectOne('/api/dailyEnergyData');
     expect(req.request.method).toEqual('POST');
-    req.flush(mtu);
+    req.flush(new DailyEnergyData());
     httpTestingController.verify();
   });
-
 
 });
 

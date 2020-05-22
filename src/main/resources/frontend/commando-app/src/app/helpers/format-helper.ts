@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2020. Energy, Inc.
  *
@@ -15,14 +16,33 @@
  *
  */
 
-import {browser, by, element} from 'protractor';
+/**
+ * A collection of string-processing helpers.
+ */
+export class FormatHelper {
 
-export class AppPage {
-  navigateTo() {
-    return browser.get(browser.baseUrl) as Promise<any>;
+  /**
+   * Left pads the string with zeros until it is the specified length
+   * @param s
+   * @param l
+   */
+  public static padZeros(s:string, length:number){
+    while (s.length < length){
+      s = '0' + s;
+    }
+    return s;
   }
 
-  getTitleText() {
-    return element(by.css('app-root .content span')).getText() as Promise<string>;
+
+  public static formatDateQueryParam(d:Date){
+    if (d==null) return '0000-00-00';
+    let s:string = d.getFullYear().toString();
+    s += '-';
+    s += FormatHelper.padZeros((d.getMonth()+1).toString(), 2);
+    s += '-';
+    s += FormatHelper.padZeros(d.getDate().toString(), 2);
+    return s;
   }
+
+
 }

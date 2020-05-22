@@ -19,9 +19,6 @@ package com.ted.commando.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivationDetails {

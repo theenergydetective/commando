@@ -20,11 +20,9 @@ import {AuthService} from '../../services/auth.service';
 import {NGXLogger} from 'ngx-logger';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
-import {ConfirmDialogComponent} from "../confirm-dialog";
 import {MatDialog} from "@angular/material/dialog";
 import {MtuService} from "../../services/mtu.service";
 import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-unit";
-import {ActivationDetails} from "../../models/activation-details";
 
 @Component({
   selector: 'app-home',

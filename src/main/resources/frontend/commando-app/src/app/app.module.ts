@@ -52,7 +52,6 @@ import {ServerSettingsComponent} from "./components/ServerSettingsComponent";
 import {DeviceEditComponent} from "./components/DeviceEditComponent";
 
 
-
 @NgModule({
   entryComponents:[
     ConfirmDialogComponent
