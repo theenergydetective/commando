@@ -129,6 +129,7 @@ public class DailyEnergyDataDAO extends SimpleAbstractDAO {
     }
 
     public List<DailyEnergyData> findByIdDate(String mtuId, Long startDate, Long endDate) {
+        LOGGER.debug("[findByIdDate] mtuId:{} startDate:{} endDate:{}", mtuId, startDate, endDate);
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("mtu_id", mtuId);
         parameterSource.addValue("start_date", startDate);

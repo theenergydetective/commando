@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
@@ -78,7 +79,7 @@ public class TestDataGenerator {
     }
 
     private void zeroOutCalendar(Calendar calendar){
-        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
@@ -86,7 +87,7 @@ public class TestDataGenerator {
 
     //@Ignore
     @Test
-    public void readFromInputStreamTest() throws Exception{
+    public void generateTestData() throws Exception{
         cleanUpData();
 
         //Stubbed out
@@ -96,6 +97,7 @@ public class TestDataGenerator {
 
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(userDetailsService.getTimezone()));
+        calendar.setTimeInMillis(new Date().getTime());
         zeroOutCalendar(calendar);
         long startTime = calendar.getTimeInMillis();
 
@@ -108,20 +110,15 @@ public class TestDataGenerator {
         energyControlCenterDAO.insert(ecc);
 
         //Create MTU and Spyders
-
-//        for (int i = 0; i < MAX_MTU_COUNT; i++){
-//            MeasuringTransmittingUnit measuringTransmittingUnit = new MeasuringTransmittingUnit();
-//            measuringTransmittingUnit.setId("TESTMTU" + i);
-//            measuringTransmittingUnit.setName("TESTMTU" + i);
-//            measuringTransmittingUnitDAO.insert(measuringTransmittingUnit);
-//        }
-
         calendar.add(Calendar.DATE, -180); //last several montns
         zeroOutCalendar(calendar);
 
         long wattsPerDay = 0;
+        long wattsIncrement = 30000;
 
         while (calendar.getTimeInMillis() <= startTime){
+            wattsIncrement += 10000;
+
             EnergyPost energyPost = new EnergyPost();
             energyPost.setSecurityKey(TEST_KEY);
             energyPost.setGateway(ECC_ID);
@@ -132,7 +129,7 @@ public class TestDataGenerator {
             for (int i=0; i < MAX_MTU_COUNT; i++){
                 EnergyMTUPost mtuPost = new EnergyMTUPost();
                 mtuPost.setCumulativePostList(new ArrayList<>());
-                mtuPost.setMtuSerial("TESTMTU" + i);
+                mtuPost.setMtuSerial("TESTDEV" + i);
                 mtuPost.setMtuTypeOrdinal(0);
                 EnergyCumulativePost energyCumulativePost = new EnergyCumulativePost();
                 energyCumulativePost.setTimestamp(calendar.getTimeInMillis()/1000);
@@ -151,7 +148,7 @@ public class TestDataGenerator {
 
             postDataController.postData(energyPost, servletResponse);
 
-            wattsPerDay += 30000;
+            wattsPerDay += wattsIncrement;
             calendar.add(Calendar.DATE, 1);
             zeroOutCalendar(calendar);
         }

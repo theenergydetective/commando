@@ -24,6 +24,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {MtuService} from "../../services/mtu.service";
 import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-unit";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {DailyEnergyService} from "../../services/daily-energy.service";
+import {DailyEnergyData} from "../../models/daily-energy-data";
 
 @Component({
   selector: 'app-device-edit',
@@ -37,6 +39,7 @@ export class DeviceEditComponent implements OnInit, AfterContentInit {
   public deviceId:string = '';
   public timezones: Array<string>=[];
   public mtu:MeasuringTransmittingUnit = new MeasuringTransmittingUnit();
+  public dailyEnergyData:Array<DailyEnergyData> = [];
   public months:Array<string>=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   public month: string = this.months[new Date().getMonth()];
   public year: string = new Date().getFullYear().toString();
@@ -49,6 +52,7 @@ export class DeviceEditComponent implements OnInit, AfterContentInit {
 
   constructor(private authService: AuthService,
               private mtuService:MtuService,
+              private dailyEnergyService:DailyEnergyService,
               private formBuilder: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
@@ -89,7 +93,8 @@ export class DeviceEditComponent implements OnInit, AfterContentInit {
             this.setMTU(mtu);
           });
 
-          //TODO: Load Data for current month, year
+          this.searchByDateRange(this.months[new Date().getMonth()],new Date().getFullYear().toString());
+
 
         })
 
@@ -128,12 +133,35 @@ export class DeviceEditComponent implements OnInit, AfterContentInit {
      });
   }
 
+
+  searchByDateRange(m:string,y:string){
+    this.logger.debug('[searchByDateRange] Month:' + m + ' Year: ' + y);
+    let month:number = 0;
+    for (let i=0; i < this.months.length; i++){
+      if (m == this.months[i]){
+        month = i;
+        break;
+      }
+    }
+
+    let startDate:Date = new Date(parseInt(y), month, 1, 0,0,0,0);
+    let endDate:Date = new Date(parseInt(y), month+1, 1, 0,0,0,0);
+    this.dailyEnergyService.findByIdDate(this.deviceId, startDate, endDate)
+      .then((r:Array<DailyEnergyData>)=>{
+        this.dailyEnergyData = r;
+      });
+
+  }
+
+
   onNewMonth() {
     this.logger.debug("[onNewMonth] " + this.month + ' selected');
+    this.searchByDateRange(this.month, this.year);
 
   }
 
   onNewYear() {
     this.logger.debug("[onNewYear] " + this.year + ' selected');
+    this.searchByDateRange(this.month, this.year);
   }
 }

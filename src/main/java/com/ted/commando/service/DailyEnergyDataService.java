@@ -56,24 +56,34 @@ public class DailyEnergyDataService {
     MeasuringTransmittingUnitDAO measuringTransmittingUnitDAO;
 
 
-    @Async
+    //@Async
     public void processDailyEnergyData(MeasuringTransmittingUnit mtu) {
         TimeZone timeZone = TimeZone.getTimeZone(userDetailsService.getTimezone());
         if (mtu.getTimezone() != null && !mtu.getTimezone().isEmpty()) {
             timeZone = TimeZone.getTimeZone(mtu.getTimezone());
         }
-        LOGGER.debug("[processDailyEnergyData] Using timezone {}", timeZone);
+        LOGGER.debug("[processDailyEnergyData] Using timezone {}", timeZone.getDisplayName());
 
+        boolean isGreater = (mtu.getLastPost().longValue() > mtu.getLastDayPost().longValue());
         //Make sure the clock has not jumped back giving us a weird timestamp (DST)
-        if (mtu.getLastPost().longValue() > mtu.getLastDayValue().longValue()) {
+        LOGGER.debug("[processDailyEnergyData] isGreater:{}", isGreater);
+        if (isGreater) {
+
 
             Calendar calendar = Calendar.getInstance(timeZone);
             calendar.setTimeInMillis(mtu.getLastDayPost() * 1000);
             int lastDay = calendar.get(Calendar.DAY_OF_YEAR);
+            int lastYear = calendar.get(Calendar.YEAR);
+
             calendar.setTimeInMillis(mtu.getLastPost() * 1000);
             int today = calendar.get(Calendar.DAY_OF_YEAR);
+            int thisYear = calendar.get(Calendar.YEAR);
+            if (lastYear != thisYear) today+=365;
 
-            if (today > lastDay) {
+
+            boolean nextDay = (today > lastDay);
+            LOGGER.debug("[processDailyEnergyData] nextDay:{} today:{} lastDay:{}", nextDay, today, lastDay);
+            if (nextDay) {
                 int days = today - lastDay;
                 BigDecimal energyValue = mtu.getLastValue().subtract(mtu.getLastDayValue()).divide(new BigDecimal(days));
                 LOGGER.debug("[processDailyEnergyData] Daily Energy Value {} smoothing:{}", energyValue, days > 1);
@@ -106,13 +116,15 @@ public class DailyEnergyDataService {
                 measuringTransmittingUnitDAO.updateLastDayPost(mtu);
 
             }
-
         }
 
     }
 
     public List<DailyEnergyData> findByIdDate(String mtuId, String startDate, String endDate) {
+        LOGGER.debug("[findByIdDate] mtu: {}, startDate:{}, endDate:{}", mtuId, startDate, endDate);
         if (startDate == null || endDate == null) return dailyEnergyDataDAO.findByMtu(mtuId);
+
+
 
         MeasuringTransmittingUnit mtu = measuringTransmittingUnitDAO.findOne(mtuId);
         TimeZone mtuTimeZone = TimeZone.getTimeZone(mtu.getTimezone());
@@ -124,9 +136,12 @@ public class DailyEnergyDataService {
                 FormatUtil.parseStringDate(startDate, mtuTimeZone ),
                 FormatUtil.parseStringDate(endDate, mtuTimeZone));
 
+        LOGGER.trace("[findByIdDate] Found: {} records", dailyEnergyData.size());
+
         for (DailyEnergyData data: dailyEnergyData){
             long epochMs = data.getEpochDate() * 1000L;
             data.setFormattedDate(simpleDateFormat.format(new Date(epochMs)));
+            LOGGER.trace("[findByIdDate] Updating:{}", data);
         }
 
         return  dailyEnergyData;
