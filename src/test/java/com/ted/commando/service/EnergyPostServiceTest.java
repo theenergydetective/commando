@@ -52,6 +52,9 @@ public class EnergyPostServiceTest {
     @Mock
     DailyEnergyDataService dailyEnergyDataService;
 
+    @Mock
+    UserDetailsService userDetailsService;
+
     @InjectMocks
     EnergyPostService energyPostService;
 
@@ -109,6 +112,9 @@ public class EnergyPostServiceTest {
     public void processMTUPostTest(){
         MeasuringTransmittingUnit mtu = new MeasuringTransmittingUnit();
         mtu.setId("TESTMTU");
+        mtu.setEnabled(true);
+
+        when(userDetailsService.getTimezone()).thenReturn("America/New_York");
         when(measuringTransmittingUnitDAO.findOne("TESTMTU")).thenReturn(null);
 
         EnergyMTUPost mtuPost = new EnergyMTUPost();
@@ -124,6 +130,14 @@ public class EnergyPostServiceTest {
         verify(measuringTransmittingUnitDAO).updateLastPost(any());
         verify(measuringTransmittingUnitDAO).updateLastDayPost(any());
 
+        reset(dailyEnergyDataService);
+        reset(measuringTransmittingUnitDAO);
+        when(measuringTransmittingUnitDAO.findOne("TESTMTU")).thenReturn(mtu);
+        mtu.setEnabled(false);
+        energyPostService.processMTUPost(mtuPost);
+        verify(dailyEnergyDataService, times(0)).processDailyEnergyData(any());
+        verify(measuringTransmittingUnitDAO, times(0)).updateLastPost(any());
+        verify(measuringTransmittingUnitDAO, times(0)).updateLastDayPost(any());
 
 
     }

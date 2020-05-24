@@ -112,21 +112,23 @@ public class EnergyPostService {
 
         MeasuringTransmittingUnit mtu = findMTU(mtuPost.getMtuSerial());
 
-        for (EnergyCumulativePost cumulativePost : mtuPost.getCumulativePostList()) {
+        if (mtu.isEnabled()) {
+            for (EnergyCumulativePost cumulativePost : mtuPost.getCumulativePostList()) {
 
-            if (mtu.getLastDayPost().equals(0L)) {
-                LOGGER.debug("[processMTUPost] No daily history for mtu:{}. Defaulting to current value", mtu);
-                mtu.setLastDayPost(cumulativePost.getTimestamp());
-                mtu.setLastDayValue(new BigDecimal(cumulativePost.getWatts()));
-                measuringTransmittingUnitDAO.updateLastDayPost(mtu);
+                if (mtu.getLastDayPost().equals(0L)) {
+                    LOGGER.debug("[processMTUPost] No daily history for mtu:{}. Defaulting to current value", mtu);
+                    mtu.setLastDayPost(cumulativePost.getTimestamp());
+                    mtu.setLastDayValue(new BigDecimal(cumulativePost.getWatts()));
+                    measuringTransmittingUnitDAO.updateLastDayPost(mtu);
+                }
+
+                //Update the last post value
+                mtu.setLastValue(new BigDecimal(cumulativePost.getWatts()));
+                mtu.setLastPost(cumulativePost.getTimestamp());
+                measuringTransmittingUnitDAO.updateLastPost(mtu);
+
+                dailyEnergyDataService.processDailyEnergyData(mtu);
             }
-
-            //Update the last post value
-            mtu.setLastValue(new BigDecimal(cumulativePost.getWatts()));
-            mtu.setLastPost(cumulativePost.getTimestamp());
-            measuringTransmittingUnitDAO.updateLastPost(mtu);
-
-            dailyEnergyDataService.processDailyEnergyData(mtu);
         }
 
     }

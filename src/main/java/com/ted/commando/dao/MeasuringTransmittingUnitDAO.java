@@ -43,15 +43,17 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
             "last_post",
             "energy_rate",
             "last_day_value",
-            "last_day_post"
+            "last_day_post",
+            "enabled"
     };
 
 
     private static String BASE_QUERY = "select " + generateFields("m.", FIELDS, 0) + " from mtu m ";
     private static String FIND_ONE = BASE_QUERY + " where m.id = :id";
-    private static String FIND_ALL = BASE_QUERY + " order by name asc";
+
+
     private static String INSERT = "insert into mtu (" + generateFields("", FIELDS, 0) + ") VALUES (" + generateFields(":", FIELDS, 0) + ")";
-    private static String UPDATE_SETTINGS = "update mtu set name=:name, energy_rate=:energy_rate,timezone=:timezone  where id = :id";
+    private static String UPDATE_SETTINGS = "update mtu set name=:name, energy_rate=:energy_rate,timezone=:timezone, enabled=:enabled  where id = :id";
     private static String UPDATE_LAST_POST = "update mtu set last_post=:last_post, last_value=:last_value  where id = :id";
     private static String UPDATE_LAST_DAY = "update mtu set last_day_post=:last_day_post, last_day_value=:last_day_value  where id = :id";
     private static String DELETE = "delete from mtu where id = :id";
@@ -68,6 +70,7 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
             dto.setLastDayPost(rs.getLong("last_day_post"));
             dto.setLastDayValue(rs.getBigDecimal("last_day_value"));
             dto.setTimezone(rs.getString("timezone"));
+            dto.setEnabled(rs.getBoolean("enabled"));
             return dto;
         }
     };
@@ -83,6 +86,7 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
         map.addValue("last_day_post", dto.getLastDayPost());
         map.addValue("last_day_value", dto.getLastDayValue());
         map.addValue("timezone", dto.getTimezone());
+        map.addValue("enabled", dto.isEnabled());
         return map;
     }
 
@@ -131,7 +135,11 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
         namedParameterJdbcTemplate.update(DELETE, map);
     }
 
-    public List<MeasuringTransmittingUnit> findAll() {
-        return namedParameterJdbcTemplate.query(FIND_ALL, rowMapper);
+    public List<MeasuringTransmittingUnit> findAll(boolean enabled) {
+        StringBuilder query = new StringBuilder(BASE_QUERY);
+        if (enabled) query.append(" where enabled=1 ");
+        query.append(" order by name asc ");
+        return namedParameterJdbcTemplate.query(query.toString(),  rowMapper);
     }
+
 }

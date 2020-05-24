@@ -88,7 +88,8 @@ public class MeasuringTransmittingUnitDAOTest {
         assertEquals(mtu.getLastDayPost(), measuringTransmittingUnitDAO.findOne(TEST_ID).getLastDayPost());
 
 
-        assertTrue(!measuringTransmittingUnitDAO.findAll().isEmpty());
+        assertTrue(!measuringTransmittingUnitDAO.findAll(true).isEmpty());
+
 
         measuringTransmittingUnitDAO.delete(mtu.getId());
         assertNull(measuringTransmittingUnitDAO.findOne(TEST_ID));

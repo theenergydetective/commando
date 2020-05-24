@@ -30,7 +30,7 @@ $default-min-height: 30px;
 .mtuList {
   background-color: white;
   width: calc(100% - 32px);
-  max-width:600px;
+  max-width:1024px;
   padding:16px;
   margin:auto;
 }
@@ -39,7 +39,9 @@ $default-min-height: 30px;
   text-align: center;
 }
 
-.noActivate{
 
+.dataColumn {
+  padding-left:16px;
+  padding-right:16px;
 }
 

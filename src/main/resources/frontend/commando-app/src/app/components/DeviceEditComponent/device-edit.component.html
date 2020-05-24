@@ -31,7 +31,7 @@
   <div class="title">Device Settings</div>
   <form [formGroup]="form" (submit)="submit()"  style="width:100%;margin-top:16px;">
 
-    <div fxLayout="row" fxLayoutAlign="space-evenly" style="width:100%">
+    <div fxLayout="row" fxLayoutAlign="space-evenly center" style="width:100%">
       <mat-form-field>
         <input matInput type="text" id="name" formControlName="name" placeholder="Name" required>
       </mat-form-field>
@@ -48,6 +48,11 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+
+
+
+      <mat-checkbox formControlName="enabled">Enabled</mat-checkbox>
+
     </div>
 
     <div fxLayout="row" fxLayoutAlign="end" style="padding-right: 16px">

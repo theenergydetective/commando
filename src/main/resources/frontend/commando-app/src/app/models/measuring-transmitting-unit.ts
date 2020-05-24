@@ -24,6 +24,7 @@ export class MeasuringTransmittingUnit {
   public lastDayValue:number =0.0;
   public lastDayPost: number = 0;
   public selected:boolean =false;
+  public enabled:boolean=true;
   public timezone:string = 'America/New_York';
 }
 

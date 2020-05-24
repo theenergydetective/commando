@@ -28,6 +28,7 @@ public class MeasuringTransmittingUnit {
     private Long lastPost = 0L;
     private BigDecimal lastDayValue = new BigDecimal(0L);
     private Long lastDayPost = 0L;
+    private boolean enabled = true;
     private String timezone = "America/New_York";
 
     public String getId() {
@@ -94,6 +95,14 @@ public class MeasuringTransmittingUnit {
         this.timezone = timezone;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public String toString() {
         return "MeasuringTransmittingUnit{" +
@@ -104,6 +113,7 @@ public class MeasuringTransmittingUnit {
                 ", lastPost=" + lastPost +
                 ", lastDayValue=" + lastDayValue +
                 ", lastDayPost=" + lastDayPost +
+                ", enabled=" + enabled +
                 ", timezone='" + timezone + '\'' +
                 '}';
     }

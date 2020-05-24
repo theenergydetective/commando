@@ -77,6 +77,7 @@ export class DeviceEditComponent implements OnInit, AfterContentInit {
       name: [null, [Validators.required]],
       rate: [null, Validators.required],
       timezone: [null, Validators.required],
+      enabled:[null]
     });
   }
 
@@ -117,6 +118,7 @@ export class DeviceEditComponent implements OnInit, AfterContentInit {
     this.form.get('name').setValue(mtu.name);
     this.form.get('rate').setValue(mtu.rate);
     this.form.get('timezone').setValue(mtu.timezone);
+    this.form.get('enabled').setValue(mtu.enabled);
   }
 
   onClose() {
@@ -127,6 +129,10 @@ export class DeviceEditComponent implements OnInit, AfterContentInit {
      this.mtu.name = this.form.get('name').value;
      this.mtu.rate = this.form.get('rate').value;
      this.mtu.timezone = this.form.get('timezone').value;
+     this.mtu.enabled = this.form.get('enabled').value;
+
+    console.error(this.mtu.enabled);
+
      this.mtuService.updateSettings(this.mtu).then((mtu:MeasuringTransmittingUnit)=>{
        this.setMTU(mtu);
        this._snackBar.open('Device settings updated', 'Close', {duration: 3000})

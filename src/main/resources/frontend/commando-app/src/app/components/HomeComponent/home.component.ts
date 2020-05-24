@@ -23,6 +23,7 @@ import {Router} from '@angular/router';
 import {MatDialog} from "@angular/material/dialog";
 import {MtuService} from "../../services/mtu.service";
 import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-unit";
+import {DailyEnergyData} from "../../models/daily-energy-data";
 
 @Component({
   selector: 'app-home',
@@ -31,9 +32,10 @@ import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-uni
 })
 
 export class HomeComponent implements AfterContentInit {
-  form: FormGroup;
-
   public mtuList:Array<MeasuringTransmittingUnit> = [];
+  private static readonly MAX_COLUMN_COUNT:number = 5;
+  public columnCount:Array<number> = Array(HomeComponent.MAX_COLUMN_COUNT +1).fill(0).map((x,i)=>i);
+  public dataColumns:Array<Array<MeasuringTransmittingUnit>> = [[]];
 
 
   constructor(private authService: AuthService,
@@ -50,8 +52,17 @@ export class HomeComponent implements AfterContentInit {
 
     this.authService.verifyAccessToken().then(r=>{
       if (r){
-        this.mtuService.findAllMTU().then((r:Array<MeasuringTransmittingUnit>)=>{
+        this.mtuService.findAllMTU(true).then((r:Array<MeasuringTransmittingUnit>)=>{
           this.mtuList = r;
+
+          let colSize = 10;
+          if (this.mtuList.length > (HomeComponent.MAX_COLUMN_COUNT * colSize)){
+            colSize = Math.ceil(this.mtuList.length / HomeComponent.MAX_COLUMN_COUNT);
+          }
+          this.dataColumns = [[]];
+          for (let c=0; c < HomeComponent.MAX_COLUMN_COUNT; c++) {
+            this.dataColumns.push(this.createArrayChunk(this.mtuList, c, colSize));
+          }
         });
       } else {
         this.authService.logOut();
@@ -61,5 +72,24 @@ export class HomeComponent implements AfterContentInit {
   }
 
 
+  createArrayChunk(array:Array<MeasuringTransmittingUnit>, column:number, maxSize:number){
+    let offset:number = column * maxSize;
+    if (offset >= array.length) return []; //No more elements
+
+    let endIndex = offset + maxSize;
+    if (endIndex > array.length) endIndex = array.length;
+
+    console.log('CREATING ' + column + ' ms: ' + maxSize + ' offset:' + offset + ' end:' + endIndex);
+
+    let result:Array<MeasuringTransmittingUnit> = [];
+
+    for (let i=offset; i < endIndex; i++){
+      result.push(array[i]);
+    }
+
+    return result;
+
+
+  }
 
 }

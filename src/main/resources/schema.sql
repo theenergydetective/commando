@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS mtu (
     energy_rate decimal(22,19) unsigned NOT NULL DEFAULT '0.10',
     last_day_value decimal(32,4) unsigned NOT NULL DEFAULT '0',
     last_day_post bigint(20) unsigned NOT NULL DEFAULT '0',
+    enabled tinyint(1) unsigned NOT NULL DEFAULT '1',
     PRIMARY KEY (`id`)
 );
 

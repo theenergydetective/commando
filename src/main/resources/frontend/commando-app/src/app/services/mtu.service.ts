@@ -31,10 +31,10 @@ export class MtuService {
   /**
    * Returns a list of all MTUs in the system ordered by name
    */
-  public findAllMTU() {
+  public findAllMTU(enabled:boolean) {
     this.logger.debug('[findAllMTU] Looking up mtu list');
     return new Promise(mtuResult => {
-      const response = this.http.get('/api/mtu', this.authService.getAuthorizedHttpOptions());
+      const response = this.http.get('/api/mtu?enabled=' + enabled, this.authService.getAuthorizedHttpOptions());
 
       response.subscribe((data: Array<MeasuringTransmittingUnit>) => {
           mtuResult(data);

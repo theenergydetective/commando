@@ -57,8 +57,10 @@ public class MeasuringTransmittingUnitControllerTest {
 
     @Test
     public void getMTUsTest(){
-        when(measuringTransmittingUnitDAO.findAll()).thenReturn(new ArrayList<>());
-        assertNotNull(measuringTransmittingUnitController.getMTUs());
+        when(measuringTransmittingUnitDAO.findAll(anyBoolean())).thenReturn(new ArrayList<>());
+        assertNotNull(measuringTransmittingUnitController.getMTUs(false));
+        verify(measuringTransmittingUnitDAO).findAll(false);
+
     }
 
     @Test

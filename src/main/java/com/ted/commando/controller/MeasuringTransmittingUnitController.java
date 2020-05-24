@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.ws.rs.QueryParam;
 import java.util.List;
 
 /***
@@ -43,8 +44,9 @@ public class MeasuringTransmittingUnitController {
     @RequestMapping(method = RequestMethod.GET)
     public
     @ResponseBody
-    List<MeasuringTransmittingUnit> getMTUs(){
-        return measuringTransmittingUnitDAO.findAll();
+    List<MeasuringTransmittingUnit> getMTUs(@QueryParam("enabled") Boolean enabled){
+        if (enabled == null ) enabled = false;
+        return measuringTransmittingUnitDAO.findAll(enabled);
     }
 
     @RequestMapping(value="{id}", method = RequestMethod.GET)

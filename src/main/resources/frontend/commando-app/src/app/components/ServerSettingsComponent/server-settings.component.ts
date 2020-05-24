@@ -52,7 +52,7 @@ export class ServerSettingsComponent implements AfterContentInit {
           .then((ad:ActivationDetails)=>{
             this.activationDetails = ad;
           });
-        this.mtuService.findAllMTU().then((r:Array<MeasuringTransmittingUnit>)=>{
+        this.mtuService.findAllMTU(false).then((r:Array<MeasuringTransmittingUnit>)=>{
           this.mtuList = r;
         });
       } else {

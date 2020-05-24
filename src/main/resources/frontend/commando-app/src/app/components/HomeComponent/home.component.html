@@ -52,8 +52,19 @@
 
 <div *ngIf="mtuList.length != 0" class="content">
   <div class="mtuList">
-    <div class="instructions">Please select which MTUs and Spyders you would like to include on your billing report.
+    <div class="instructions">Please select which MTUs and Spyders you would like to include on your billing report.</div>
+
+
+    <div class="instructions">The below values are in watt hours. Editing these values will permenanantly change them in the database.</div>
+
+    <div fxLayout="row" fxLayoutAlign="center start" style="width:100%;margin-top:16px;">
+      <div class="dataColumn" fxLayout="column" fxLayoutAlign="start start" *ngFor="let col of columnCount">
+        <div *ngFor="let mtu of dataColumns[col]">
+              <mat-checkbox [(ngModel)]="mtu.selected">{{mtu.name}}</mat-checkbox>
+        </div>
+      </div>
     </div>
+
   </div>
 </div>
 
