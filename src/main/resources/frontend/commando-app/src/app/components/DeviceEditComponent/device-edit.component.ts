@@ -39,15 +39,18 @@ export class DeviceEditComponent implements OnInit, AfterContentInit {
   public deviceId:string = '';
   public timezones: Array<string>=[];
   public mtu:MeasuringTransmittingUnit = new MeasuringTransmittingUnit();
+
+  //Easy split into 3 columns
   public dailyEnergyData:Array<DailyEnergyData> = [];
+
   public months:Array<string>=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   public month: string = this.months[new Date().getMonth()];
   public year: string = new Date().getFullYear().toString();
-
-
   public years:Array<string>=[];
 
-
+  private static readonly MAX_COLUMN_COUNT:number = 3;
+  public columnCount:Array<number> = Array(DeviceEditComponent.MAX_COLUMN_COUNT +1).fill(0).map((x,i)=>i);
+  public dataColumns:Array<Array<DailyEnergyData>> = [[]];
 
 
   constructor(private authService: AuthService,
@@ -149,6 +152,10 @@ export class DeviceEditComponent implements OnInit, AfterContentInit {
     this.dailyEnergyService.findByIdDate(this.deviceId, startDate, endDate)
       .then((r:Array<DailyEnergyData>)=>{
         this.dailyEnergyData = r;
+        this.dataColumns = [[]];
+        for (let c=0; c < DeviceEditComponent.MAX_COLUMN_COUNT; c++) {
+          this.dataColumns.push(this.createArrayChunk(this.dailyEnergyData, c, 11));
+        }
       });
 
   }
@@ -164,4 +171,26 @@ export class DeviceEditComponent implements OnInit, AfterContentInit {
     this.logger.debug("[onNewYear] " + this.year + ' selected');
     this.searchByDateRange(this.month, this.year);
   }
+
+
+  createArrayChunk(array:Array<DailyEnergyData>, column:number, maxSize:number){
+    let offset:number = column * maxSize;
+    if (offset >= array.length) return []; //No more elements
+
+    let endIndex = offset + maxSize;
+    if (endIndex > array.length) endIndex = array.length;
+
+    console.log('CREATING ' + column + ' ms: ' + maxSize + ' offset:' + offset + ' end:' + endIndex);
+
+    let result:Array<DailyEnergyData> = [];
+
+    for (let i=offset; i < endIndex; i++){
+      result.push(array[i]);
+    }
+
+    return result;
+
+
+  }
+
 }

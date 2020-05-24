@@ -29,7 +29,7 @@ import {MatInputModule} from '@angular/material/input';
 import {LayoutModule} from '@angular/cdk/layout';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {HttpClientModule} from '@angular/common/http';
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 import {HomeComponent} from "./home.component";
 import {DatePipe} from "@angular/common";
 import {MatDialogModule} from "@angular/material/dialog";
@@ -39,20 +39,11 @@ import {MockMtuService} from "../../mocks/mock-mtu-service";
 import {MenuComponent} from "../menu/menu.component";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
+import {MockMatIconComponent} from "../../mocks/mock-mat-icon-component";
 
 
 describe('HomeComponent', () => {
 
-  @Component({
-    selector: 'mat-icon',
-    template: '<span></span>'
-  })
-
-  class MockMatIconComponent {
-    @Input() svgIcon: any;
-    @Input() fontSet: any;
-    @Input() fontIcon: any;
-  }
 
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
@@ -62,7 +53,8 @@ describe('HomeComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         HomeComponent,
-        MenuComponent
+        MenuComponent,
+        MockMatIconComponent
       ],
       imports: [
         // LoggerTestingModule

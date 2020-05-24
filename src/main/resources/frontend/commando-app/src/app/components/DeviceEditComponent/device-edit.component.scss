@@ -73,3 +73,27 @@ $default-min-height: 30px;
   font-weight: normal;
   text-align: left;
 }
+
+
+.entryTable{
+
+}
+
+.entryTable th{
+  font-size: mat-font-size($config, caption);
+  font-family: mat-font-family($config);
+  color: $dark-secondary-text;
+  font-weight: normal;
+  text-align: left;
+  vertical-align: center;
+  padding-right:16px;
+}
+
+.entryTable td {
+  border-width: 1px;
+  border-style: solid;
+  border-color: $dark-secondary-text;
+  padding:4px;
+  vertical-align: center;
+}
+

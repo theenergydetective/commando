@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2020. Energy, Inc.
  *
  *      Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,10 @@
  *
  */
 
-export class DailyEnergyData {
-  public mtuId:string;
-  public epochDate:number;
-  public energyValue:number;
-  public formattedDate:string;
-}
+@import '~@angular/material/theming';
+
+$config: mat-typography-config();
+$default-padding: 5px;
+$double-padding: $default-padding * 2;
+$default-min-height: 30px;
 

@@ -18,8 +18,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {LoggerConfig, NGXLogger, NGXLoggerHttpService, NgxLoggerLevel, NGXMapperService} from 'ngx-logger';
 import {NGXLoggerHttpServiceMock, NGXMapperServiceMock} from 'ngx-logger/testing';
-import {AuthService} from '../../services/auth.service';
-
 import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterTestingModule} from '@angular/router/testing';
 import {MatCardModule} from '@angular/material/card';
@@ -30,22 +28,30 @@ import {MatInputModule} from '@angular/material/input';
 import {LayoutModule} from '@angular/cdk/layout';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {HttpClientModule} from '@angular/common/http';
-import {Component} from '@angular/core';
-import {AdminComponent} from "./admin.component";
 import {DatePipe} from "@angular/common";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatListModule} from "@angular/material/list";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatSelectModule} from "@angular/material/select";
-import {MockAuthService} from "../../mocks/mock-auth-service";
-import {MockMatIconComponent} from "../../mocks/mock-mat-icon-component";
+import {MockMatIconComponent} from "../../../mocks/mock-mat-icon-component";
+import {DeviceEditFieldComponent} from "./device-edit-field.component";
+import {DailyEnergyService} from "../../../services/daily-energy.service";
+import {MockDailyEnergyService} from "../../../mocks/mock-daily-energy-service";
+import {AuthService} from "../../../services/auth.service";
+import {MockAuthService} from "../../../mocks/mock-auth-service";
 
-describe('AdminComponent', () => {
 
-  let component: AdminComponent;
-  let fixture: ComponentFixture<AdminComponent>;
+describe('DeviceEditFieldComponent', () => {
+
+  let component: DeviceEditFieldComponent;
+  let fixture: ComponentFixture<DeviceEditFieldComponent>;
 
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AdminComponent],
+      declarations: [DeviceEditFieldComponent,MockMatIconComponent],
       imports: [
         // LoggerTestingModule
         HttpClientModule,
@@ -53,20 +59,25 @@ describe('AdminComponent', () => {
         NoopAnimationsModule,
         MatCardModule,
         MatFormFieldModule,
+        FormsModule,
         MatIconModule,
+        MatDialogModule,
         MatInputModule,
         MatSelectModule,
-        FormsModule,
+        MatSnackBarModule,
+        MatToolbarModule,
+        MatListModule,
+        MatSidenavModule,
         ReactiveFormsModule,
         FlexLayoutModule,
-        LayoutModule
-
+        LayoutModule,
       ],
       providers: [
         DatePipe,
         NGXLogger,
         FormBuilder,
         {provide: AuthService, useClass: MockAuthService},
+        {provide: DailyEnergyService, useClass: MockDailyEnergyService},
         {provide: NGXLoggerHttpService, useClass: NGXLoggerHttpServiceMock},
         {provide: NGXMapperService, useClass: NGXMapperServiceMock},
         {provide: LoggerConfig, useValue: {level: NgxLoggerLevel.TRACE}}
@@ -84,18 +95,21 @@ describe('AdminComponent', () => {
       });
 
 
-    fixture = TestBed.createComponent(AdminComponent);
+    fixture = TestBed.createComponent(DeviceEditFieldComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
     // Inject the mocks for testing
     // httpClient = TestBed.get(HttpClient);
     // httpTestingController = TestBed.get(HttpTestingController);
 
   });
 
-
   it('should compile', () => {
     expect(component).toBeTruthy();
   });
+
+
+
 
 });

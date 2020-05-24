@@ -30,23 +30,14 @@ import {MatInputModule} from '@angular/material/input';
 import {LayoutModule} from '@angular/cdk/layout';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {HttpClientModule} from '@angular/common/http';
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 import {LogInComponent} from "./log-in.component";
 import {DatePipe} from "@angular/common";
 import {MockAuthService} from "../../mocks/mock-auth-service";
+import {MockMatIconComponent} from "../../mocks/mock-mat-icon-component";
 
 
 describe('LogInComponent', () => {
-
-  @Component({
-    selector: 'mat-icon',
-    template: '<span></span>'
-  })
-  class MockMatIconComponent {
-    @Input() svgIcon: any;
-    @Input() fontSet: any;
-    @Input() fontIcon: any;
-  }
 
   let component: LogInComponent;
   let fixture: ComponentFixture<LogInComponent>;

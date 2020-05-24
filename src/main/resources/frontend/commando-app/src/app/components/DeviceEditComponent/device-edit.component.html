@@ -14,7 +14,7 @@
   ~      limitations under the License.
   ~
   -->
-    <mat-toolbar color="primary">
+<mat-toolbar color="primary">
       <button
         type="button"
         aria-label="Toggle sidenav"
@@ -82,7 +82,21 @@
     </mat-select>
   </div>
 
-
+  <div class="instructions">The below values are in watt hours. Editing these values will permenanantly change them in the database.</div>
+  <div fxLayout="row" fxLayoutAlign="space-evenly" style="width:100%;margin-top:16px">
+      <table class="entryTable" *ngFor="let col of columnCount">
+        <div *ngFor="let ded of dataColumns[col]">
+          <tr>
+            <th>{{ded.formattedDate}}</th>
+            <td>
+              <!-- Todo: Make this it's own control -->
+<!--              <input matInput type="number" [(ngModel)]="ded.energyValue">-->
+              <app-device-edit-field [dailyEnergyData]="ded"></app-device-edit-field>
+            </td>
+          </tr>
+        </div>
+      </table>
+  </div>
 
 
 

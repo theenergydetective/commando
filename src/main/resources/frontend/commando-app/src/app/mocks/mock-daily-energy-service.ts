@@ -15,10 +15,25 @@
  *
  */
 
-export class DailyEnergyData {
-  public mtuId:string;
-  public epochDate:number;
-  public energyValue:number;
-  public formattedDate:string;
-}
+import {DailyEnergyData} from "../models/daily-energy-data";
 
+/***
+ * Simple mock for the Daily Energy Service used for testing.
+ */
+export class MockDailyEnergyService {
+
+  findByIdDate(mtuId:string, startDate:Date, endDate:Date) {
+    return new Promise(r=>{
+      let res:Array<DailyEnergyData> = [];
+      r(res);
+    })
+  }
+
+  update(){
+    return new Promise(r=>{
+      r(DailyEnergyData)
+    })
+  }
+
+
+}

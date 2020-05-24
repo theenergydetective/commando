@@ -29,7 +29,7 @@ import {MatInputModule} from '@angular/material/input';
 import {LayoutModule} from '@angular/cdk/layout';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {HttpClientModule} from '@angular/common/http';
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 
 import {DatePipe} from "@angular/common";
 import {MatDialogModule} from "@angular/material/dialog";
@@ -43,20 +43,10 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatListModule} from "@angular/material/list";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatSelectModule} from "@angular/material/select";
+import {MockMatIconComponent} from "../../mocks/mock-mat-icon-component";
 
 
 describe('DeviceEditComponent', () => {
-
-  @Component({
-    selector: 'mat-icon',
-    template: '<span></span>'
-  })
-
-  class MockMatIconComponent {
-    @Input() svgIcon: any;
-    @Input() fontSet: any;
-    @Input() fontIcon: any;
-  }
 
   let component: DeviceEditComponent;
   let fixture: ComponentFixture<DeviceEditComponent>;

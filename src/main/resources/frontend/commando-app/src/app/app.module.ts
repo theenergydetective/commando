@@ -50,6 +50,7 @@ import {ConfirmDialogComponent} from "./components/confirm-dialog";
 import {MenuComponent} from "./components/menu/menu.component";
 import {ServerSettingsComponent} from "./components/ServerSettingsComponent";
 import {DeviceEditComponent} from "./components/DeviceEditComponent";
+import {DeviceEditFieldComponent} from "./components/DeviceEditComponent/DeviceEditField/device-edit-field.component";
 
 
 @NgModule({
@@ -64,7 +65,8 @@ import {DeviceEditComponent} from "./components/DeviceEditComponent";
     DeviceEditComponent,
     ServerSettingsComponent,
     ConfirmDialogComponent,
-    MenuComponent
+    MenuComponent,
+    DeviceEditFieldComponent
   ],
     imports: [
         BrowserModule,
