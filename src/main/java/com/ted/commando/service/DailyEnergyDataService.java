@@ -20,6 +20,7 @@ package com.ted.commando.service;
 
 import com.ted.commando.dao.DailyEnergyDataDAO;
 import com.ted.commando.dao.MeasuringTransmittingUnitDAO;
+import com.ted.commando.model.BillingFormParameters;
 import com.ted.commando.model.DailyEnergyData;
 import com.ted.commando.model.MeasuringTransmittingUnit;
 import com.ted.commando.util.FormatUtil;
@@ -28,6 +29,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import javax.servlet.ServletOutputStream;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -150,5 +153,15 @@ public class DailyEnergyDataService {
         LOGGER.info("[update] Updating {}", dailyEnergyData);
         dailyEnergyDataDAO.update(dailyEnergyData);
         return dailyEnergyData;
+    }
+
+    public void writeData(BillingFormParameters billingFormParameters, ServletOutputStream outputStream) {
+        StringBuilder fakeData = new StringBuilder("1,2,3,4,5");
+        try (PrintWriter p = new PrintWriter(outputStream)) {
+            p.println(fakeData);
+        } catch (Exception ex) {
+            LOGGER.error("[writeData] Exception caught", ex);
+        }
+
     }
 }

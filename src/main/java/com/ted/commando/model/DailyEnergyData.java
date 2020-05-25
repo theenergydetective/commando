@@ -17,9 +17,12 @@
 
 package com.ted.commando.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DailyEnergyData {
     private String mtuId;
     private Long epochDate;

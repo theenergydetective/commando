@@ -50,6 +50,7 @@ public class OAuthResourceConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/admin").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/activate").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/postData").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/dailyEnergyData/export").permitAll() //We verify the token in method itself
 
                 //Lock down everything else
                 .antMatchers("/api/**").access("#oauth2.hasScope('api')");

@@ -15,7 +15,7 @@
  *
  */
 
-import {AfterContentInit, Component} from '@angular/core';
+import {AfterContentInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {NGXLogger} from 'ngx-logger';
 import {FormBuilder} from '@angular/forms';
@@ -23,13 +23,22 @@ import {Router} from '@angular/router';
 import {MatDialog} from "@angular/material/dialog";
 import {MtuService} from "../../services/mtu.service";
 import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-unit";
+import {MonthYearRange} from "../../models/month-year";
+
+
+class FormParameters {
+  public accessToken:string
+  public exportType: string;
+  public billingCycleStart: number;
+  public range:MonthYearRange;
+  public selectedDevices:Array<string> = [];
+}
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-
 export class HomeComponent implements AfterContentInit {
 
   private static readonly MAX_COLUMN_COUNT:number = 5;
@@ -42,6 +51,14 @@ export class HomeComponent implements AfterContentInit {
   exportType: string = 'DAY';
   startYear:number = new Date().getFullYear();
   valid: boolean = false;
+
+
+  @ViewChild('downloadForm') downloadForm:ElementRef;
+  @ViewChild('formData') formData:ElementRef;
+
+  private selectedRange: MonthYearRange;
+
+
 
 
   constructor(private authService: AuthService,
@@ -63,8 +80,8 @@ export class HomeComponent implements AfterContentInit {
           this.mtuList = r;
           this.startYear = this.calcStartYear(this.mtuList);
 
-          //this.onSelectAll();
-          this.onClear();
+          this.onSelectAll();
+          //this.onClear();
 
           let colSize = 10;
           let colCount = HomeComponent.MAX_COLUMN_COUNT;
@@ -153,8 +170,24 @@ export class HomeComponent implements AfterContentInit {
   }
 
   onExport() {
+    //Put together the form parameters
+    let formParameters = new FormParameters();
+    formParameters.accessToken = this.authService.userSession.accessToken;
+    formParameters.billingCycleStart = this.billingCycleStart;
+    formParameters.exportType = this.exportType;
+    formParameters.range = this.selectedRange;
+    for (let m=0; m < this.mtuList.length; m++){
+      let mtu = this.mtuList[m];
+      if (mtu.selected) formParameters.selectedDevices.push(mtu.id);
+    }
 
+    //Set the form data and submit the form
+    this.formData.nativeElement.value = JSON.stringify(formParameters);
+    this.downloadForm.nativeElement.submit();
   }
 
 
+  onSelected($event: MonthYearRange) {
+    this.selectedRange = $event;
+  }
 }

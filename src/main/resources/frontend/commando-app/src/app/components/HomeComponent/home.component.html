@@ -105,11 +105,11 @@
 
       <!-- Time Selection -->
       <div class="instructions">Please select the date rage</div>
-      <month-picker [start-year]="startYear"></month-picker>
+      <month-picker [start-year]="startYear" (selected)="onSelected($event)"></month-picker>
       <div class="divider"></div>
 
       <div fxLayout="row" fxLayoutAlign="end" style="width:100%">
-        <button class="accentButtonFlat" [disabled]="!valid" mat-button (click)="onExport()">EXPORT</button>
+        <button form="ngForm" class="accentButtonFlat" [disabled]="!valid" mat-button >EXPORT</button>
       </div>
 
 
@@ -118,5 +118,9 @@
 
 
 </div>
+
+<form (ngSubmit)="onExport()" action="/api/dailyEnergyData/export" id="ngForm" #downloadForm #documentEditForm="ngForm" method="post" novalidate>
+  <input #formData name="formData" type="hidden">
+</form>
 
 
