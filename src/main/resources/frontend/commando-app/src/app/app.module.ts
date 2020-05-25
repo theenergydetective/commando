@@ -51,6 +51,8 @@ import {MenuComponent} from "./components/menu/menu.component";
 import {ServerSettingsComponent} from "./components/ServerSettingsComponent";
 import {DeviceEditComponent} from "./components/DeviceEditComponent";
 import {DeviceEditFieldComponent} from "./components/DeviceEditComponent/DeviceEditField/device-edit-field.component";
+import {MonthPickerComponent} from "./components/month-picker/month-picker.component";
+import {MonthPickerToggleComponent} from "./components/month-picker/month-picker-toggle.component";
 
 
 @NgModule({
@@ -66,7 +68,9 @@ import {DeviceEditFieldComponent} from "./components/DeviceEditComponent/DeviceE
     ServerSettingsComponent,
     ConfirmDialogComponent,
     MenuComponent,
-    DeviceEditFieldComponent
+    DeviceEditFieldComponent,
+    MonthPickerComponent,
+    MonthPickerToggleComponent
   ],
     imports: [
         BrowserModule,

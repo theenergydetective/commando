@@ -29,7 +29,6 @@ import {MatInputModule} from '@angular/material/input';
 import {LayoutModule} from '@angular/cdk/layout';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {HttpClientModule} from '@angular/common/http';
-import {Component} from '@angular/core';
 import {HomeComponent} from "./home.component";
 import {DatePipe} from "@angular/common";
 import {MatDialogModule} from "@angular/material/dialog";

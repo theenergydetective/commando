@@ -25,6 +25,7 @@ public class MeasuringTransmittingUnit {
     private String name;
     private BigDecimal rate = new BigDecimal(0.1);
     private BigDecimal lastValue = new BigDecimal(0L);
+    private Long created = System.currentTimeMillis()/1000L;
     private Long lastPost = 0L;
     private BigDecimal lastDayValue = new BigDecimal(0L);
     private Long lastDayPost = 0L;
@@ -103,6 +104,14 @@ public class MeasuringTransmittingUnit {
         this.enabled = enabled;
     }
 
+    public Long getCreated() {
+        return created;
+    }
+
+    public void setCreated(Long created) {
+        this.created = created;
+    }
+
     @Override
     public String toString() {
         return "MeasuringTransmittingUnit{" +
@@ -110,6 +119,7 @@ public class MeasuringTransmittingUnit {
                 ", name='" + name + '\'' +
                 ", rate=" + rate +
                 ", lastValue=" + lastValue +
+                ", created=" + created +
                 ", lastPost=" + lastPost +
                 ", lastDayValue=" + lastDayValue +
                 ", lastDayPost=" + lastDayPost +

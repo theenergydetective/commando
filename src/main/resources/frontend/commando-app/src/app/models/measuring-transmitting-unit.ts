@@ -19,6 +19,7 @@ export class MeasuringTransmittingUnit {
   public id:string;
   public name:string;
   public rate:number = 0.1;
+  public created: number = 0;
   public lastValue:number =0.0;
   public lastPost: number = 0;
   public lastDayValue:number =0.0;

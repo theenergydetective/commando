@@ -56,7 +56,8 @@ public class TestDataGenerator {
 
     static final String ECC_ID = "TESTECC";
     static final String TEST_KEY = "TESTKEY";
-    static final int MAX_MTU_COUNT = (4 * 32) + 4;
+    //static final int MAX_MTU_COUNT = (4 * 32) + 4;
+    static final int MAX_MTU_COUNT = 16;
 
     @Autowired
     PostDataController postDataController;
@@ -110,7 +111,7 @@ public class TestDataGenerator {
         energyControlCenterDAO.insert(ecc);
 
         //Create MTU and Spyders
-        calendar.add(Calendar.DATE, -180); //last several montns
+        calendar.add(Calendar.DATE, -365); //last several montns
         zeroOutCalendar(calendar);
 
         long wattsPerDay = 0;

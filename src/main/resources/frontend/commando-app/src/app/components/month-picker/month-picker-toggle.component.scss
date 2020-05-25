@@ -15,6 +15,7 @@
  *
  */
 
+
 @import '~@angular/material/theming';
 
 $config: mat-typography-config();
@@ -22,38 +23,30 @@ $default-padding: 5px;
 $double-padding: $default-padding * 2;
 $default-min-height: 30px;
 
-.content {
-  width:100%;
-  padding-top:16px;
-}
 
-.mtuList {
-  background-color: white;
-  width: calc(100% - 32px);
-  max-width:1024px;
-  padding:16px;
-  margin:auto;
-}
-
-.instructions {
+.toggleButton{
+  margin:2px;
   text-align: center;
+  cursor:pointer;
+  cursor:hand;
+}
+
+.toggleButtonContent {
+  color: $dark-primary-text;
+  font-size: mat-font-size($config, body-1);
+  font-family: mat-font-family($config);
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 50%;
+  width:24px;
+  height:24px;
+  padding:8px;
+
 }
 
 
-.dataColumn {
-  padding-left:16px;
-  padding-right:16px;
-}
-
-
-.divider {
-  width: calc(100% - 16px);
-  border-color: $dark-secondary-text;
-  border-style: solid;
-  border-width: 0;
-  border-top-width: 1px;
-  height:1px;
-  max-height: 1px;
-  opacity: 0.6;
-  margin: 16px auto;
+.toggleButtonContent:hover{
+  background-color: #2962FF;
+  color:white;
+  opacity: .3;
 }

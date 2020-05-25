@@ -15,6 +15,7 @@
  *
  */
 
+
 @import '~@angular/material/theming';
 
 $config: mat-typography-config();
@@ -22,38 +23,9 @@ $default-padding: 5px;
 $double-padding: $default-padding * 2;
 $default-min-height: 30px;
 
-.content {
-  width:100%;
-  padding-top:16px;
-}
+.year {
+  font-size: mat-font-size($config, caption);
+  font-family: mat-font-family($config);
+  color: $dark-secondary-text;
 
-.mtuList {
-  background-color: white;
-  width: calc(100% - 32px);
-  max-width:1024px;
-  padding:16px;
-  margin:auto;
-}
-
-.instructions {
-  text-align: center;
-}
-
-
-.dataColumn {
-  padding-left:16px;
-  padding-right:16px;
-}
-
-
-.divider {
-  width: calc(100% - 16px);
-  border-color: $dark-secondary-text;
-  border-style: solid;
-  border-width: 0;
-  border-top-width: 1px;
-  height:1px;
-  max-height: 1px;
-  opacity: 0.6;
-  margin: 16px auto;
 }

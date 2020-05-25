@@ -30,7 +30,6 @@ import {MatInputModule} from '@angular/material/input';
 import {LayoutModule} from '@angular/cdk/layout';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {HttpClientModule} from '@angular/common/http';
-import {Component} from '@angular/core';
 import {AdminComponent} from "./admin.component";
 import {DatePipe} from "@angular/common";
 import {MatSelectModule} from "@angular/material/select";

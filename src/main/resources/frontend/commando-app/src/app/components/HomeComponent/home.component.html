@@ -40,34 +40,83 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<div *ngIf="mtuList.length == 0" class="content">
-
-  <div class="mtuList" fxLayout="row" fxLayoutAlign="start center">
-    <mat-icon class="redIcon">warning</mat-icon>
-    <div style="padding-left:8px">No MTU or Spyders have been activated against this server. Please refer to the
-      <span class="actionLink" routerLink="/serverSettings">instructions</span> on how to activate the mtu or spyder.
-    </div>
-  </div>
-</div>
-
-<div *ngIf="mtuList.length != 0" class="content">
-  <div class="mtuList">
-    <div class="instructions">Please select which MTUs and Spyders you would like to include on your billing report.</div>
-
-
-    <div class="instructions">The below values are in watt hours. Editing these values will permenanantly change them in the database.</div>
-
-    <div fxLayout="row" fxLayoutAlign="center start" style="width:100%;margin-top:16px;">
-      <div class="dataColumn" fxLayout="column" fxLayoutAlign="start start" *ngFor="let col of columnCount">
-        <div *ngFor="let mtu of dataColumns[col]">
-              <mat-checkbox [(ngModel)]="mtu.selected">{{mtu.name}}</mat-checkbox>
-        </div>
+<div *ngIf="loaded" style="width:100%">
+  <div *ngIf="mtuList.length == 0" class="content">
+    <div class="mtuList" fxLayout="row" fxLayoutAlign="start center">
+      <mat-icon class="redIcon">warning</mat-icon>
+      <div style="padding-left:8px">No MTU or Spyders have been activated against this server. Please refer to the
+        <span class="actionLink" routerLink="/serverSettings">instructions</span> on how to activate the mtu or spyder.
       </div>
     </div>
-
   </div>
+
+  <div *ngIf="mtuList.length != 0" class="content">
+    <div class="mtuList">
+      <div class="instructions">Please select which MTUs and Spyders you would like to include on your billing report.
+      </div>
+
+
+      <div class="instructions">The below values are in watt hours. Editing these values will permenanantly change them
+        in the database.
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="center start" style="width:100%;margin-top:16px;">
+        <div class="dataColumn" fxLayout="column" fxLayoutAlign="start start" *ngFor="let col of columnCount">
+          <div *ngFor="let mtu of dataColumns[col]">
+            <mat-checkbox [(ngModel)]="mtu.selected" (change)="validateForm()">{{mtu.name}}</mat-checkbox>
+          </div>
+        </div>
+      </div>
+
+
+      <div fxLayout="row" fxLayoutAlign="center center" style="margin-top:16px">
+        <button class="accentButtonFlat" mat-button (click)="onClear()">CLEAR</button>
+        <div style="width:32px"></div>
+        <button class="accentButtonFlat" mat-button (click)="onSelectAll()">SELECT ALL</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="instructions">
+        Please select the time frame you would like to export.
+      </div>
+
+      <div class="fxLayout=row" fxLayoutAlign="center center" style="margin-top:16px">
+
+        <div style="width:116px">&nbsp;</div>
+
+        <mat-radio-group aria-label="Select an option" fxLayout="row" [(ngModel)]="exportType" >
+          <mat-radio-button value="DAY">Day</mat-radio-button>
+          <mat-radio-button value="BILLING" style="padding-left:16px">Billing Cycle</mat-radio-button>
+        </mat-radio-group>
+
+        <mat-form-field style="width:100px;margin-left:16px;" *ngIf="exportType=='BILLING'">
+        <input matInput min="0" max="31" type="number"  [(ngModel)]="billingCycleStart" placeholder="Billing Cyle Start Day" (change)="onBillingCycleChange()">
+        </mat-form-field>
+
+        <!-- Balance out the optional field -->
+        <div style="width:116px;margin-top:36px;" *ngIf="exportType=='DAY'">&nbsp;</div>
+
+      </div>
+
+
+      <div class="divider"></div>
+
+
+      <!-- Time Selection -->
+      <div class="instructions">Please select the date rage</div>
+      <month-picker [start-year]="startYear"></month-picker>
+      <div class="divider"></div>
+
+      <div fxLayout="row" fxLayoutAlign="end" style="width:100%">
+        <button class="accentButtonFlat" [disabled]="!valid" mat-button (click)="onExport()">EXPORT</button>
+      </div>
+
+
+    </div>
+  </div>
+
+
 </div>
-
-
 
 

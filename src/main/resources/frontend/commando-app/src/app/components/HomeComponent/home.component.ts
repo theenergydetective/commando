@@ -18,12 +18,11 @@
 import {AfterContentInit, Component} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {NGXLogger} from 'ngx-logger';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MatDialog} from "@angular/material/dialog";
 import {MtuService} from "../../services/mtu.service";
 import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-unit";
-import {DailyEnergyData} from "../../models/daily-energy-data";
 
 @Component({
   selector: 'app-home',
@@ -32,10 +31,17 @@ import {DailyEnergyData} from "../../models/daily-energy-data";
 })
 
 export class HomeComponent implements AfterContentInit {
-  public mtuList:Array<MeasuringTransmittingUnit> = [];
+
   private static readonly MAX_COLUMN_COUNT:number = 5;
-  public columnCount:Array<number> = Array(HomeComponent.MAX_COLUMN_COUNT +1).fill(0).map((x,i)=>i);
-  public dataColumns:Array<Array<MeasuringTransmittingUnit>> = [[]];
+
+  mtuList:Array<MeasuringTransmittingUnit> = [];
+  columnCount:Array<number> = Array(HomeComponent.MAX_COLUMN_COUNT +1).fill(0).map((x,i)=>i);
+  dataColumns:Array<Array<MeasuringTransmittingUnit>> = [[]];
+  loaded: boolean = false;
+  billingCycleStart: number = 1;
+  exportType: string = 'DAY';
+  startYear:number = new Date().getFullYear();
+  valid: boolean = false;
 
 
   constructor(private authService: AuthService,
@@ -50,19 +56,38 @@ export class HomeComponent implements AfterContentInit {
 
   ngAfterContentInit(): void {
 
+    this.loaded = false;
     this.authService.verifyAccessToken().then(r=>{
       if (r){
         this.mtuService.findAllMTU(true).then((r:Array<MeasuringTransmittingUnit>)=>{
           this.mtuList = r;
+          this.startYear = this.calcStartYear(this.mtuList);
+
+          //this.onSelectAll();
+          this.onClear();
 
           let colSize = 10;
+          let colCount = HomeComponent.MAX_COLUMN_COUNT;
+
           if (this.mtuList.length > (HomeComponent.MAX_COLUMN_COUNT * colSize)){
+            //See if we need to adjust the column length
             colSize = Math.ceil(this.mtuList.length / HomeComponent.MAX_COLUMN_COUNT);
+          } else {
+            //See if we need to reduce columns
+            let columnsNeeded = Math.ceil(this.mtuList.length / colSize);
+            if (columnsNeeded < colCount) {
+              colCount = columnsNeeded;
+
+            }
           }
+
+          this.columnCount = Array(colCount +1).fill(0).map((x,i)=>i);
           this.dataColumns = [[]];
-          for (let c=0; c < HomeComponent.MAX_COLUMN_COUNT; c++) {
+          for (let c=0; c < colCount; c++) {
             this.dataColumns.push(this.createArrayChunk(this.mtuList, c, colSize));
           }
+
+          this.loaded = true;
         });
       } else {
         this.authService.logOut();
@@ -91,5 +116,45 @@ export class HomeComponent implements AfterContentInit {
 
 
   }
+
+  onClear() {
+    for (let i=0; i < this.mtuList.length; i++) this.mtuList[i].selected = false;
+    this.validateForm();
+  }
+
+  onSelectAll(){
+    for (let i=0; i < this.mtuList.length; i++) this.mtuList[i].selected = true;
+    this.validateForm();
+  }
+
+  onBillingCycleChange() {
+    if (this.billingCycleStart < 1) this.billingCycleStart = 1;
+    if (this.billingCycleStart > 31) this.billingCycleStart = 31;
+  }
+
+  calcStartYear(mtuList:Array<MeasuringTransmittingUnit>) {
+    let oldestDate = Math.floor(new Date().getTime()/1000);
+
+     for (let m=0; m < mtuList.length; m++){
+       let mtu = mtuList[m];
+       if (oldestDate > mtu.created) oldestDate = mtu.created;
+     }
+    return new Date(oldestDate * 1000).getFullYear();
+  }
+
+  validateForm() {
+    this.valid = false;
+    for (let m=0; m < this.mtuList.length; m++){
+      let mtu = this.mtuList[m];
+      if (mtu.selected){
+        this.valid = true;
+      }
+    }
+  }
+
+  onExport() {
+
+  }
+
 
 }

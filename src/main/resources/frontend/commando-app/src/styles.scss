@@ -106,6 +106,10 @@ body {
 }
 
 
+.accentButtonFlat {
+  color: $accent;
+}
+
 .instructions{
   font-size: mat-font-size($config, caption);
   font-family: mat-font-family($config);
