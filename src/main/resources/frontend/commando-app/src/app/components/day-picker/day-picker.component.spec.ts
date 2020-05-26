@@ -19,9 +19,10 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {DatePipe} from "@angular/common";
 import {LoggerConfig, NGXLogger, NGXLoggerHttpService, NgxLoggerLevel, NGXMapperService} from "ngx-logger";
 import {NGXLoggerHttpServiceMock, NGXMapperServiceMock} from "ngx-logger/testing";
-import {DayPickerComponent} from "./month-picker.component";
+import {DayPickerComponent} from "./day-picker.component";
 
-describe('MonthPickerComponent', () => {
+
+describe('DayPickerComponent', () => {
   let component: DayPickerComponent;
   let fixture: ComponentFixture<DayPickerComponent>;
 

@@ -68,8 +68,8 @@ describe('MtuService', () => {
     }
 
     const service: MtuService = TestBed.get(MtuService);
-    service.findAllMTU();
-    const req = httpTestingController.expectOne('/api/mtu');
+    service.findAllMTU(true);
+    const req = httpTestingController.expectOne('/api/mtu?enabled=true');
     expect(req.request.method).toEqual('GET');
     req.flush(mtuArray);
     httpTestingController.verify();

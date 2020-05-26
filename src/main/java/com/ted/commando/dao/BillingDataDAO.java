@@ -81,19 +81,13 @@ public class BillingDataDAO extends SimpleAbstractDAO {
         public DayBillingData mapRow(ResultSet rs, int rowNum) throws SQLException {
             BigDecimal rate = rs.getBigDecimal("energy_rate");
 
-
             DayBillingData dto = new DayBillingData();
             dto.setId(rs.getString("id"));
             dto.setMtuName(rs.getString("name"));
 
             BigDecimal usage = rs.getBigDecimal("usage").divide(new BigDecimal(1000.0));
-            //usage.setScale(2, RoundingMode.HALF_UP);
             dto.setKwhUsage(usage);
             dto.setKwhCost(usage.multiply(rate));
-
-            BigDecimal cost = rs.getBigDecimal("cost");
-            //cost.setScale(2, RoundingMode.FLOOR);
-            dto.setKwhCost(cost);
             return dto;
         }
     };
@@ -108,10 +102,8 @@ public class BillingDataDAO extends SimpleAbstractDAO {
             dto.setBillingCycleMonth(rs.getInt("month"));
             dto.setBillingCycleYear(rs.getInt("year"));
             BigDecimal usage = rs.getBigDecimal("usage").divide(new BigDecimal(1000.0));
-            //usage.setScale(2, RoundingMode.HALF_UP);
             dto.setKwhUsage(usage);
             dto.setKwhCost(usage.multiply(rate));
-            //cost.setScale(2, RoundingMode.FLOOR);
             return dto;
         }
     };

@@ -104,9 +104,11 @@
 
 
       <!-- Time Selection -->
-      <div class="instructions">Please select the date rage</div>
+      <div *ngIf="exportType=='BILLING'"  class="instructions">Please select the date rage</div>
+      <div *ngIf="exportType=='DAY'"  class="instructions">Please select the date rage. To select a single day, please click it twice.</div>
 
 
+      <day-picker *ngIf="exportType=='DAY'" (selected)="onSelected($event)"></day-picker>
       <month-picker *ngIf="exportType=='BILLING'" [start-year]="startYear" (selected)="onSelected($event)"></month-picker>
       <div class="divider"></div>
 

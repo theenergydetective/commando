@@ -15,15 +15,12 @@
  *
  */
 
-import {AfterContentInit, Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterContentInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {NGXLogger} from "ngx-logger";
-import {BillingRange, MonthYearRange} from "../../models/month-year";
-
-class MonthPickerData {
-  public year:number;
-  public months:Array<BillingRange> = [];
-}
-
+import {BillingDate, BillingDateRange} from "../../models/billing-date";
+import * as moment from 'moment';
+import {FormatHelper} from "../../helpers/format-helper";
+import {DaterangepickerComponent} from "ngx-daterangepicker-material";
 
 @Component({
   selector: 'day-picker',
@@ -31,87 +28,67 @@ class MonthPickerData {
   styleUrls: ['./day-picker.component.scss']
 })
 export class DayPickerComponent implements AfterContentInit{
-
-  @Input('start-year')
-  public startYear:number = 2019;
-
-  public values:Array<MonthPickerData> = [];
-
-  private range:MonthYearRange = new MonthYearRange();
-
-
-  @Output() selected: EventEmitter<MonthYearRange> = new EventEmitter();
-//this.selected.emit(value);
+  @Output() selected: EventEmitter<BillingDateRange> = new EventEmitter();
 
   constructor(private logger: NGXLogger) {
   }
 
+  private static TODAY_STRING:string = new Date().getFullYear()  +
+    '-' + FormatHelper.padZeros((new Date().getMonth()+1)+'', 2) +
+    '-' + FormatHelper.padZeros((new Date().getDate()+1)+'', 2) +
+    'T00:00Z';
+
+  defaultDate = {
+    chosenLabel:'',
+    startDate: moment(DayPickerComponent.TODAY_STRING),
+    endDate: moment(DayPickerComponent.TODAY_STRING)
+  };
+
   ngAfterContentInit(): void {
-    let thisYear = new Date().getFullYear();
-
-
-    this.values = [];
-    for (let y=this.startYear; y <= thisYear; y++){
-      let value = new MonthPickerData();
-      value.year = y;
-      value.months = [];
-
-      //Set up the month values
-      for (let m=0; m< 12; m++) {
-        let my:BillingRange = new BillingRange();
-        my.month = m;
-        my.year = y;
-        my.selected = false;
-        value.months.push(my);
-      }
-
-      this.values.push(value);
-    }
-
-    //Default to the current month
-    this.onSelected(new BillingRange(new Date(),true));
+    //Default to today.
+    this.chosenDate(this.defaultDate);
 
   }
 
 
-  onSelected($event: BillingRange) {
-    if (this.range.start == null || this.range.end != null){
-      //Clear the previous selection and start a new selection range.
-      this.range.start = $event;
-      this.range.end = null;
-
-      //Clear All except first select
-      for (let v=0; v < this.values.length; v++){
-        let months:Array<BillingRange> = this.values[v].months;
-        for (let m=0; m < months.length; m++){
-          let my:BillingRange = months[m];
-          my.selected = my.month == this.range.start.month && my.year == this.range.start.year;
-        }
-      }
-    } else if (this.range.end == null){
-      this.range.end = $event;
-
-      //Swap the order
-      if (this.range.start.compare(this.range.end) > 0){
-        this.range.end = this.range.start;
-        this.range.start = $event;
-      }
-
-      //Fill in the blanks
-      for (let v=0; v < this.values.length; v++){
-        let months:Array<BillingRange> = this.values[v].months;
-        for (let m=0; m < months.length; m++){
-          let my:BillingRange = months[m];
-          my.selected = my.isInBetween(this.range.start, this.range.end);
-        }
-      }
 
 
+
+  chosenDate(chosenDate: { chosenLabel: string; startDate: moment.Moment; endDate: moment.Moment }): void {
+    let range:BillingDateRange = new BillingDateRange();
+    range.start = new BillingDate();
+    range.end = new BillingDate();
+
+    range.start.year = chosenDate.startDate.year();
+    range.start.month = chosenDate.startDate.month();
+    range.start.date = chosenDate.startDate.date();
+    if (chosenDate.endDate == null){
+      range.end.year = chosenDate.startDate.year();
+      range.end.month = chosenDate.startDate.month();
+      range.end.date = chosenDate.startDate.date();
+    } else {
+      range.end.year = chosenDate.endDate.year();
+      range.end.month = chosenDate.endDate.month();
+      range.end.date = chosenDate.endDate.date();
     }
 
-    //Send results upstream
-    this.selected.emit(this.range);
+    this.logger.debug("[chosenDate] " + JSON.stringify(range, null, 2));
+    this.selected.emit(range);
+  }
 
 
+  startDateChanged(chosenDate: { startDate: moment.Moment }) {
+    let range:BillingDateRange = new BillingDateRange();
+    range.start = new BillingDate();
+    range.end = new BillingDate();
+    range.start.year = chosenDate.startDate.year();
+    range.start.month = chosenDate.startDate.month();
+    range.start.date = chosenDate.startDate.date();
+    range.end.year = chosenDate.startDate.year();
+    range.end.month = chosenDate.startDate.month();
+    range.end.date = chosenDate.startDate.date();
+
+    this.logger.debug("[startDateChanged] " + JSON.stringify(range, null, 2));
+    this.selected.emit(range);
   }
 }

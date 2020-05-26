@@ -14,11 +14,16 @@
   ~      limitations under the License.
   ~
   -->
-<div fxLayout="column" style="max-width:600px; margin:auto">
-  <div fxLayout="row" fxLayoutAlign="start center" *ngFor="let value of values">
-    <div class="year">{{value.year}}</div>
-    <div fxLayout="row" fxLayoutAlign="start center" *ngFor="let my of value.months">
-      <month-picker-toggle [month-year]="my" (selected)="onSelected($event)"></month-picker-toggle>
-    </div>
-  </div>
+
+
+<div fxLayout="row" fxLayoutAlign="center center" style="width:100%;padding:16px">
+
+  <!-- The date picker in Angular Material 10 is supposed to support ranges. When that release
+       is stable, we can probably swap out this component with that one -->
+  <ngx-daterangepicker-material
+    name="inline-daterangepicker"
+    [autoApply]="true"
+    (startDateChanged)="startDateChanged($event)"
+    (chosenDate)="chosenDate($event)">
+  </ngx-daterangepicker-material>
 </div>

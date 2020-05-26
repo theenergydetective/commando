@@ -19,6 +19,8 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @import '~@angular/material/theming';
+@import 'date-picker-theme.scss';
+
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -64,7 +66,7 @@ $commando-app-theme: mat-light-theme($commando-app-primary, $commando-app-accent
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include angular-material-theme($commando-app-theme);
-
+@include date-range-picker-theme($commando-app-theme);
 /*!
  * Copyright (c) 2020. Energy, Inc.
  *
@@ -146,3 +148,4 @@ body {
   background-color: $accent;
   color:white;
 }
+

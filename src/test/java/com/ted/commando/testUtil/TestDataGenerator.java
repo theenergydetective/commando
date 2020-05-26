@@ -86,7 +86,7 @@ public class TestDataGenerator {
         calendar.set(Calendar.MILLISECOND, 0);
     }
 
-    //@Ignore
+    @Ignore
     @Test
     public void generateTestData() throws Exception{
         cleanUpData();
@@ -137,8 +137,8 @@ public class TestDataGenerator {
                 energyCumulativePost.setVoltage(120.0);
                 energyCumulativePost.setPowerFactor(0.98);
 
-                long watts = 1000000000L * i;
-                watts += wattsPerDay;
+                long watts = 1000000000L;
+                watts += wattsPerDay * i;
 
                 energyCumulativePost.setWatts((double)watts);
                 mtuPost.getCumulativePostList().add(energyCumulativePost);

@@ -53,6 +53,8 @@ import {DeviceEditComponent} from "./components/DeviceEditComponent";
 import {DeviceEditFieldComponent} from "./components/DeviceEditComponent/DeviceEditField/device-edit-field.component";
 import {MonthPickerComponent} from "./components/month-picker/month-picker.component";
 import {MonthPickerToggleComponent} from "./components/month-picker/month-picker-toggle.component";
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
+import {DayPickerComponent} from "./components/day-picker/day-picker.component";
 
 
 @NgModule({
@@ -70,7 +72,8 @@ import {MonthPickerToggleComponent} from "./components/month-picker/month-picker
     MenuComponent,
     DeviceEditFieldComponent,
     MonthPickerComponent,
-    MonthPickerToggleComponent
+    MonthPickerToggleComponent,
+    DayPickerComponent
   ],
     imports: [
         BrowserModule,
@@ -94,6 +97,7 @@ import {MonthPickerToggleComponent} from "./components/month-picker/month-picker
         MatRippleModule,
         MatChipsModule,
         HttpClientModule,
+        NgxDaterangepickerMd.forRoot(),
         LoggerModule.forRoot({
             // serverLoggingUrl: '/api/logs',
             level: NgxLoggerLevel.DEBUG, // TODO: Switch to WARN on production
@@ -104,6 +108,7 @@ import {MonthPickerToggleComponent} from "./components/month-picker/month-picker
         BrowserAnimationsModule,
         ReactiveFormsModule,
         MatSidenavModule,
+        NgxDaterangepickerMd,
 
 
     ],

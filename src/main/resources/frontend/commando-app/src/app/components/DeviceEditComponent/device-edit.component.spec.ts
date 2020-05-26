@@ -43,6 +43,7 @@ import {MatListModule} from "@angular/material/list";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatSelectModule} from "@angular/material/select";
 import {MockMatIconComponent} from "../../mocks/mock-mat-icon-component";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 
 describe('DeviceEditComponent', () => {
@@ -69,6 +70,7 @@ describe('DeviceEditComponent', () => {
         MatSnackBarModule,
         MatToolbarModule,
         MatListModule,
+        MatCheckboxModule,
         MatSidenavModule,
         ReactiveFormsModule,
         FlexLayoutModule,
