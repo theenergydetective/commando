@@ -17,7 +17,7 @@
     <groupId>com.ted</groupId>
     <artifactId>commando</artifactId>
     <version>1.0</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <skipTests>false</skipTests>
@@ -178,6 +178,7 @@
                 <filtering>true</filtering>
                 <excludes>
                     <exclude>**/*.p12</exclude>
+                    <exclude>frontend/**</exclude>
                 </excludes>
             </resource>
         </resources>
@@ -217,6 +218,11 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -226,34 +232,6 @@
                     <useManifestOnlyJar>true</useManifestOnlyJar>
                     <skipTests>${skipTests}</skipTests>
                 </configuration>
-            </plugin>
-
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>prepare</id>
-                        <phase>package</phase>
-                        <configuration>
-                            <tasks>
-                                <unzip src="${project.build.directory}/${project.build.finalName}.war"
-                                       dest="${project.build.directory}/${project.build.finalName}"/>
-                                <copy todir="${project.build.directory}/${project.build.finalName}/" overwrite="false">
-                                    <fileset dir="./" includes=".ebextensions/**"/>
-                                </copy>
-                                <zip compress="false"
-                                     destfile="${project.build.directory}/${project.build.finalName}.war"
-                                     basedir="${project.build.directory}/${project.build.finalName}"/>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
