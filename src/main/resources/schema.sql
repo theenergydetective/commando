@@ -42,10 +42,13 @@ CREATE TABLE IF NOT EXISTS mtu (
 
 CREATE TABLE IF NOT EXISTS daily_energy_data (
     mtu_id varchar(45)  NOT NULL,
-    epoch_date bigint(20) unsigned NOT NULL DEFAULT '0',
+    energy_date bigint(20) unsigned NOT NULL DEFAULT '0',
     energy_value decimal(32,4) unsigned NOT NULL DEFAULT '0',
-    PRIMARY KEY (mtu_id,epoch_date)
+    PRIMARY KEY (mtu_id,energy_date)
 );
 
+CREATE ALIAS IF NOT EXISTS billingCycleMonth
+   FOR "com.ted.commando.util.DatabaseFunctions.getBillingCycleMonth";
 
-
+CREATE ALIAS IF NOT EXISTS billingCycleYear
+   FOR "com.ted.commando.util.DatabaseFunctions.getBillingCycleYear";

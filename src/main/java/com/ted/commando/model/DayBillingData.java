@@ -20,32 +20,34 @@ package com.ted.commando.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ted.commando.enums.ExportType;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BillingFormParameters {
-    private String accessToken;
-    private ExportType exportType;
-    private String startDate;
-    private String endDate;
-    private Integer meterReadDate;
-    private List<String> selectedDevices = new ArrayList<>();
+public class DayBillingData {
+    String id;
+    String mtuName;
+    String startDate;
+    String endDate;
+    BigDecimal kwhUsage;
+    BigDecimal kwhCost;
 
-    public String getAccessToken() {
-        return accessToken;
+
+    public String getId() {
+        return id;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public ExportType getExportType() {
-        return exportType;
+    public String getMtuName() {
+        return mtuName;
     }
 
-    public void setExportType(ExportType exportType) {
-        this.exportType = exportType;
+    public void setMtuName(String mtuName) {
+        this.mtuName = mtuName;
     }
 
     public String getStartDate() {
@@ -64,31 +66,31 @@ public class BillingFormParameters {
         this.endDate = endDate;
     }
 
-    public List<String> getSelectedDevices() {
-        return selectedDevices;
+    public BigDecimal getKwhUsage() {
+        return kwhUsage;
     }
 
-    public void setSelectedDevices(List<String> selectedDevices) {
-        this.selectedDevices = selectedDevices;
+    public void setKwhUsage(BigDecimal kwhUsage) {
+        this.kwhUsage = kwhUsage;
     }
 
-    public Integer getMeterReadDate() {
-        return meterReadDate;
+    public BigDecimal getKwhCost() {
+        return kwhCost;
     }
 
-    public void setMeterReadDate(Integer meterReadDate) {
-        this.meterReadDate = meterReadDate;
+    public void setKwhCost(BigDecimal kwhCost) {
+        this.kwhCost = kwhCost;
     }
 
     @Override
     public String toString() {
-        return "BillingFormParameters{" +
-                "accessToken='" + accessToken + '\'' +
-                ", exportType=" + exportType +
+        return "DayBillingData{" +
+                "id='" + id + '\'' +
+                ", mtuName='" + mtuName + '\'' +
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
-                ", meterReadDate=" + meterReadDate +
-                ", selectedDevices=" + selectedDevices +
+                ", kwhUsage=" + kwhUsage +
+                ", kwhCost=" + kwhCost +
                 '}';
     }
 }

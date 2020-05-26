@@ -17,7 +17,9 @@
 
 package com.ted.commando.dao;
 
+import com.ted.commando.model.BillingFormParameters;
 import com.ted.commando.model.DailyEnergyData;
+import com.ted.commando.model.MeasuringTransmittingUnit;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -25,6 +27,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
+import javax.servlet.ServletOutputStream;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,25 +42,25 @@ public class DailyEnergyDataDAO extends SimpleAbstractDAO {
 
     public static final String[] FIELDS = {
             "mtu_id",
-            "epoch_date",
+            "energy_date",
             "energy_value"
     };
 
     private static String BASE_QUERY = "select " + generateFields("ed.", FIELDS, 0) + " from daily_energy_data ed ";
-    private static String FIND_ONE = BASE_QUERY + " where ed.mtu_id=:mtu_id and ed.epoch_date=:epoch_date";
-    private static String FIND_BY_MTU = BASE_QUERY + " where mtu_id = :mtu_id order by epoch_date desc";
-    private static String FIND_BY_MTU_DATE = BASE_QUERY + " where mtu_id = :mtu_id and epoch_date >= :start_date and epoch_date < :end_date order by epoch_date desc";
+    private static String FIND_ONE = BASE_QUERY + " where ed.mtu_id=:mtu_id and ed.energy_date=:energy_date";
+    private static String FIND_BY_MTU = BASE_QUERY + " where mtu_id = :mtu_id order by energy_date desc";
+    private static String FIND_BY_MTU_DATE = BASE_QUERY + " where mtu_id = :mtu_id and energy_date >= :start_date and energy_date < :end_date order by energy_date desc";
 
-    private static String FIND_TOTAL_ENERGY = "select sum(energy_value) from daily_energy_data where mtu_id = :mtu_id and epoch_date >= :start and epoch_date < :end";
+    private static String FIND_TOTAL_ENERGY = "select sum(energy_value) from daily_energy_data where mtu_id = :mtu_id and energy_date >= :start and energy_date < :end";
 
     private static String INSERT = "insert into daily_energy_data (" + generateFields("", FIELDS, 0) + ") VALUES (" + generateFields(":", FIELDS, 0) + ")";
-    private static String UPDATE = "update daily_energy_data set energy_value=:energy_value where mtu_id=:mtu_id and epoch_date=:epoch_date";
+    private static String UPDATE = "update daily_energy_data set energy_value=:energy_value where mtu_id=:mtu_id and energy_date=:energy_date";
 
-    private RowMapper<DailyEnergyData> rowMapper = new RowMapper<DailyEnergyData>() {
+    public static RowMapper<DailyEnergyData> ROW_MAPPER = new RowMapper<DailyEnergyData>() {
         public DailyEnergyData mapRow(ResultSet rs, int rowNum) throws SQLException {
             DailyEnergyData dto = new DailyEnergyData();
             dto.setMtuId(rs.getString("mtu_id"));
-            dto.setEpochDate(rs.getLong("epoch_date"));
+            dto.setEnergyDate(rs.getLong("energy_date"));
             dto.setEnergyValue(rs.getBigDecimal("energy_value"));
             return dto;
         }
@@ -65,7 +69,7 @@ public class DailyEnergyDataDAO extends SimpleAbstractDAO {
     private MapSqlParameterSource createMap(DailyEnergyData dto) {
         MapSqlParameterSource map = new MapSqlParameterSource();
         map.addValue("mtu_id", dto.getMtuId());
-        map.addValue("epoch_date", dto.getEpochDate());
+        map.addValue("energy_date", dto.getEnergyDate());
         map.addValue("energy_value", dto.getEnergyValue());
         return map;
     }
@@ -74,22 +78,21 @@ public class DailyEnergyDataDAO extends SimpleAbstractDAO {
     public List<DailyEnergyData> findByMtu(String mtuId) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("mtu_id", mtuId);
-        return namedParameterJdbcTemplate.query(FIND_BY_MTU, parameterSource, rowMapper);
+        return namedParameterJdbcTemplate.query(FIND_BY_MTU, parameterSource, ROW_MAPPER);
     }
 
-    /**
-     * Returns the total usage begining with the start date up to but not including the end date
-     *
+    /***
+     * Returns the total usage beginning with the start date up to but not including the end date
      * @param mtuId
-     * @param startEpoch - epoch in seconds
-     * @param endEpoch   - epoch in seconds
+     * @param startEnergyDate YYYYMMDD format
+     * @param endEnergyDate YYYYMMDD format
      * @return
      */
-    public BigDecimal sumTotalEnergy(String mtuId, long startEpoch, long endEpoch) {
+    public BigDecimal sumTotalEnergy(String mtuId, long startEnergyDate, long endEnergyDate) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("mtu_id", mtuId);
-        parameterSource.addValue("start", startEpoch);
-        parameterSource.addValue("end", endEpoch);
+        parameterSource.addValue("start", startEnergyDate);
+        parameterSource.addValue("end", endEnergyDate);
         return namedParameterJdbcTemplate.queryForObject(FIND_TOTAL_ENERGY, parameterSource, BigDecimal.class);
     }
 
@@ -97,22 +100,22 @@ public class DailyEnergyDataDAO extends SimpleAbstractDAO {
      * Returns a single energy data record.
      *
      * @param mtuId
-     * @param epochDate
+     * @param energyDate
      * @return
      */
-    public DailyEnergyData findOne(String mtuId, Long epochDate) {
+    public DailyEnergyData findOne(String mtuId, Long energyDate) {
         try {
             MapSqlParameterSource parameterSource = new MapSqlParameterSource();
             parameterSource.addValue("mtu_id", mtuId);
-            parameterSource.addValue("epoch_date", epochDate);
-            return namedParameterJdbcTemplate.queryForObject(FIND_ONE, parameterSource, rowMapper);
+            parameterSource.addValue("energy_date", energyDate);
+            return namedParameterJdbcTemplate.queryForObject(FIND_ONE, parameterSource, ROW_MAPPER);
         } catch (EmptyResultDataAccessException ex) {
             return null;
         }
     }
 
     public synchronized DailyEnergyData insert(DailyEnergyData dto) {
-        if (null != findOne(dto.getMtuId(), dto.getEpochDate())) {
+        if (null != findOne(dto.getMtuId(), dto.getEnergyDate())) {
             LOGGER.debug("[insert] Already exists: {}", dto);
             update(dto);
         } else {
@@ -134,6 +137,8 @@ public class DailyEnergyDataDAO extends SimpleAbstractDAO {
         parameterSource.addValue("mtu_id", mtuId);
         parameterSource.addValue("start_date", startDate);
         parameterSource.addValue("end_date", endDate);
-        return namedParameterJdbcTemplate.query(FIND_BY_MTU_DATE, parameterSource, rowMapper);
+        return namedParameterJdbcTemplate.query(FIND_BY_MTU_DATE, parameterSource, ROW_MAPPER);
     }
+
+
 }

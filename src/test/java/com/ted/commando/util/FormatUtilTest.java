@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -51,6 +52,32 @@ public class FormatUtilTest {
         assertEquals(1582866000L, FormatUtil.parseStringDate(date, NYTZ).longValue());
         assertEquals(1582848000L, FormatUtil.parseStringDate(date, LATZ).longValue());
 
+    }
+
+    @Test
+    public void parseEnergyDateStringTest(){
+        assertEquals(0L, FormatUtil.parseEnergyDateString(null).longValue());
+        assertEquals(20200420L, FormatUtil.parseEnergyDateString("2020-04-20").longValue());
+        assertEquals(0L, FormatUtil.parseEnergyDateString("ABCD-04-20").longValue());
+    }
+
+    @Test
+    public void parseCycleDateStringTest(){
+        assertEquals(0L, FormatUtil.parseCycleDateString(null).longValue());
+        assertEquals(202004L, FormatUtil.parseCycleDateString("2020-04-20").longValue());
+        assertEquals(0L, FormatUtil.parseCycleDateString("ABCD-04-20").longValue());
+    }
+
+    @Test
+    public void prettyFormatEnergyDateTest(){
+        assertEquals("Apr 20, 2020", FormatUtil.prettyFormatEnergyDate(20200420L));
+        assertEquals("", FormatUtil.prettyFormatEnergyDate(202004L));
+    }
+
+    @Test
+    public void simpleFormatEnergyDateTest(){
+        assertEquals("04/20/2020", FormatUtil.simpleFormatEnergyDate("2020-04-20"));
+        assertEquals("", FormatUtil.simpleFormatEnergyDate("2020-04-2000"));
     }
 
 }

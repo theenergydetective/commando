@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -47,6 +48,11 @@ public class VersionControllerTest {
     public void testVersionInformation(){
         when(versionService.getVersion()).thenReturn("Test");
         assertEquals("Test", versionController.getVersion());
+    }
+
+    @Test
+    public void getPingTest(){
+        assertNotNull(versionController.getPing());
     }
 
 }

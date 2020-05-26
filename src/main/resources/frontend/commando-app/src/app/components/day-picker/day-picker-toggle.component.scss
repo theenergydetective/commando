@@ -1,0 +1,52 @@
+/*!
+ * Copyright (c) 2020. Energy, Inc.
+ *
+ *      Licensed under the Apache License, Version 2.0 (the "License");
+ *      you may not use this file except in compliance with the License.
+ *      You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *      Unless required by applicable law or agreed to in writing, software
+ *      distributed under the License is distributed on an "AS IS" BASIS,
+ *      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *      See the License for the specific language governing permissions and
+ *      limitations under the License.
+ *
+ */
+
+
+@import '~@angular/material/theming';
+
+$config: mat-typography-config();
+$default-padding: 5px;
+$double-padding: $default-padding * 2;
+$default-min-height: 30px;
+
+
+.toggleButton{
+  margin:2px;
+  text-align: center;
+  cursor:pointer;
+  cursor:hand;
+}
+
+.toggleButtonContent {
+  color: $dark-primary-text;
+  font-size: mat-font-size($config, body-1);
+  font-family: mat-font-family($config);
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 50%;
+  width:24px;
+  height:24px;
+  padding:8px;
+
+}
+
+
+.toggleButtonContent:hover{
+  background-color: #2962FF;
+  color:white;
+  opacity: .3;
+}

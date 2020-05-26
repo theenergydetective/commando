@@ -17,9 +17,10 @@
 
 package com.ted.commando.service;
 
+import com.ted.commando.dao.BillingDataDAO;
 import com.ted.commando.dao.DailyEnergyDataDAO;
-import com.ted.commando.dao.EnergyControlCenterDAO;
 import com.ted.commando.dao.MeasuringTransmittingUnitDAO;
+import com.ted.commando.enums.ExportType;
 import com.ted.commando.model.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,12 +29,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.inject.Inject;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -48,6 +50,9 @@ public class DailyEnergyDataServiceTest {
 
     @Mock
     MeasuringTransmittingUnitDAO measuringTransmittingUnitDAO;
+
+    @Mock
+    BillingDataDAO billingDataDAO;
 
     @InjectMocks
     DailyEnergyDataService dailyEnergyDataService;
@@ -106,7 +111,7 @@ public class DailyEnergyDataServiceTest {
         DailyEnergyData dailyEnergyData = new DailyEnergyData();
         dailyEnergyData.setEnergyValue(new BigDecimal(10000.0));
         dailyEnergyData.setMtuId("TESTMTU");
-        dailyEnergyData.setEpochDate(1589860800L);
+        dailyEnergyData.setEnergyDate(20200523L);
 
         mtu.setTimezone(NYTZ);
         reset(measuringTransmittingUnitDAO);
@@ -115,6 +120,56 @@ public class DailyEnergyDataServiceTest {
         verify(measuringTransmittingUnitDAO).updateLastDayPost(expectedFinalMTU);
         verify(dailyEnergyDataDAO, times(5)).insert(any());
         verify(dailyEnergyDataDAO, times(1)).insert(dailyEnergyData);
+    }
+
+
+    @Test
+    public void writeDataTest(){
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        BillingFormParameters parameters = new BillingFormParameters();
+        parameters.setExportType(ExportType.DAY);
+    }
+
+    @Test
+    public void findByIdDateTest(){
+        DailyEnergyData dailyEnergyData = new DailyEnergyData();
+        dailyEnergyData.setMtuId("TEST");
+        dailyEnergyData.setEnergyDate(20200420L);
+        dailyEnergyData.setEnergyValue(new BigDecimal(10000));
+
+        List<DailyEnergyData> dailyEnergyDataList = new ArrayList<>();
+        dailyEnergyDataList.add(dailyEnergyData);
+
+        when(dailyEnergyDataDAO.findByMtu("TEST")).thenReturn(dailyEnergyDataList);
+        when(dailyEnergyDataDAO.findByIdDate("TEST", 20200401L, 20200430L)).thenReturn(dailyEnergyDataList);
+        List<DailyEnergyData> results = dailyEnergyDataService.findByIdDate("TEST", null, null);
+        verify(dailyEnergyDataDAO).findByMtu("TEST");
+        assertEquals("Apr 20, 2020", results.get(0).getFormattedDate());
+
+        results = dailyEnergyDataService.findByIdDate("TEST", "2020-04-01", "2020-04-30");
+        verify(dailyEnergyDataDAO).findByIdDate("TEST",20200401L, 20200430L);
+        assertEquals("Apr 20, 2020", results.get(0).getFormattedDate());
+
+    }
+
+    @Test
+    public void updateTest(){
+        dailyEnergyDataService.update(new DailyEnergyData());
+        verify(dailyEnergyDataDAO).update(any());
+    }
+
+    @Test
+    public void writeDailyDataTest(){
+        ServletOutputStream outputStream = mock(ServletOutputStream.class);
+        dailyEnergyDataService.writeDailyData(new BillingFormParameters(), outputStream);
+        verify(billingDataDAO).exportDailyData(any(),any());
+    }
+
+    @Test
+    public void writeBillingCycleDataTest(){
+        ServletOutputStream outputStream = mock(ServletOutputStream.class);
+        dailyEnergyDataService.writeBillingCycleData(new BillingFormParameters(), outputStream);
+        verify(billingDataDAO).exportBillingCycleData(any(),any());
     }
 
 

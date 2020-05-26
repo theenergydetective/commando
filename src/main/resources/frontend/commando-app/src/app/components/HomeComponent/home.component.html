@@ -91,7 +91,7 @@
         </mat-radio-group>
 
         <mat-form-field style="width:100px;margin-left:16px;" *ngIf="exportType=='BILLING'">
-        <input matInput min="0" max="31" type="number"  [(ngModel)]="billingCycleStart" placeholder="Billing Cyle Start Day" (change)="onBillingCycleChange()">
+        <input matInput min="0" max="31" type="number"  [(ngModel)]="meterReadDate" placeholder="Meter Read Date" (change)="onBillingCycleChange()">
         </mat-form-field>
 
         <!-- Balance out the optional field -->
@@ -105,7 +105,9 @@
 
       <!-- Time Selection -->
       <div class="instructions">Please select the date rage</div>
-      <month-picker [start-year]="startYear" (selected)="onSelected($event)"></month-picker>
+
+
+      <month-picker *ngIf="exportType=='BILLING'" [start-year]="startYear" (selected)="onSelected($event)"></month-picker>
       <div class="divider"></div>
 
       <div fxLayout="row" fxLayoutAlign="end" style="width:100%">

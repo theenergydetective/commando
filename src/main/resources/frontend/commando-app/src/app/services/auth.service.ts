@@ -22,6 +22,7 @@ import {NGXLogger} from 'ngx-logger';
 import {OAuthResponse} from '../models/oauth-response';
 import {AdminRequest} from "../models/admin-request";
 import {ActivationDetails} from "../models/activation-details";
+import {PongResponse} from "../models/pong-response";
 
 @Injectable({
   providedIn: 'root'
@@ -289,7 +290,7 @@ export class AuthService implements OnDestroy {
     this.logger.info('[verifyAccessToken] Looking up activation details');
     return new Promise(adResult => {
       const response = this.http.get('/api/version/ping', this.getAuthorizedHttpOptions());
-      response.subscribe(data => {
+      response.subscribe((data:PongResponse) => {
           adResult(true);
         },
         error => {

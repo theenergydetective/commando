@@ -25,16 +25,16 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DailyEnergyData {
     private String mtuId;
-    private Long epochDate;
+    private Long energyDate;
     private BigDecimal energyValue;
     private String formattedDate;
 
     public DailyEnergyData() {
     }
 
-    public DailyEnergyData(String mtuId, Long epochDate, BigDecimal energyValue) {
+    public DailyEnergyData(String mtuId, Long energyDate, BigDecimal energyValue) {
         this.mtuId = mtuId;
-        this.epochDate = epochDate;
+        this.energyDate = energyDate;
         this.energyValue = energyValue;
     }
 
@@ -46,12 +46,12 @@ public class DailyEnergyData {
         this.mtuId = mtuId;
     }
 
-    public Long getEpochDate() {
-        return epochDate;
+    public Long getEnergyDate() {
+        return energyDate;
     }
 
-    public void setEpochDate(Long epochDate) {
-        this.epochDate = epochDate;
+    public void setEnergyDate(Long energyDate) {
+        this.energyDate = energyDate;
     }
 
     public BigDecimal getEnergyValue() {
@@ -77,20 +77,20 @@ public class DailyEnergyData {
         if (!(o instanceof DailyEnergyData)) return false;
         DailyEnergyData that = (DailyEnergyData) o;
         return Objects.equals(mtuId, that.mtuId) &&
-                Objects.equals(epochDate, that.epochDate) &&
+                Objects.equals(energyDate, that.energyDate) &&
                 Objects.equals(energyValue, that.energyValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(mtuId, epochDate, energyValue);
+        return Objects.hash(mtuId, energyDate, energyValue);
     }
 
     @Override
     public String toString() {
         return "DailyEnergyData{" +
                 "mtuId='" + mtuId + '\'' +
-                ", epochDate=" + epochDate +
+                ", epochDate=" + energyDate +
                 ", energyValue=" + energyValue +
                 '}';
     }

@@ -14,11 +14,10 @@
   ~      limitations under the License.
   ~
   -->
-<div fxLayout="column" style="max-width:600px; margin:auto">
-  <div fxLayout="row" fxLayoutAlign="start center" *ngFor="let value of values">
-    <div class="year">{{value.year}}</div>
-    <div fxLayout="row" fxLayoutAlign="start center" *ngFor="let bd of value.months">
-      <month-picker-toggle [billing-date]="bd" (selected)="onSelected($event)"></month-picker-toggle>
-    </div>
+<div class="toggleButton" (click)="onClick()">
+  <div class="toggleButtonContent" [ngStyle]="{'color': monthYear.selected ? 'white' : 'black', 'background': monthYear.selected ? '#2962FF': 'white'}">
+  {{label}}
   </div>
 </div>
+
+

@@ -89,7 +89,15 @@ public class DailyEnergyDataController {
                     response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName.toString() + "\"");
                     response.setStatus(200);
 
-                    dailyEnergyDataService.writeData(billingFormParameters, response.getOutputStream());
+                    switch (billingFormParameters.getExportType()){
+                        case DAY:{
+                            dailyEnergyDataService.writeDailyData(billingFormParameters, response.getOutputStream());
+                            break;
+                        }
+                        default:
+                            dailyEnergyDataService.writeBillingCycleData(billingFormParameters, response.getOutputStream());
+                    }
+
                     response.flushBuffer();
                     return;
                 } catch (IOException ioex){

@@ -64,7 +64,7 @@ public class DailyEnergyControllerTest {
     public void updateTest() throws Exception{
         DailyEnergyData dailyEnergyData = new DailyEnergyData();
         dailyEnergyData.setMtuId("TEST");
-        dailyEnergyData.setEpochDate(1L);
+        dailyEnergyData.setEnergyDate(1L);
         dailyEnergyData.setEnergyValue(BigDecimal.TEN);
         dailyEnergyDataController.updateRecord(dailyEnergyData);
         verify(dailyEnergyDataService).update(dailyEnergyData);
@@ -79,21 +79,30 @@ public class DailyEnergyControllerTest {
 
     @Test
     public void exportDataTest() throws IOException {
-        String formParameters = "{\"selectedDevices\":[\"TESTDEV0\",\"TESTDEV1\",\"TESTDEV10\",\"TESTDEV11\",\"TESTDEV12\",\"TESTDEV13\",\"TESTDEV14\",\"TESTDEV15\",\"TESTDEV2\",\"TESTDEV3\",\"TESTDEV4\",\"TESTDEV5\",\"TESTDEV6\",\"TESTDEV7\",\"TESTDEV8\",\"TESTDEV9\"],\"accessToken\":\"zIPfpIENzDNrL+Oacwzb5blrflQ=\",\"billingCycleStart\":1,\"exportType\":\"DAY\",\"range\":{\"start\":{\"selected\":true,\"month\":4,\"year\":2020},\"end\":null}}";
+        String dailyFormParamters = "{\"selectedDevices\":[\"TESTDEV0\",\"TESTDEV1\",\"TESTDEV10\",\"TESTDEV11\",\"TESTDEV12\",\"TESTDEV13\",\"TESTDEV14\",\"TESTDEV15\",\"TESTDEV2\",\"TESTDEV3\",\"TESTDEV4\",\"TESTDEV5\",\"TESTDEV6\",\"TESTDEV7\",\"TESTDEV8\",\"TESTDEV9\"],\"accessToken\":\"zIPfpIENzDNrL+Oacwzb5blrflQ=\",\"billingCycleStart\":1,\"exportType\":\"DAY\",\"range\":{\"start\":{\"selected\":true,\"month\":4,\"year\":2020},\"end\":null}}";
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
-        when(request.getParameter("formData")).thenReturn(formParameters);
+        when(request.getParameter("formData")).thenReturn(dailyFormParamters);
         when(authorizationService.isAuthorized(anyString())).thenReturn(true);
 
         dailyEnergyDataController.exportData(request, response);
         verify(response).setStatus(200);
-        verify(dailyEnergyDataService).writeData(any(), any());
-
+        verify(dailyEnergyDataService).writeDailyData(any(), any());
         reset(dailyEnergyDataService);
+        reset(response);
+
+        String billingFormParameters = "{\"selectedDevices\":[\"TESTDEV0\",\"TESTDEV1\",\"TESTDEV10\",\"TESTDEV11\",\"TESTDEV12\",\"TESTDEV13\",\"TESTDEV14\",\"TESTDEV15\",\"TESTDEV2\",\"TESTDEV3\",\"TESTDEV4\",\"TESTDEV5\",\"TESTDEV6\",\"TESTDEV7\",\"TESTDEV8\",\"TESTDEV9\"],\"accessToken\":\"zIPfpIENzDNrL+Oacwzb5blrflQ=\",\"billingCycleStart\":1,\"exportType\":\"BILLING\",\"range\":{\"start\":{\"selected\":true,\"month\":4,\"year\":2020},\"end\":null}}";
+        when(request.getParameter("formData")).thenReturn(billingFormParameters);
+        dailyEnergyDataController.exportData(request, response);
+        verify(response).setStatus(200);
+        verify(dailyEnergyDataService).writeBillingCycleData(any(), any());
+        reset(dailyEnergyDataService);
+        reset(response);
+
         when(authorizationService.isAuthorized(anyString())).thenReturn(false);
         dailyEnergyDataController.exportData(request, response);
         verify(response).sendError(401);
-        verify(dailyEnergyDataService, times(0)).writeData(any(), any());
+        verify(dailyEnergyDataService, times(0)).writeDailyData(any(), any());
 
         reset(dailyEnergyDataService);
         reset(response);
@@ -101,7 +110,7 @@ public class DailyEnergyControllerTest {
         doThrow(new IOException()).when(response).flushBuffer();
         dailyEnergyDataController.exportData(request, response);
         verify(response).sendError(401);
-        verify(dailyEnergyDataService, times(1)).writeData(any(), any());
+        verify(dailyEnergyDataService, times(1)).writeBillingCycleData(any(), any());
 
 
     }

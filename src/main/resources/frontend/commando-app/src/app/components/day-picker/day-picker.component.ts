@@ -17,33 +17,30 @@
 
 import {AfterContentInit, Component, EventEmitter, Input, Output} from '@angular/core';
 import {NGXLogger} from "ngx-logger";
-import {BillingDate, BillingDateRange} from "../../models/billing-date";
+import {BillingRange, MonthYearRange} from "../../models/month-year";
 
 class MonthPickerData {
   public year:number;
-  public months:Array<BillingDate> = [];
+  public months:Array<BillingRange> = [];
 }
 
 
 @Component({
-  selector: 'month-picker',
-  templateUrl: './month-picker.component.html',
-  styleUrls: ['./month-picker.component.scss']
+  selector: 'day-picker',
+  templateUrl: './day-picker.component.html',
+  styleUrls: ['./day-picker.component.scss']
 })
-export class MonthPickerComponent implements AfterContentInit{
+export class DayPickerComponent implements AfterContentInit{
 
   @Input('start-year')
-  public startYear:number = 2020;
-
-  @Input('billing-cycle-date')
-  public billingCycleDate:number=1;
+  public startYear:number = 2019;
 
   public values:Array<MonthPickerData> = [];
 
-  private range:BillingDateRange = new BillingDateRange();
+  private range:MonthYearRange = new MonthYearRange();
 
 
-  @Output() selected: EventEmitter<BillingDateRange> = new EventEmitter();
+  @Output() selected: EventEmitter<MonthYearRange> = new EventEmitter();
 //this.selected.emit(value);
 
   constructor(private logger: NGXLogger) {
@@ -61,27 +58,23 @@ export class MonthPickerComponent implements AfterContentInit{
 
       //Set up the month values
       for (let m=0; m< 12; m++) {
-        let bd:BillingDate = new BillingDate();
-        bd.month = m;
-        bd.year = y;
-        bd.date = 1;
-        bd.selected = false;
-        value.months.push(bd);
+        let my:BillingRange = new BillingRange();
+        my.month = m;
+        my.year = y;
+        my.selected = false;
+        value.months.push(my);
       }
 
       this.values.push(value);
     }
 
-    let currentMonth:BillingDate = new BillingDate();
-    currentMonth.date = 1;
-
     //Default to the current month
-    this.onSelected(currentMonth);
+    this.onSelected(new BillingRange(new Date(),true));
 
   }
 
 
-  onSelected($event: BillingDate) {
+  onSelected($event: BillingRange) {
     if (this.range.start == null || this.range.end != null){
       //Clear the previous selection and start a new selection range.
       this.range.start = $event;
@@ -89,9 +82,9 @@ export class MonthPickerComponent implements AfterContentInit{
 
       //Clear All except first select
       for (let v=0; v < this.values.length; v++){
-        let months:Array<BillingDate> = this.values[v].months;
+        let months:Array<BillingRange> = this.values[v].months;
         for (let m=0; m < months.length; m++){
-          let my:BillingDate = months[m];
+          let my:BillingRange = months[m];
           my.selected = my.month == this.range.start.month && my.year == this.range.start.year;
         }
       }
@@ -106,9 +99,9 @@ export class MonthPickerComponent implements AfterContentInit{
 
       //Fill in the blanks
       for (let v=0; v < this.values.length; v++){
-        let months:Array<BillingDate> = this.values[v].months;
+        let months:Array<BillingRange> = this.values[v].months;
         for (let m=0; m < months.length; m++){
-          let my:BillingDate = months[m];
+          let my:BillingRange = months[m];
           my.selected = my.isInBetween(this.range.start, this.range.end);
         }
       }
@@ -121,6 +114,4 @@ export class MonthPickerComponent implements AfterContentInit{
 
 
   }
-
-
 }

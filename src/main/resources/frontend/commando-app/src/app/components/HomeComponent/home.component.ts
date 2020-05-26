@@ -23,15 +23,15 @@ import {Router} from '@angular/router';
 import {MatDialog} from "@angular/material/dialog";
 import {MtuService} from "../../services/mtu.service";
 import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-unit";
-import {MonthYearRange} from "../../models/month-year";
+import {BillingDate, BillingDateRange, ExportType} from "../../models/billing-date";
 
 
 class FormParameters {
-  public accessToken:string
-  public exportType: string;
-  public billingCycleStart: number;
-  public range:MonthYearRange;
-  public selectedDevices:Array<string> = [];
+  public accessToken: string
+  public exportType: ExportType;
+  public startDate: string;
+  public endDate: string;
+  public selectedDevices: Array<string> = [];
 }
 
 @Component({
@@ -41,28 +41,26 @@ class FormParameters {
 })
 export class HomeComponent implements AfterContentInit {
 
-  private static readonly MAX_COLUMN_COUNT:number = 5;
+  private static readonly MAX_COLUMN_COUNT: number = 5;
 
-  mtuList:Array<MeasuringTransmittingUnit> = [];
-  columnCount:Array<number> = Array(HomeComponent.MAX_COLUMN_COUNT +1).fill(0).map((x,i)=>i);
-  dataColumns:Array<Array<MeasuringTransmittingUnit>> = [[]];
+  mtuList: Array<MeasuringTransmittingUnit> = [];
+  columnCount: Array<number> = Array(HomeComponent.MAX_COLUMN_COUNT + 1).fill(0).map((x, i) => i);
+  dataColumns: Array<Array<MeasuringTransmittingUnit>> = [[]];
   loaded: boolean = false;
-  billingCycleStart: number = 1;
-  exportType: string = 'DAY';
-  startYear:number = new Date().getFullYear();
+  meterReadDate: number = 1;
+  exportType: ExportType = ExportType.DAY;
+  startYear: number = new Date().getFullYear();
   valid: boolean = false;
 
 
-  @ViewChild('downloadForm') downloadForm:ElementRef;
-  @ViewChild('formData') formData:ElementRef;
+  @ViewChild('downloadForm') downloadForm: ElementRef;
+  @ViewChild('formData') formData: ElementRef;
 
-  private selectedRange: MonthYearRange;
-
-
+  private selectedRange: BillingDateRange;
 
 
   constructor(private authService: AuthService,
-              private mtuService:MtuService,
+              private mtuService: MtuService,
               private formBuilder: FormBuilder,
               private router: Router,
               public dialog: MatDialog,
@@ -74,9 +72,9 @@ export class HomeComponent implements AfterContentInit {
   ngAfterContentInit(): void {
 
     this.loaded = false;
-    this.authService.verifyAccessToken().then(r=>{
-      if (r){
-        this.mtuService.findAllMTU(true).then((r:Array<MeasuringTransmittingUnit>)=>{
+    this.authService.verifyAccessToken().then(r => {
+      if (r) {
+        this.mtuService.findAllMTU(true).then((r: Array<MeasuringTransmittingUnit>) => {
           this.mtuList = r;
           this.startYear = this.calcStartYear(this.mtuList);
 
@@ -86,7 +84,7 @@ export class HomeComponent implements AfterContentInit {
           let colSize = 10;
           let colCount = HomeComponent.MAX_COLUMN_COUNT;
 
-          if (this.mtuList.length > (HomeComponent.MAX_COLUMN_COUNT * colSize)){
+          if (this.mtuList.length > (HomeComponent.MAX_COLUMN_COUNT * colSize)) {
             //See if we need to adjust the column length
             colSize = Math.ceil(this.mtuList.length / HomeComponent.MAX_COLUMN_COUNT);
           } else {
@@ -98,9 +96,9 @@ export class HomeComponent implements AfterContentInit {
             }
           }
 
-          this.columnCount = Array(colCount +1).fill(0).map((x,i)=>i);
+          this.columnCount = Array(colCount + 1).fill(0).map((x, i) => i);
           this.dataColumns = [[]];
-          for (let c=0; c < colCount; c++) {
+          for (let c = 0; c < colCount; c++) {
             this.dataColumns.push(this.createArrayChunk(this.mtuList, c, colSize));
           }
 
@@ -114,8 +112,8 @@ export class HomeComponent implements AfterContentInit {
   }
 
 
-  createArrayChunk(array:Array<MeasuringTransmittingUnit>, column:number, maxSize:number){
-    let offset:number = column * maxSize;
+  createArrayChunk(array: Array<MeasuringTransmittingUnit>, column: number, maxSize: number) {
+    let offset: number = column * maxSize;
     if (offset >= array.length) return []; //No more elements
 
     let endIndex = offset + maxSize;
@@ -123,9 +121,9 @@ export class HomeComponent implements AfterContentInit {
 
     console.log('CREATING ' + column + ' ms: ' + maxSize + ' offset:' + offset + ' end:' + endIndex);
 
-    let result:Array<MeasuringTransmittingUnit> = [];
+    let result: Array<MeasuringTransmittingUnit> = [];
 
-    for (let i=offset; i < endIndex; i++){
+    for (let i = offset; i < endIndex; i++) {
       result.push(array[i]);
     }
 
@@ -135,48 +133,67 @@ export class HomeComponent implements AfterContentInit {
   }
 
   onClear() {
-    for (let i=0; i < this.mtuList.length; i++) this.mtuList[i].selected = false;
+    for (let i = 0; i < this.mtuList.length; i++) this.mtuList[i].selected = false;
     this.validateForm();
   }
 
-  onSelectAll(){
-    for (let i=0; i < this.mtuList.length; i++) this.mtuList[i].selected = true;
+  onSelectAll() {
+    for (let i = 0; i < this.mtuList.length; i++) this.mtuList[i].selected = true;
     this.validateForm();
   }
 
   onBillingCycleChange() {
-    if (this.billingCycleStart < 1) this.billingCycleStart = 1;
-    if (this.billingCycleStart > 31) this.billingCycleStart = 31;
+    if (this.meterReadDate < 1) this.meterReadDate = 1;
+    if (this.meterReadDate > 31) this.meterReadDate = 31;
   }
 
-  calcStartYear(mtuList:Array<MeasuringTransmittingUnit>) {
-    let oldestDate = Math.floor(new Date().getTime()/1000);
+  calcStartYear(mtuList: Array<MeasuringTransmittingUnit>) {
+    let oldestDate = Math.floor(new Date().getTime() / 1000);
 
-     for (let m=0; m < mtuList.length; m++){
-       let mtu = mtuList[m];
-       if (oldestDate > mtu.created) oldestDate = mtu.created;
-     }
+    for (let m = 0; m < mtuList.length; m++) {
+      let mtu = mtuList[m];
+      if (oldestDate > mtu.created) oldestDate = mtu.created;
+    }
     return new Date(oldestDate * 1000).getFullYear();
   }
 
   validateForm() {
     this.valid = false;
-    for (let m=0; m < this.mtuList.length; m++){
+    for (let m = 0; m < this.mtuList.length; m++) {
       let mtu = this.mtuList[m];
-      if (mtu.selected){
+      if (mtu.selected) {
         this.valid = true;
       }
     }
   }
 
+
   onExport() {
     //Put together the form parameters
     let formParameters = new FormParameters();
     formParameters.accessToken = this.authService.userSession.accessToken;
-    formParameters.billingCycleStart = this.billingCycleStart;
     formParameters.exportType = this.exportType;
-    formParameters.range = this.selectedRange;
-    for (let m=0; m < this.mtuList.length; m++){
+
+    if (this.exportType == ExportType.BILLING) {
+      //Adjust for meter read date
+      formParameters.startDate = BillingDate.adjustForMeterReadDate(this.selectedRange.start, this.meterReadDate).toSimpleDateString();
+      if (this.selectedRange.end == null) {
+        formParameters.endDate = BillingDate.adjustForMeterReadDate(BillingDate.addMonth(this.selectedRange.start), this.meterReadDate).toSimpleDateString();
+      } else {
+        formParameters.endDate = BillingDate.adjustForMeterReadDate(this.selectedRange.end, this.meterReadDate).toSimpleDateString();
+      }
+    } else {
+      formParameters.startDate = this.selectedRange.start.toSimpleDateString();
+      if (this.selectedRange.end == null) {
+        formParameters.endDate = BillingDate.addDate(this.selectedRange.start).toSimpleDateString();
+      } else {
+        formParameters.endDate = this.selectedRange.end.toSimpleDateString();
+      }
+    }
+
+
+    if (this.selectedRange.end != null) formParameters.endDate = this.selectedRange.end.toSimpleDateString();
+    for (let m = 0; m < this.mtuList.length; m++) {
       let mtu = this.mtuList[m];
       if (mtu.selected) formParameters.selectedDevices.push(mtu.id);
     }
@@ -187,7 +204,7 @@ export class HomeComponent implements AfterContentInit {
   }
 
 
-  onSelected($event: MonthYearRange) {
+  onSelected($event: BillingDateRange) {
     this.selectedRange = $event;
   }
 }

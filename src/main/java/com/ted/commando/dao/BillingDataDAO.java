@@ -1,0 +1,139 @@
+/*
+ * Copyright (c) 2020. Energy, Inc.
+ *
+ *      Licensed under the Apache License, Version 2.0 (the "License");
+ *      you may not use this file except in compliance with the License.
+ *      You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *      Unless required by applicable law or agreed to in writing, software
+ *      distributed under the License is distributed on an "AS IS" BASIS,
+ *      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *      See the License for the specific language governing permissions and
+ *      limitations under the License.
+ *
+ */
+
+package com.ted.commando.dao;
+
+import com.ted.commando.dao.callbackHandler.CycleBillingDataCallbackHandler;
+import com.ted.commando.dao.callbackHandler.DayBillingDataCallbackHandler;
+import com.ted.commando.model.BillingFormParameters;
+import com.ted.commando.model.CycleBillingData;
+import com.ted.commando.model.DayBillingData;
+import com.ted.commando.util.FormatUtil;
+import org.checkerframework.checker.units.qual.C;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import javax.inject.Inject;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+@Repository
+public class BillingDataDAO extends SimpleAbstractDAO {
+    final static Logger LOGGER = LoggerFactory.getLogger(BillingDataDAO.class);
+
+
+
+    @Inject
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    public static String DAY_QUERY = "select  m.id, " +
+            "       m.name, " +
+            "       sum(ed.ENERGY_VALUE) / 1000.0 as usage, " +
+            "       (sum(ed.ENERGY_VALUE) / 1000.0) * m.ENERGY_RATE as cost " +
+            "from DAILY_ENERGY_DATA ed " +
+            "join MTU m on m.id = ed.mtu_id " +
+            "where ed.ENERGY_DATE >= :start_date " +
+            "and ed.ENERGY_DATE <= :end_date " +
+            "and ed.MTU_ID in (:mtuList) " +
+            "group by m.id, m.name, m.ENERGY_RATE " +
+            "order by m.name";
+
+
+    public static String CYCLE_QUERY = "select id, name, month, year, sum(usage) as usage, sum(cost) as cost " +
+            "from ( " +
+            "select m.id, " +
+            "       m.name, " +
+            "       BILLINGCYCLEMONTH(ENERGY_DATE, :meter_read_date) as month, " +
+            "       BILLINGCYCLEYEAR(ENERGY_DATE, :meter_read_date) as year, " +
+            "       ENERGY_VALUE/1000.0 as usage, " +
+            "       ENERGY_RATE * (ENERGY_VALUE/1000.0) as cost " +
+            "from DAILY_ENERGY_DATA d " +
+            "join MTU m on m.ID = d.MTU_ID " +
+            "where (BILLINGCYCLEYEAR(ENERGY_DATE, :meter_read_date) * 100 + BILLINGCYCLEMONTH(ENERGY_DATE, :meter_read_date)) >= :start_date " +
+            "  and BILLINGCYCLEYEAR(ENERGY_DATE, :meter_read_date) * 100 + BILLINGCYCLEMONTH(ENERGY_DATE, :meter_read_date) <= :end_date " +
+            "and MTU_ID in (:mtuList)) q " +
+            "group by id, name, month, year " +
+            "order by name, month, year";
+
+
+    public static RowMapper<DayBillingData> DAY_ROW_MAPPER = new RowMapper<DayBillingData>() {
+        public DayBillingData mapRow(ResultSet rs, int rowNum) throws SQLException {
+            DayBillingData dto = new DayBillingData();
+            dto.setId(rs.getString("id"));
+            dto.setMtuName(rs.getString("name"));
+
+            BigDecimal usage = rs.getBigDecimal("usage");
+            usage.setScale(2, RoundingMode.HALF_UP);
+            dto.setKwhUsage(usage);
+
+            BigDecimal cost = rs.getBigDecimal("cost");
+            cost.setScale(2, RoundingMode.FLOOR);
+            dto.setKwhCost(cost);
+            return dto;
+        }
+    };
+
+    public static RowMapper<CycleBillingData> CYCLE_ROW_MAPPER = new RowMapper<CycleBillingData>() {
+        public CycleBillingData mapRow(ResultSet rs, int rowNum) throws SQLException {
+            CycleBillingData dto = new CycleBillingData();
+            dto.setId(rs.getString("id"));
+            dto.setMtuName(rs.getString("name"));
+            dto.setBillingCycleMonth(rs.getInt("month"));
+            dto.setBillingCycleYear(rs.getInt("year"));
+            BigDecimal usage = rs.getBigDecimal("usage");
+            usage.setScale(2, RoundingMode.HALF_UP);
+            dto.setKwhUsage(usage);
+            BigDecimal cost = rs.getBigDecimal("cost");
+            cost.setScale(2, RoundingMode.FLOOR);
+            dto.setKwhCost(cost);
+            return dto;
+        }
+    };
+
+
+    public void exportDailyData(BillingFormParameters billingFormParameters, PrintWriter printWriter){
+        DayBillingDataCallbackHandler callbackHandler = new DayBillingDataCallbackHandler(billingFormParameters, printWriter);
+        MapSqlParameterSource map = new MapSqlParameterSource();
+        Long startDate = FormatUtil.parseEnergyDateString(billingFormParameters.getStartDate());
+        Long endDate = FormatUtil.parseEnergyDateString(billingFormParameters.getEndDate());
+        map.addValue("mtuList", billingFormParameters.getSelectedDevices());
+        map.addValue("start_date", startDate);
+        map.addValue("end_date", endDate);
+        namedParameterJdbcTemplate.query(DAY_QUERY, map, callbackHandler);
+    }
+
+
+    public void exportBillingCycleData(BillingFormParameters billingFormParameters, PrintWriter printWriter) {
+        CycleBillingDataCallbackHandler callbackHandler = new CycleBillingDataCallbackHandler(billingFormParameters, printWriter);
+        MapSqlParameterSource map = new MapSqlParameterSource();
+        Long startDate = FormatUtil.parseCycleDateString(billingFormParameters.getStartDate());
+        Long endDate = FormatUtil.parseCycleDateString(billingFormParameters.getEndDate());
+        map.addValue("mtuList", billingFormParameters.getSelectedDevices());
+        map.addValue("meter_read_date", billingFormParameters.getMeterReadDate());
+        map.addValue("start_date", startDate);
+        map.addValue("end_date", endDate);
+        namedParameterJdbcTemplate.query(CYCLE_QUERY, map, callbackHandler);
+
+    }
+}

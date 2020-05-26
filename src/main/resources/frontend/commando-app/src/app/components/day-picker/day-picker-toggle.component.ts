@@ -16,22 +16,21 @@
  */
 
 import {AfterContentInit, Component, EventEmitter, Input, Output} from '@angular/core';
-import {BillingDate} from "../../models/billing-date";
-
+import {BillingRange} from "../../models/month-year";
 
 @Component({
-  selector: 'month-picker-toggle',
-  templateUrl: './month-picker-toggle.component.html',
-  styleUrls: ['./month-picker-toggle.component.scss']
+  selector: 'day-picker-toggle',
+  templateUrl: './day-picker-toggle.component.html',
+  styleUrls: ['./day-picker-toggle.component.scss']
 })
-export class MonthPickerToggleComponent implements AfterContentInit{
+export class DayPickerToggleComponent implements AfterContentInit{
 
   private static MONTHS:Array<string> = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-   @Input('billing-date')
-   public billingDate:BillingDate = new BillingDate();
+   @Input('month-year')
+   public monthYear:BillingRange = new BillingRange();
 
-   @Output() selected: EventEmitter<BillingDate> = new EventEmitter();
+   @Output() selected: EventEmitter<BillingRange> = new EventEmitter();
 
   label:string;
 
@@ -40,12 +39,12 @@ export class MonthPickerToggleComponent implements AfterContentInit{
   }
 
   ngAfterContentInit(): void {
-    this.label = MonthPickerToggleComponent.MONTHS[this.billingDate.month];
+    this.label = DayPickerToggleComponent.MONTHS[this.monthYear.month];
   }
 
 
   onClick() {
-    this.billingDate.selected = !this.billingDate.selected;
-    this.selected.emit(this.billingDate);
+    this.monthYear.selected = !this.monthYear.selected;
+    this.selected.emit(this.monthYear);
   }
 }

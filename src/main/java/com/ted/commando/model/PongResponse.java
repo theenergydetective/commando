@@ -19,43 +19,15 @@ package com.ted.commando.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MonthYear {
-    private int month = 0;
-    private int year = 0;
-    private boolean selected = false;
+public class PongResponse {
+    private String status="PONG";
 
-    public int getMonth() {
-        return month;
+    public String getStatus() {
+        return status;
     }
 
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
-
-    @Override
-    public String toString() {
-        return "MonthYear{" +
-                "month=" + month +
-                ", year=" + year +
-                ", selected=" + selected +
-                '}';
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

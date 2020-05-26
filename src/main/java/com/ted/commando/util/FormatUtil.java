@@ -17,12 +17,23 @@
 
 package com.ted.commando.util;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 public class FormatUtil {
+    final static Logger LOGGER = LoggerFactory.getLogger(FormatUtil.class);
 
-    public static final Long parseStringDate(String stringDate, TimeZone timeZone){
+    static SimpleDateFormat prettyFormat = new SimpleDateFormat("MMM dd, YYYY");
+    static SimpleDateFormat simpleFormat = new SimpleDateFormat("MM/dd/YYYY");
+
+    public static final Long parseStringDate(String stringDate, TimeZone timeZone) {
         String s[] = stringDate.split("-");
         Calendar calendar = Calendar.getInstance(timeZone);
 
@@ -35,13 +46,63 @@ public class FormatUtil {
 
         //Set the parsed values
         calendar.set(Calendar.YEAR, Integer.parseInt(s[0]));
-        calendar.set(Calendar.MONTH, Integer.parseInt(s[1])-1);
+        calendar.set(Calendar.MONTH, Integer.parseInt(s[1]) - 1);
         calendar.set(Calendar.DATE, Integer.parseInt(s[2]));
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
-        return calendar.getTimeInMillis()/1000;
+        return calendar.getTimeInMillis() / 1000;
+    }
+
+
+    public static final Long parseEnergyDateString(String stringDate) {
+        if (stringDate == null) return 0L;
+        try {
+            stringDate = stringDate.replace("-", "").trim();
+            return Long.parseLong(stringDate);
+        } catch (NumberFormatException ex) {
+            LOGGER.error("[parseEnergyDateString] Error parsing {}", stringDate, ex);
+            return 0L;
+        }
+    }
+
+
+    public static final Long parseCycleDateString(String stringDate) {
+        if (stringDate == null) return 0L;
+        try {
+            stringDate = stringDate.replace("-", "").trim();
+            stringDate = stringDate.substring(0, 6); //Drop the day field
+            return Long.parseLong(stringDate);
+        } catch (NumberFormatException ex) {
+            LOGGER.error("[parseEnergyDateString] Error parsing {}", stringDate, ex);
+            return 0L;
+        }
+    }
+
+    public static String prettyFormatEnergyDate(Long energyDate) {
+        String energyDateString = energyDate.toString();
+        if (energyDateString.length() == 8) {
+            int year = Integer.parseInt(energyDateString.substring(0, 4));
+            int month = Integer.parseInt(energyDateString.substring(4, 6));
+            int date = Integer.parseInt(energyDateString.substring(6, 8));
+            Date parsedDate = new Date(year - 1900, month - 1, date, 0, 0, 0);
+            return prettyFormat.format(parsedDate);
+        }
+        return "";
+    }
+
+    public static String simpleFormatEnergyDate(String energyDateString) {
+        energyDateString = energyDateString.replace("-", "").trim();
+        if (energyDateString.length() == 8) {
+            int year = Integer.parseInt(energyDateString.substring(0, 4));
+            int month = Integer.parseInt(energyDateString.substring(4, 6));
+            int date = Integer.parseInt(energyDateString.substring(6, 8));
+            Date parsedDate = new Date(year - 1900, month - 1, date, 0, 0, 0);
+            return simpleFormat.format(parsedDate);
+        }
+        return "";
+
     }
 }

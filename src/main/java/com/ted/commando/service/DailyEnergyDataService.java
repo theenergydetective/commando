@@ -18,6 +18,7 @@
 package com.ted.commando.service;
 
 
+import com.ted.commando.dao.BillingDataDAO;
 import com.ted.commando.dao.DailyEnergyDataDAO;
 import com.ted.commando.dao.MeasuringTransmittingUnitDAO;
 import com.ted.commando.model.BillingFormParameters;
@@ -33,10 +34,7 @@ import javax.servlet.ServletOutputStream;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Service for handling the access to daily energy data
@@ -48,6 +46,7 @@ import java.util.TimeZone;
 public class DailyEnergyDataService {
     final static Logger LOGGER = LoggerFactory.getLogger(DailyEnergyDataService.class);
 
+
     @Inject
     DailyEnergyDataDAO dailyEnergyDataDAO;
 
@@ -56,6 +55,9 @@ public class DailyEnergyDataService {
 
     @Inject
     MeasuringTransmittingUnitDAO measuringTransmittingUnitDAO;
+
+    @Inject
+    BillingDataDAO billingDataDAO;
 
 
     //@Async
@@ -102,7 +104,13 @@ public class DailyEnergyDataService {
                     DailyEnergyData dailyEnergyData = new DailyEnergyData();
                     dailyEnergyData.setMtuId(mtu.getId());
                     dailyEnergyData.setEnergyValue(energyValue);
-                    dailyEnergyData.setEpochDate(calendar.getTimeInMillis() / 1000);
+
+                    //Create a date key in the format of YYYYMMDD using a 1-based index.
+                    long date = calendar.get(Calendar.YEAR) * 10000;
+                    date += (calendar.get(Calendar.MONTH)+1) * 100;;
+                    date += calendar.get(Calendar.DATE);
+                    dailyEnergyData.setEnergyDate(date);
+
                     LOGGER.debug("[processDailyEnergyData] inserting daily data: {}", dailyEnergyData);
                     dailyEnergyDataDAO.insert(dailyEnergyData);
                 }
@@ -124,25 +132,20 @@ public class DailyEnergyDataService {
 
     public List<DailyEnergyData> findByIdDate(String mtuId, String startDate, String endDate) {
         LOGGER.debug("[findByIdDate] mtu: {}, startDate:{}, endDate:{}", mtuId, startDate, endDate);
-        if (startDate == null || endDate == null) return dailyEnergyDataDAO.findByMtu(mtuId);
 
-
-
-        MeasuringTransmittingUnit mtu = measuringTransmittingUnitDAO.findOne(mtuId);
-        TimeZone mtuTimeZone = TimeZone.getTimeZone(mtu.getTimezone());
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM dd, yyyy");
-        simpleDateFormat.setTimeZone(mtuTimeZone);
-
-        List<DailyEnergyData>  dailyEnergyData= dailyEnergyDataDAO.findByIdDate(mtuId,
-                FormatUtil.parseStringDate(startDate, mtuTimeZone ),
-                FormatUtil.parseStringDate(endDate, mtuTimeZone));
-
+        List<DailyEnergyData>  dailyEnergyData = new ArrayList<>();
+        if (startDate == null || endDate == null) {
+             dailyEnergyData = dailyEnergyDataDAO.findByMtu(mtuId);
+        } else {
+            dailyEnergyData= dailyEnergyDataDAO.findByIdDate(mtuId,
+                    FormatUtil.parseEnergyDateString(startDate),
+                    FormatUtil.parseEnergyDateString(endDate));
+        }
         LOGGER.trace("[findByIdDate] Found: {} records", dailyEnergyData.size());
 
+
         for (DailyEnergyData data: dailyEnergyData){
-            long epochMs = data.getEpochDate() * 1000L;
-            data.setFormattedDate(simpleDateFormat.format(new Date(epochMs)));
+            data.setFormattedDate(FormatUtil.prettyFormatEnergyDate(data.getEnergyDate()));
             LOGGER.trace("[findByIdDate] Updating:{}", data);
         }
 
@@ -155,13 +158,24 @@ public class DailyEnergyDataService {
         return dailyEnergyData;
     }
 
-    public void writeData(BillingFormParameters billingFormParameters, ServletOutputStream outputStream) {
-        StringBuilder fakeData = new StringBuilder("1,2,3,4,5");
+    public void writeBillingCycleData(BillingFormParameters billingFormParameters, ServletOutputStream outputStream) {
+        LOGGER.debug("[writeBillingCyleData] Generating Data for {}", billingFormParameters);
         try (PrintWriter p = new PrintWriter(outputStream)) {
-            p.println(fakeData);
+            billingDataDAO.exportBillingCycleData(billingFormParameters, p);;
         } catch (Exception ex) {
-            LOGGER.error("[writeData] Exception caught", ex);
+            LOGGER.error("[writeBillingCycleData] Error writing data for: {}", billingFormParameters, ex);
+        }
+    }
+
+    public void writeDailyData(BillingFormParameters billingFormParameters, ServletOutputStream outputStream) {
+        LOGGER.debug("[writeDailyData] Generating Data for {}", billingFormParameters);
+        try (PrintWriter p = new PrintWriter(outputStream)) {
+            billingDataDAO.exportDailyData(billingFormParameters, p);;
+        } catch (Exception ex) {
+            LOGGER.error("[writeDailyData] Error writing data for: {}", billingFormParameters, ex);
         }
 
     }
+
+
 }

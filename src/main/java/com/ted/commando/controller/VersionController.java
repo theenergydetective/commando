@@ -17,8 +17,10 @@
 
 package com.ted.commando.controller;
 
+import com.ted.commando.model.PongResponse;
 import com.ted.commando.service.VersionService;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
@@ -38,8 +40,10 @@ public class VersionController {
     }
 
     @RequestMapping(value="ping", method = GET)
-    public String getPing() {
-        return versionService.getVersion();
+    public
+    @ResponseBody
+    PongResponse getPing() {
+        return new PongResponse();
     }
 
 }
