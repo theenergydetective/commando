@@ -103,19 +103,5 @@ export class BillingDate {
   }
 
 
-  /**
-   * Creates a new billing date adjusted for the meter read date.
-   * @param bd
-   * @param meterReadDate
-   */
-  public static adjustForMeterReadDate(bd:BillingDate, meterReadDate:number):BillingDate {
-    let newBD = new BillingDate();
-    newBD.year = bd.year;
-    newBD.month = bd.month;
-    newBD.date = meterReadDate;
-    let daysInMonth = new Date(newBD.year, newBD.month, 0).getDate();
-    if (newBD.date > daysInMonth) newBD.date = daysInMonth;
-    return newBD;
-  }
 }
 

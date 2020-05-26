@@ -52,3 +52,6 @@ CREATE ALIAS IF NOT EXISTS billingCycleMonth
 
 CREATE ALIAS IF NOT EXISTS billingCycleYear
    FOR "com.ted.commando.util.DatabaseFunctions.getBillingCycleYear";
+
+CREATE ALIAS IF NOT EXISTS billingCycleKey
+   FOR "com.ted.commando.util.DatabaseFunctions.getBillingCycleKey";

@@ -22,33 +22,28 @@ import java.sql.Connection;
 public class DatabaseFunctions {
 
     public static int getBillingCycleMonth(Connection connection, Long energyDate, int meterReadDate){
-        //parse the month
-        String energyDateString = energyDate.toString();
-
-        int month = Integer.parseInt(energyDateString.substring(4, 6));
-        int date = Integer.parseInt(energyDateString.substring(6, 8));
-
-        if (date < meterReadDate) {
-            month--;
-            if (month == 0) month = 12;
-        }
-        return month;
+        int year = getBillingCycleYear(connection, energyDate, meterReadDate) * 100;
+        return getBillingCycleKey(connection, energyDate, meterReadDate) - year;
     }
 
     public static int getBillingCycleYear(Connection connection, Long energyDate, int meterReadDate){
-        //parse the month
-        String energyDateString = energyDate.toString();
+        return getBillingCycleKey(connection, energyDate, meterReadDate)/100;
+    }
 
+    public static int getBillingCycleKey(Connection connection, Long energyDate, int meterReadDate) {
+        String energyDateString = energyDate.toString();
         int year = Integer.parseInt(energyDateString.substring(0, 4));
         int month = Integer.parseInt(energyDateString.substring(4, 6));
         int date = Integer.parseInt(energyDateString.substring(6, 8));
 
         if (date < meterReadDate) {
             month--;
-            if (month == 0) year--;
+            if (month == 0) {
+                year--;
+                month=12;
+            }
         }
 
-        return year;
+        return (year * 100) + month;
     }
-
 }

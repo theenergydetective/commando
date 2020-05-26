@@ -49,8 +49,8 @@ public class BillingDataDAO extends SimpleAbstractDAO {
 
     public static String DAY_QUERY = "select  m.id, " +
             "       m.name, " +
-            "       sum(ed.ENERGY_VALUE) / 1000.0 as usage, " +
-            "       (sum(ed.ENERGY_VALUE) / 1000.0) * m.ENERGY_RATE as cost " +
+            "       m.ENERGY_RATE, " +
+            "       sum(ed.ENERGY_VALUE) as usage " +
             "from DAILY_ENERGY_DATA ed " +
             "join MTU m on m.id = ed.mtu_id " +
             "where ed.ENERGY_DATE >= :start_date " +
@@ -60,35 +60,39 @@ public class BillingDataDAO extends SimpleAbstractDAO {
             "order by m.name";
 
 
-    public static String CYCLE_QUERY = "select id, name, month, year, sum(usage) as usage, sum(cost) as cost " +
+    public static String CYCLE_QUERY = "select id, name, ENERGY_RATE, month, year, sum(usage) as usage " +
             "from ( " +
             "select m.id, " +
             "       m.name, " +
+            "       m.ENERGY_RATE, " +
             "       BILLINGCYCLEMONTH(ENERGY_DATE, :meter_read_date) as month, " +
             "       BILLINGCYCLEYEAR(ENERGY_DATE, :meter_read_date) as year, " +
-            "       ENERGY_VALUE/1000.0 as usage, " +
-            "       ENERGY_RATE * (ENERGY_VALUE/1000.0) as cost " +
+            "       ENERGY_VALUE as usage " +
             "from DAILY_ENERGY_DATA d " +
             "join MTU m on m.ID = d.MTU_ID " +
-            "where (BILLINGCYCLEYEAR(ENERGY_DATE, :meter_read_date) * 100 + BILLINGCYCLEMONTH(ENERGY_DATE, :meter_read_date)) >= :start_date " +
-            "  and BILLINGCYCLEYEAR(ENERGY_DATE, :meter_read_date) * 100 + BILLINGCYCLEMONTH(ENERGY_DATE, :meter_read_date) <= :end_date " +
-            "and MTU_ID in (:mtuList)) q " +
-            "group by id, name, month, year " +
-            "order by name, month, year";
+            "where BILLINGCYCLEKEY(ENERGY_DATE, :meter_read_date)  >= :start_date " +
+            "  and BILLINGCYCLEKEY(ENERGY_DATE, :meter_read_date)  <= :end_date " +
+            "  and MTU_ID in (:mtuList)) q " +
+            "group by id, name, month, year, ENERGY_RATE " +
+            "order by name, month,  year";
 
 
     public static RowMapper<DayBillingData> DAY_ROW_MAPPER = new RowMapper<DayBillingData>() {
         public DayBillingData mapRow(ResultSet rs, int rowNum) throws SQLException {
+            BigDecimal rate = rs.getBigDecimal("energy_rate");
+
+
             DayBillingData dto = new DayBillingData();
             dto.setId(rs.getString("id"));
             dto.setMtuName(rs.getString("name"));
 
-            BigDecimal usage = rs.getBigDecimal("usage");
-            usage.setScale(2, RoundingMode.HALF_UP);
+            BigDecimal usage = rs.getBigDecimal("usage").divide(new BigDecimal(1000.0));
+            //usage.setScale(2, RoundingMode.HALF_UP);
             dto.setKwhUsage(usage);
+            dto.setKwhCost(usage.multiply(rate));
 
             BigDecimal cost = rs.getBigDecimal("cost");
-            cost.setScale(2, RoundingMode.FLOOR);
+            //cost.setScale(2, RoundingMode.FLOOR);
             dto.setKwhCost(cost);
             return dto;
         }
@@ -96,17 +100,18 @@ public class BillingDataDAO extends SimpleAbstractDAO {
 
     public static RowMapper<CycleBillingData> CYCLE_ROW_MAPPER = new RowMapper<CycleBillingData>() {
         public CycleBillingData mapRow(ResultSet rs, int rowNum) throws SQLException {
+            BigDecimal rate = rs.getBigDecimal("energy_rate");
+
             CycleBillingData dto = new CycleBillingData();
             dto.setId(rs.getString("id"));
             dto.setMtuName(rs.getString("name"));
             dto.setBillingCycleMonth(rs.getInt("month"));
             dto.setBillingCycleYear(rs.getInt("year"));
-            BigDecimal usage = rs.getBigDecimal("usage");
-            usage.setScale(2, RoundingMode.HALF_UP);
+            BigDecimal usage = rs.getBigDecimal("usage").divide(new BigDecimal(1000.0));
+            //usage.setScale(2, RoundingMode.HALF_UP);
             dto.setKwhUsage(usage);
-            BigDecimal cost = rs.getBigDecimal("cost");
-            cost.setScale(2, RoundingMode.FLOOR);
-            dto.setKwhCost(cost);
+            dto.setKwhCost(usage.multiply(rate));
+            //cost.setScale(2, RoundingMode.FLOOR);
             return dto;
         }
     };

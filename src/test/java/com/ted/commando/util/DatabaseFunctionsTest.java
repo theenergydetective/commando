@@ -48,4 +48,14 @@ public class DatabaseFunctionsTest {
         assertEquals(2019, DatabaseFunctions.getBillingCycleYear(connection, date, 21));
     }
 
+
+    @Test
+    public void getBillingCycleKeyTest(){
+        Connection connection = mock(Connection.class);
+        Long date = 20200120L;
+        assertEquals(202001, DatabaseFunctions.getBillingCycleKey(connection, date, 20));
+        assertEquals(202001, DatabaseFunctions.getBillingCycleKey(connection, date, 1));
+        assertEquals(201912, DatabaseFunctions.getBillingCycleKey(connection, date, 21));
+    }
+
 }

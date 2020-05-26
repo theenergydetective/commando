@@ -31,6 +31,7 @@ class FormParameters {
   public exportType: ExportType;
   public startDate: string;
   public endDate: string;
+  public meterReadDate: number;
   public selectedDevices: Array<string> = [];
 }
 
@@ -173,14 +174,16 @@ export class HomeComponent implements AfterContentInit {
     let formParameters = new FormParameters();
     formParameters.accessToken = this.authService.userSession.accessToken;
     formParameters.exportType = this.exportType;
+    formParameters.meterReadDate = this.meterReadDate;
+    formParameters.startDate = this.selectedRange.start.toSimpleDateString();
+
 
     if (this.exportType == ExportType.BILLING) {
       //Adjust for meter read date
-      formParameters.startDate = BillingDate.adjustForMeterReadDate(this.selectedRange.start, this.meterReadDate).toSimpleDateString();
       if (this.selectedRange.end == null) {
-        formParameters.endDate = BillingDate.adjustForMeterReadDate(BillingDate.addMonth(this.selectedRange.start), this.meterReadDate).toSimpleDateString();
+        formParameters.endDate = BillingDate.addMonth(this.selectedRange.start).toSimpleDateString();
       } else {
-        formParameters.endDate = BillingDate.adjustForMeterReadDate(this.selectedRange.end, this.meterReadDate).toSimpleDateString();
+        formParameters.endDate = this.selectedRange.end.toSimpleDateString();
       }
     } else {
       formParameters.startDate = this.selectedRange.start.toSimpleDateString();
