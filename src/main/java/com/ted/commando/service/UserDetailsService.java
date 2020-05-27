@@ -49,7 +49,7 @@ import java.util.Properties;
  * @author Pete Arvanitis (pete@petecode.com)
  */
 
-@PropertySource(value = "file:/opt/data/commando.user.properties", ignoreResourceNotFound = true)
+@PropertySource(value = "file:/opt/commando/data/commando.user.properties", ignoreResourceNotFound = true)
 @Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
