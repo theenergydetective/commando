@@ -13,7 +13,7 @@ For cloud hosting the commando server, we suggest using  [Digital Ocean](https:/
  - 1000 GB Transfer
  - Operating System: Ubuntu 18.04.xx LTS 
   
-Once the droplet is created you should assign a [floating ip](https://www.digitalocean.com/docs/networking/floating-ips/) to the server so that it never changes in case the droplet needs to be recreated. This will pevent 
+Once the droplet is created you should assign a [floating ip](https://www.digitalocean.com/docs/networking/floating-ips/) to the server so that it never changes in case the droplet needs to be recreated. This will allow you to re-use the same IP address if the droplet needs to be recreated in the future. 
 
 While the service can be accessed via an IP address, we highly recommend you [assign a domain name ](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars)to the server.  **This is required if you plan on using HTTPS to access your server.**
 
