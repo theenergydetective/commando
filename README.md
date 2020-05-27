@@ -34,7 +34,7 @@ Other hosts, such as [Amazon Web Services](https://aws.amazon.com/) , [Microsoft
 
 To install a basic server (no-HTTPS/TLS), you can run the following commands:
 
- - **_`wget https://raw.githubusercontent.com/theenergydetective/commando/master/scriups/install.sh`_**
+ - **_`wget https://raw.githubusercontent.com/theenergydetective/commando/master/scripts/install.sh`_**
  - **_`chmod 777 install.sh`_**
  - **_`sudo ./install.sh`_**
 
@@ -72,20 +72,20 @@ The **Activation Key** is optional. Specifying this key will allow you to restri
 There are several properties that can be overridden from the defaults. **DO THIS AT YOUR OWN RISK.** 
 Create or edit the file named 'application.properties'  in the same directory as the  _commando-1.0.jar_  file (/opt/lib/ by default)
 
-#### Database Path (spring.datasource.url)
+##### Database Path (spring.datasource.url)
 
 To change the path of the database, define the  _spring.datasource.url_  property. e.g.  **_`spring.datasource.url=jdbc:h2:file:/opt/data/commando`_**  If running under Windows, the drive letter must be included. e.g.  **_`spring.datasource.url=jdbc:h2:file:C:/opt/data/commando`_**  The default database path is '/opt/data/commando'
 
-#### Default Port (server.port)
+##### Default Port (server.port)
 
 To change the default port of the server, use the following option:  **_`server.port=<port>`_**  e.g.  **_`server.port=80`_**  The default port is 8080
 
-#### Backup Directory (spring.datasource.backup.directory)
+##### Backup Directory (spring.datasource.backup.directory)
 
 The server will create a rolling backup of the database every night at 1:00am of the server's local time. To change the location of this directory, use the option:  **_`spring.datasource.backup.directory=<path to database>`_**  
 e.g.  **_`spring.datasource.backup.directory=/opt/data/backup`_**
 
-#### Backup Directory (spring.datasource.backup.count)
+##### Backup Directory (spring.datasource.backup.count)
 
 The server will create a rolling backup of the database every night at 1:00am of the server's local time. To change number of backups it will maintain use the option  **_`spring.datasource.backup.count=<count>`_**  
 e.g.  **_`spring.datasource.backup.count=7`_**  By default, 7 backup files will be created.
@@ -119,7 +119,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 **_`-Dspring.datasource.url=jdbc:h2:file:C:/opt/data/commando`_**
 
--   If using WSL for Angular/Node, then the maven command line must be run from there as well.
+
 
 ### How to Build
 
@@ -128,3 +128,4 @@ Unless required by applicable law or agreed to in writing, software distributed 
 -   Be sure all of the pre-requisits are installed.
 -   After node is installed, run  **_`npm install`_**  from the  **_`commando/src/main/resources/frontend/command-app`_**  directory.
 -   Run the following from the command prompt:  **_`mvn clean package install -DskipTests`_**
+-   If using WSL for Angular/Node, then the maven command line must be run from there as well.
