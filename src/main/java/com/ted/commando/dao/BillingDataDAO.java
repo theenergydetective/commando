@@ -72,7 +72,7 @@ public class BillingDataDAO extends SimpleAbstractDAO {
             "  and BILLINGCYCLEKEY(ENERGY_DATE, :meter_read_date)  <= :end_date " +
             "  and MTU_ID in (:mtuList)) q " +
             "group by id, name, month, year, ENERGY_RATE " +
-            "order by name, month,  year";
+            "order by name, year, month";
 
 
     public static RowMapper<DayBillingData> DAY_ROW_MAPPER = new RowMapper<DayBillingData>() {
