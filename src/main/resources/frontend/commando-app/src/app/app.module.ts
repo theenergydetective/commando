@@ -58,12 +58,14 @@ import {DayPickerComponent} from "./components/day-picker/day-picker.component";
 import {ImportDevicesDialogComponent} from "./components/import-devices-dialog";
 import {MatFileUploadComponent} from "./components/mat-file-upload";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {ImportDataDialogComponent} from "./components/import-data-dialog";
 
 
 @NgModule({
   entryComponents:[
     ConfirmDialogComponent,
-    ImportDevicesDialogComponent
+    ImportDevicesDialogComponent,
+    ImportDataDialogComponent
   ],
   declarations: [
     AppComponent,
@@ -74,6 +76,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
     ServerSettingsComponent,
     ConfirmDialogComponent,
     ImportDevicesDialogComponent,
+    ImportDataDialogComponent,
     MenuComponent,
     DeviceEditFieldComponent,
     MonthPickerComponent,

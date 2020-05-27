@@ -15,30 +15,33 @@
   ~
   -->
 
-<h1 mat-dialog-title>Import Devices</h1>
+<h1 mat-dialog-title>Import Data</h1>
 
-<div mat-dialog-content>
-  <p style="max-width:600px">
-    You can bulk import devices into COMMANDO by uploading a CSV file.<br>
-    The format of the CSV file needs to be: <b><i>ID,Name,Rate,Enabled</i></b>
-    <br>The name should be in quotes. The first line of the file will be ignored as header data.
+<div mat-dialog-content style="max-width:600px">
+  <p>
+    You can bulk import <b>DAILY HISTORY</b> into COMMANDO by uploading a CSV file. The format of the CSV file needs to be: <b><i>ID, Date, Value</i></b>:
+  </p>
+  <ul>
+    <li><i>ID</i> - This can <i>either</i> be the serial number of the MTU/Spyder or the configured name. The name should be in quotes if it contans a comma.</li>
+    <li><i>DATE</i> - Date of the record in MM/DD/YYYY format.</li>
+    <li><i>Value</i> - Energy in kWh.</li>
+  </ul>
+
+  <p>
+    If you are using a TED Pro, you can export the <i>Daily Data</i> for <i>ALL</i> to a CSV file and upload that file here as-is. However, the MTU
+    or Spyder must already be configured in <i>Commando</i> with matching names, otherwise the data will not be imported.
   </p>
 
   <p>Example</p>
   <pre>
-    ID,Name,Rate,Enabled
-    160D81, "MAIN",0.1,true
-    160D8100,"HEATER",0.1,true
-    160D8101,"DRYER",0.1,true
-    160D8102,"OUTSIDE",0.1,true
-    160D8103,"FRIDGE",0.1,true
-    160D8104,"WASHMA",0.1,true
-    160D8105,"160D8105",0.1,false
-    160D8106,"160D8106",0.1,false
-    160D8107,"160D8107",0.1,false
+    ID, Date, Value
+    160D81, 05/25/2020, 90.874
+    MAIN, 05/24/2020, 90.936
+    MAIN, 05/23/2020, 93.244
+    160D81, 05/23/2020, 93.244
   </pre>
 
-
+  <p><b>If the record already exists, it's data will be overwritten.</b></p>
 
 </div>
 

@@ -20,22 +20,24 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-unit";
 import {FormatHelper} from "../../helpers/format-helper";
 import {MtuService} from "../../services/mtu.service";
+import {DailyEnergyService} from "../../services/daily-energy.service";
+import {DailyEnergyData} from "../../models/daily-energy-data";
 
 
 @Component({
-  selector: 'import-devices-dialog',
-  templateUrl: './import-devices-dialog.component.html',
-  styleUrls: ['./import-devices-dialog.component.scss']
+  selector: 'import-data-dialog',
+  templateUrl: './import-data-dialog.component.html',
+  styleUrls: ['./import-data-dialog.component.scss']
 })
-export class ImportDevicesDialogComponent implements AfterContentInit{
+export class ImportDataDialogComponent implements AfterContentInit{
   hasFile: boolean = false;
   private file:File = null;
   isUploading: boolean = false;
   progress: number = 0;
 
   constructor(
-    private mtuService:MtuService,
-    public dialogRef: MatDialogRef<ImportDevicesDialogComponent>,
+    private dailyEnergyService:DailyEnergyService,
+    public dialogRef: MatDialogRef<ImportDataDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     dialogRef.disableClose = true;
@@ -56,7 +58,6 @@ export class ImportDevicesDialogComponent implements AfterContentInit{
         // this 'text' is the content of the file
         let text:string = reader.result.toString();
         let lines = text.split('\n');
-        lines.shift(); //Pop the first line
         this.processNextLine(lines, lines.length);
         for (let i=0; i < lines.length; i++){
           this.progress = i/lines.length * 100;
@@ -79,13 +80,12 @@ export class ImportDevicesDialogComponent implements AfterContentInit{
         let values:Array<string> = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
         console.error(JSON.stringify(values));
 
-        let mtu:MeasuringTransmittingUnit = new MeasuringTransmittingUnit();
-        mtu.id=FormatHelper.removeCSVQuotes(values[0])
-        mtu.name=FormatHelper.removeCSVQuotes(values[1])
-        mtu.rate=parseFloat(FormatHelper.removeCSVQuotes(values[2]));
-        mtu.enabled=FormatHelper.removeCSVQuotes(values[3]).toLowerCase() != 'false';
-        this.mtuService.updateSettings(mtu)
-          .then((mtu:MeasuringTransmittingUnit)=>{
+        let ded:DailyEnergyData = new DailyEnergyData();
+        ded.mtuId=FormatHelper.removeCSVQuotes(values[0]);
+        ded.energyDate=FormatHelper.convertToEnergyDate(FormatHelper.removeCSVQuotes(values[1]));
+        ded.energyValue=parseFloat(FormatHelper.removeCSVQuotes(values[2]).toLowerCase()) * 1000.0;
+        this.dailyEnergyService.update(ded)
+          .then((ded:DailyEnergyData)=>{
             this.progress = Math.ceil(((total-lines.length)/total) * 100);
             this.processNextLine(lines, total);
           })

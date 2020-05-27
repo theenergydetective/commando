@@ -155,8 +155,24 @@ public class DailyEnergyDataService {
     }
 
     public DailyEnergyData update(DailyEnergyData dailyEnergyData) {
+        MeasuringTransmittingUnit mtu = measuringTransmittingUnitDAO.findOne(dailyEnergyData.getMtuId());
+        if (mtu == null) mtu = measuringTransmittingUnitDAO.findByName(dailyEnergyData.getMtuId());
+        if (mtu == null){
+            LOGGER.warn("[update] Attempted to import a record for a non-existant mtu: {}", dailyEnergyData);
+            return dailyEnergyData;
+        }
+        dailyEnergyData.setMtuId(mtu.getId());
         LOGGER.info("[update] Updating {}", dailyEnergyData);
-        dailyEnergyDataDAO.update(dailyEnergyData);
+
+        if (null == dailyEnergyDataDAO.findOne(dailyEnergyData.getMtuId(), dailyEnergyData.getEnergyDate())){
+            LOGGER.info("[update] Creating new record: {}", dailyEnergyData);
+            dailyEnergyDataDAO.insert(dailyEnergyData);
+        } else {
+            LOGGER.info("[update] Updating existing record: {}", dailyEnergyData);
+            dailyEnergyDataDAO.update(dailyEnergyData);
+        }
+
+
         return dailyEnergyData;
     }
 

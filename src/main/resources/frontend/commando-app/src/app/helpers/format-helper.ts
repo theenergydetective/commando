@@ -52,4 +52,16 @@ export class FormatHelper {
     }
     return field;
   }
+
+  /***
+   * Converts a date in MM/DD/YYYY format to the YYYYMMDD epoch date format
+   * @param dateValue
+   */
+  static convertToEnergyDate(dateValue:string):number{
+    let v:Array<string> = dateValue.split('/');
+    let s=this.padZeros(v[2],4);
+    s+=this.padZeros(v[0],2);
+    s+=this.padZeros(v[1],2);
+    return parseInt(s);
+  }
 }

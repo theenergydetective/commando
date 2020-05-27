@@ -156,8 +156,45 @@ public class DailyEnergyDataServiceTest {
 
     @Test
     public void updateTest(){
-        dailyEnergyDataService.update(new DailyEnergyData());
+        MeasuringTransmittingUnit mtu = new MeasuringTransmittingUnit();
+        mtu.setId("TEST");
+
+        DailyEnergyData dailyEnergyData = new DailyEnergyData();
+        dailyEnergyData.setMtuId("TEST");
+        dailyEnergyData.setEnergyDate(20200420L);
+
+        when(measuringTransmittingUnitDAO.findOne("TEST")).thenReturn(mtu);
+        when(dailyEnergyDataDAO.findOne(anyString(), anyLong())).thenReturn(null);
+        dailyEnergyDataService.update(dailyEnergyData);
+        verify(dailyEnergyDataDAO).insert(any());
+        verify(dailyEnergyDataDAO, times(0)).update(any());
+
+        reset(measuringTransmittingUnitDAO);
+        reset(dailyEnergyDataDAO);
+        when(measuringTransmittingUnitDAO.findOne("TEST")).thenReturn(mtu);
+        when(dailyEnergyDataDAO.findOne(anyString(), anyLong())).thenReturn(dailyEnergyData);
+        dailyEnergyDataService.update(dailyEnergyData);
         verify(dailyEnergyDataDAO).update(any());
+        verify(dailyEnergyDataDAO, times(0)).insert(any());
+
+        reset(measuringTransmittingUnitDAO);
+        reset(dailyEnergyDataDAO);
+        when(measuringTransmittingUnitDAO.findOne("TEST")).thenReturn(null);
+        when(measuringTransmittingUnitDAO.findByName("TEST")).thenReturn(mtu);
+        when(dailyEnergyDataDAO.findOne(anyString(), anyLong())).thenReturn(null);
+        dailyEnergyDataService.update(dailyEnergyData);
+        verify(dailyEnergyDataDAO).insert(any());
+        verify(dailyEnergyDataDAO, times(0)).update(any());
+
+
+        reset(measuringTransmittingUnitDAO);
+        reset(dailyEnergyDataDAO);
+        when(measuringTransmittingUnitDAO.findOne("TEST")).thenReturn(null);
+        when(measuringTransmittingUnitDAO.findByName("TEST")).thenReturn(null);
+        when(dailyEnergyDataDAO.findOne(anyString(), anyLong())).thenReturn(null);
+        dailyEnergyDataService.update(dailyEnergyData);
+        verify(dailyEnergyDataDAO, times(0)).insert(any());
+        verify(dailyEnergyDataDAO, times(0)).update(any());
     }
 
     @Test

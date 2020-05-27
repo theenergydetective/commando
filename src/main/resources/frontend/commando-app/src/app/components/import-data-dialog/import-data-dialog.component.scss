@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2020. Energy, Inc.
  *
  *      Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,26 @@
  *
  */
 
-export class DailyEnergyData {
-  public mtuId:string;
-  public energyDate:number;
-  public energyValue:number;
-  public formattedDate:string;
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
 }
 
+.inputfile + label {
+  font-size: 1.25em;
+  font-weight: 700;
+  color: white;
+  background-color: black;
+  display: inline-block;
+  cursor: pointer; /* "hand" cursor */
+
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+  background-color: red;
+}

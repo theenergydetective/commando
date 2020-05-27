@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2020. Energy, Inc.
  *
  *      Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,4 @@
  *
  */
 
-export class DailyEnergyData {
-  public mtuId:string;
-  public energyDate:number;
-  public energyValue:number;
-  public formattedDate:string;
-}
-
+export * from './import-data-dialog.component';

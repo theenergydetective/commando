@@ -33,7 +33,7 @@ import {NG_VALUE_ACCESSOR} from "@angular/forms";
 export class MatFileUploadComponent{
   @Input() progress;
   onChange: Function;
-  private file: File | null = null;
+  file: File | null = null;
 
   @Output() selected: EventEmitter<File> = new EventEmitter();
 

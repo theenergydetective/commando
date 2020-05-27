@@ -25,6 +25,7 @@ import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-uni
 import {ActivationDetails} from "../../models/activation-details";
 import {ConfirmDialogComponent} from "../confirm-dialog";
 import {ImportDevicesDialogComponent} from "../import-devices-dialog";
+import {ImportDataDialogComponent} from "../import-data-dialog";
 
 @Component({
   selector: 'app-server-settings',
@@ -109,6 +110,12 @@ export class ServerSettingsComponent implements AfterContentInit {
 
   importData() {
 
+    const dialogRef = this.dialog.open(ImportDataDialogComponent, {});
 
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result != null && result) {
+        this.ngAfterContentInit();
+      }
+    });
   }
 }
