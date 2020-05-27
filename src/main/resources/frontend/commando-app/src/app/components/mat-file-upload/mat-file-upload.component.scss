@@ -1,0 +1,79 @@
+/*!
+ * Copyright (c) 2020. Energy, Inc.
+ *
+ *      Licensed under the Apache License, Version 2.0 (the "License");
+ *      you may not use this file except in compliance with the License.
+ *      You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *      Unless required by applicable law or agreed to in writing, software
+ *      distributed under the License is distributed on an "AS IS" BASIS,
+ *      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *      See the License for the specific language governing permissions and
+ *      limitations under the License.
+ *
+ */
+
+@import 'node_modules/@angular/material/theming';
+@import 'src/styles';
+
+// Create a config with the default typography levels.
+// Create a config with the default typography levels.
+$config: mat-typography-config();
+$default-padding: 5px;
+$double-padding: $default-padding * 2;
+$default-min-height: 30px;
+
+
+.file-drop-area {
+  border: 1px dashed #7c7db3;
+  border-radius: 3px;
+  position: relative;
+  width: 450px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 26px 20px 30px;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+}
+
+.file-drop-area.is-active {
+  background-color: #3F4069;
+}
+
+.fake-btn {
+  background-color: $accent;
+  color:white;
+  border: 1px solid #9E9EC4;
+  border-radius: 3px;
+  padding: 8px 15px;
+  margin-right: 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.file-msg {
+  font-size: mat-font-size($config, body-1);
+  font-family: mat-font-family($config);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: calc(100% - 130px);
+  vertical-align: middle;
+}
+
+.file-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.file-input:focus {
+  outline: none;
+}

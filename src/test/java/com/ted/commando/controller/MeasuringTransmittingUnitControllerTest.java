@@ -68,7 +68,12 @@ public class MeasuringTransmittingUnitControllerTest {
         when(measuringTransmittingUnitDAO.findOne(anyString())).thenReturn(measuringTransmittingUnit);
         assertNotNull(measuringTransmittingUnitController.setMTU(measuringTransmittingUnit));
         verify(measuringTransmittingUnitDAO).updateSettings(measuringTransmittingUnit);
-        verify(measuringTransmittingUnitDAO).findOne("TEST");
+        //verify(measuringTransmittingUnitDAO, times(2)).findOne("TEST");
+
+        reset(measuringTransmittingUnitDAO);
+        when(measuringTransmittingUnitDAO.findOne(anyString())).thenReturn(null);
+        measuringTransmittingUnitController.setMTU(measuringTransmittingUnit);
+        verify(measuringTransmittingUnitDAO).insert(measuringTransmittingUnit);
     }
 
 }

@@ -55,11 +55,15 @@ import {MonthPickerComponent} from "./components/month-picker/month-picker.compo
 import {MonthPickerToggleComponent} from "./components/month-picker/month-picker-toggle.component";
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 import {DayPickerComponent} from "./components/day-picker/day-picker.component";
+import {ImportDevicesDialogComponent} from "./components/import-devices-dialog";
+import {MatFileUploadComponent} from "./components/mat-file-upload";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 
 @NgModule({
   entryComponents:[
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    ImportDevicesDialogComponent
   ],
   declarations: [
     AppComponent,
@@ -69,49 +73,52 @@ import {DayPickerComponent} from "./components/day-picker/day-picker.component";
     DeviceEditComponent,
     ServerSettingsComponent,
     ConfirmDialogComponent,
+    ImportDevicesDialogComponent,
     MenuComponent,
     DeviceEditFieldComponent,
     MonthPickerComponent,
     MonthPickerToggleComponent,
-    DayPickerComponent
+    DayPickerComponent,
+    MatFileUploadComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        FormsModule,
-        FlexLayoutModule,
-        LayoutModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatIconModule,
-        MatInputModule,
-        MatCheckboxModule,
-        MatFormFieldModule,
-        MatSnackBarModule,
-        MatListModule,
-        MatDialogModule,
-        MatCardModule,
-        MatTableModule,
-        MatSelectModule,
-        MatRadioModule,
-        MatRippleModule,
-        MatChipsModule,
-        HttpClientModule,
-        NgxDaterangepickerMd.forRoot(),
-        LoggerModule.forRoot({
-            // serverLoggingUrl: '/api/logs',
-            level: NgxLoggerLevel.DEBUG, // TODO: Switch to WARN on production
-            serverLogLevel: NgxLoggerLevel.ERROR,
-            disableConsoleLogging: false, // TODO: enable in production
-            enableSourceMaps: true // TODO: Disable in production
-        }),
-        BrowserAnimationsModule,
-        ReactiveFormsModule,
-        MatSidenavModule,
-        NgxDaterangepickerMd,
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    FlexLayoutModule,
+    LayoutModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatSnackBarModule,
+    MatListModule,
+    MatDialogModule,
+    MatCardModule,
+    MatTableModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatProgressBarModule,
+    MatRippleModule,
+    MatChipsModule,
+    HttpClientModule,
+    NgxDaterangepickerMd.forRoot(),
+    LoggerModule.forRoot({
+      // serverLoggingUrl: '/api/logs',
+      level: NgxLoggerLevel.DEBUG, // TODO: Switch to WARN on production
+      serverLogLevel: NgxLoggerLevel.ERROR,
+      disableConsoleLogging: false, // TODO: enable in production
+      enableSourceMaps: true // TODO: Disable in production
+    }),
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    MatSidenavModule,
+    NgxDaterangepickerMd,
 
 
-    ],
+  ],
   providers: [DatePipe],
   bootstrap: [AppComponent]
 })

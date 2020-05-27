@@ -44,5 +44,12 @@ export class FormatHelper {
     return s;
   }
 
-
+  static removeCSVQuotes(field: string) {
+    field=field.trim();
+    if (field.length > 0) {
+      if (field[0] == '"') field = field.substring(1);
+      if (field[field.length - 1] == '"') field = field.substring(0, field.length - 1);
+    }
+    return field;
+  }
 }

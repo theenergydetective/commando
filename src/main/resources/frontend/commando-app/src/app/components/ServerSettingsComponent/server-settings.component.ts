@@ -23,6 +23,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {MtuService} from "../../services/mtu.service";
 import {MeasuringTransmittingUnit} from "../../models/measuring-transmitting-unit";
 import {ActivationDetails} from "../../models/activation-details";
+import {ConfirmDialogComponent} from "../confirm-dialog";
+import {ImportDevicesDialogComponent} from "../import-devices-dialog";
 
 @Component({
   selector: 'app-server-settings',
@@ -93,5 +95,20 @@ export class ServerSettingsComponent implements AfterContentInit {
 
   onDeviceEdit(device: MeasuringTransmittingUnit) {
     this.router.navigate(['/edit/' + device.id]);
+  }
+
+  importDevices() {
+    const dialogRef = this.dialog.open(ImportDevicesDialogComponent, {});
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result != null && result) {
+        this.ngAfterContentInit();
+      }
+    });
+  }
+
+  importData() {
+
+
   }
 }

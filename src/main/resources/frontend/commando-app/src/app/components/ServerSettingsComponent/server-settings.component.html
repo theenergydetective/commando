@@ -34,6 +34,23 @@
       </button>
       <span style="color:white">Server Settings</span>
       <div class="fill-space"></div>
+
+      <button
+        mat-button
+        type="button"
+        aria-label="Import Devices"
+        (click)="importDevices()">
+        IMPORT DEVICES
+      </button>
+
+      <button
+        mat-button
+        type="button"
+        aria-label="Import Data"
+        (click)="importData()">
+        IMPORT DATA
+      </button>
+
     </mat-toolbar>
     <!-- Add Content Here -->
   </mat-sidenav-content>
@@ -104,6 +121,7 @@
         <th>Energy Rate</th>
         <th>Timezone</th>
         <th>Last Post</th>
+        <th>Enabled</th>
         <th></th>
       </tr>
 
@@ -113,6 +131,7 @@
         <td>${{device.rate}}/kWh</td>
         <td>{{device.timezone}}</td>
         <td>{{formatLastPost(device.lastPost)}}</td>
+        <td>{{device.enabled?'Yes':'No'}}</td>
         <td>
             <mat-icon class="accentIcon" aria-label="Side nav toggle icon">edit</mat-icon>
         </td>

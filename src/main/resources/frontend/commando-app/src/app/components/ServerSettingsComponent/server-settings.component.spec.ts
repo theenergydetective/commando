@@ -41,6 +41,7 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatListModule} from "@angular/material/list";
 import {MockMatIconComponent} from "../../mocks/mock-mat-icon-component";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 
 describe('ServerSettingsComponent', () => {
@@ -69,6 +70,7 @@ describe('ServerSettingsComponent', () => {
         ReactiveFormsModule,
         FlexLayoutModule,
         LayoutModule,
+        MatProgressBarModule,
       ],
       providers: [
         DatePipe,

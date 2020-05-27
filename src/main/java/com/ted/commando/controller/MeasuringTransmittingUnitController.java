@@ -61,7 +61,13 @@ public class MeasuringTransmittingUnitController {
     public
     @ResponseBody
     MeasuringTransmittingUnit setMTU(@RequestBody MeasuringTransmittingUnit mtu){
-        measuringTransmittingUnitDAO.updateSettings(mtu);
+        if (null == measuringTransmittingUnitDAO.findOne(mtu.getId())) {
+            LOGGER.debug("[setMTU] MTU not found. Inserting new MTU: {}", mtu);
+            measuringTransmittingUnitDAO.insert(mtu);
+        } else {
+            LOGGER.debug("[setMTU] MTU found. Updating Settings: {}", mtu);
+            measuringTransmittingUnitDAO.updateSettings(mtu);
+        }
         return measuringTransmittingUnitDAO.findOne(mtu.getId());
     }
 

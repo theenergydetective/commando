@@ -1,0 +1,56 @@
+<!--
+  ~ Copyright (c) 2020. Energy, Inc.
+  ~
+  ~      Licensed under the Apache License, Version 2.0 (the "License");
+  ~      you may not use this file except in compliance with the License.
+  ~      You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~      Unless required by applicable law or agreed to in writing, software
+  ~      distributed under the License is distributed on an "AS IS" BASIS,
+  ~      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~      See the License for the specific language governing permissions and
+  ~      limitations under the License.
+  ~
+  -->
+
+<h1 mat-dialog-title>Import Devices</h1>
+
+<div mat-dialog-content>
+  <p style="max-width:600px">
+    You can bulk import devices into COMMANDO by uploading a CSV file.<br>
+    The format of the CSV file needs to be: <b><i>ID,Name,Enabled</i></b>
+    <br>The name should be in quotes. The first line of the file will be ignored as header data.
+  </p>
+
+  <p>Example</p>
+  <pre>
+    ID,Name,Enabled
+    160D81, "MAIN",true
+    160D8100,"HEATER",true
+    160D8101,"DRYER",true
+    160D8102,"OUTSIDE",true
+    160D8103,"FRIDGE",true
+    160D8104,"WASHMA",true
+    160D8105,"160D8105",false
+    160D8106,"160D8106",false
+    160D8107,"160D8107",false
+  </pre>
+
+
+
+</div>
+
+
+<div mat-dialog-actions *ngIf="!isUploading">
+  <mat-file-upload (selected)="onSelectedFileChanged($event)"></mat-file-upload>
+  <div class="fill-space"></div>
+  <button mat-button (click)="onCloseClick()">Cancel</button>
+  <button color="accent" [disabled]="!hasFile" mat-button (click)="onClickImport()">Import</button>
+</div>
+
+<div mat-dialog-actions *ngIf="isUploading">
+  <mat-progress-bar [color]="'accent'" [mode]="'determinate'" [value]="progress"></mat-progress-bar>
+
+</div>
