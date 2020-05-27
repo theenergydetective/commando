@@ -28,8 +28,8 @@ wget https://raw.githubusercontent.com/theenergydetective/commando/master/script
 
 #Set up the keepalive script
 wget https://raw.githubusercontent.com/theenergydetective/commando/master/scripts/keep_alive.sh -O /opt/commando/lib/keep_alive.sh
-chmod 755 keep_alive.sh
-dos2unix keep_alive.sh
+chmod 755 /opt/commando/lib/keep_alive.sh
+dos2unix /opt/commando/lib/keep_alive.sh
 sudo crontab -l > /tmp/mycron
 grep 'keep_alive' /tmp/mycron || echo '*/5 * * * * /opt/commando/lib/keep_alive.sh' >> /tmp/mycron
 sudo crontab /tmp/mycron
