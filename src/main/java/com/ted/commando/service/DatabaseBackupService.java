@@ -18,6 +18,11 @@
 package com.ted.commando.service;
 
 
+import com.ted.commando.dao.DailyEnergyDataDAO;
+import com.ted.commando.dao.MeasuringTransmittingUnitDAO;
+import com.ted.commando.model.DailyEnergyData;
+import com.ted.commando.model.MeasuringTransmittingUnit;
+import com.ted.commando.util.FormatUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +31,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
+import javax.inject.Inject;
+import java.io.*;
+import java.math.BigDecimal;
 
 /**
  * Service for performing nightly backups of the database
@@ -47,6 +54,12 @@ public class DatabaseBackupService {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    @Inject
+    DailyEnergyDataDAO dailyEnergyDataDAO;
+
+    @Autowired
+    MeasuringTransmittingUnitDAO measuringTransmittingUnitDAO;
 
 
     protected void rollBackupFiles(String backupFile, int count){
@@ -99,6 +112,48 @@ public class DatabaseBackupService {
             jdbcTemplate.update("BACKUP TO '" + backupFile + "'");
         } catch (Exception ex){
             LOGGER.error("[doBackup] ERROR CREATING BACKUP: {}", ex);
+        }
+    }
+
+
+    /**
+     * This imports data from a csv exported from a TED Pro ECC. It requires that the name of the device EXACTLY MATCH
+     * the name of the exported Spyder/MTU.
+     * @param csvFile
+     */
+    public void import6KCSV(File csvFile){
+        LOGGER.debug("[import6KCSV] Opening File: {}");
+        try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))){
+            String line = reader.readLine();
+            while (line != null){
+                if (!line.trim().isEmpty()) {
+                    LOGGER.debug("[import6K] Importing {}", line);
+                    String fields[] = line.split(",");
+
+
+                    MeasuringTransmittingUnit mtu = measuringTransmittingUnitDAO.findByName(fields[0]);
+                    if (mtu != null) {
+                        DailyEnergyData dailyEnergyData = new DailyEnergyData();
+                        dailyEnergyData.setMtuId(mtu.getId());
+                        dailyEnergyData.setEnergyDate(FormatUtil.convertSimpleDateToEnergyDate(fields[1]));
+                        dailyEnergyData.setEnergyValue(new BigDecimal(fields[2]).multiply(new BigDecimal(1000.0)));
+
+                        if (null == dailyEnergyDataDAO.findOne(mtu.getId(), dailyEnergyData.getEnergyDate())) {
+                            LOGGER.debug("[import6K] Inserting new record: {}", dailyEnergyData);
+                            dailyEnergyDataDAO.insert(dailyEnergyData);
+                        } else {
+                            LOGGER.debug("[import6K] Overwriting existing record: {}", dailyEnergyData);
+                            dailyEnergyDataDAO.update(dailyEnergyData);
+                        }
+
+                    }
+                }
+                line = reader.readLine();
+            }
+
+
+        } catch (IOException e) {
+            LOGGER.error("[import6KCSV] Error importing {}", csvFile, e);
         }
     }
 }

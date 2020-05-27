@@ -24,6 +24,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FormatUtilTest {
@@ -66,5 +67,13 @@ public class FormatUtilTest {
         assertEquals("04/20/2020", FormatUtil.simpleFormatEnergyDate("2020-04-20"));
         assertEquals("", FormatUtil.simpleFormatEnergyDate("2020-04-2000"));
     }
+    @Test
+    public void convertSimpleDateToEnergyDate(){
+        assertEquals(20200420L, FormatUtil.convertSimpleDateToEnergyDate("04/20/2020").longValue());
+        assertNull(FormatUtil.convertSimpleDateToEnergyDate("04/20XXXX/2020"));
+        assertNull(FormatUtil.convertSimpleDateToEnergyDate("04/2020"));
+
+    }
+
 
 }

@@ -51,6 +51,7 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
 
     private static String BASE_QUERY = "select " + generateFields("m.", FIELDS, 0) + " from mtu m ";
     private static String FIND_ONE = BASE_QUERY + " where m.id = :id";
+    private static String FIND_BY_NAME = BASE_QUERY + " where LOWER(m.name) = :name";
 
 
     private static String INSERT = "insert into mtu (" + generateFields("", FIELDS, 0) + ") VALUES (" + generateFields(":", FIELDS, 0) + ")";
@@ -145,4 +146,13 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
         return namedParameterJdbcTemplate.query(query.toString(),  rowMapper);
     }
 
+    public MeasuringTransmittingUnit findByName(String name) {
+        try {
+            MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("name", name.toLowerCase());
+            return namedParameterJdbcTemplate.queryForObject(FIND_BY_NAME, parameterSource, rowMapper);
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        }
+    }
 }

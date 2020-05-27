@@ -17,6 +17,10 @@
 
 package com.ted.commando.service;
 
+import com.ted.commando.dao.DailyEnergyDataDAO;
+import com.ted.commando.dao.MeasuringTransmittingUnitDAO;
+import com.ted.commando.model.DailyEnergyData;
+import com.ted.commando.model.MeasuringTransmittingUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -49,6 +54,13 @@ public class DatabaseBackupServiceTest {
     @Mock
     JdbcTemplate jdbcTemplate;
 
+    @Mock
+    DailyEnergyDataDAO dailyEnergyDataDAO;
+
+    @Mock
+    MeasuringTransmittingUnitDAO measuringTransmittingUnitDAO;
+
+
     @InjectMocks
     DatabaseBackupService databaseBackupService;
 
@@ -58,9 +70,10 @@ public class DatabaseBackupServiceTest {
     private static final String TEST_BACKUP_FILE = "/opt/testDirectory/commando.db.bak";
 
 
-
     @Before
     public void setup() throws Exception{
+        reset(dailyEnergyDataDAO);
+        reset(measuringTransmittingUnitDAO);
         reset(jdbcTemplate);
         reset(environment);
         deleteDirectoryRecursion(new File(TEST_DIRECTORY).toPath());
@@ -108,6 +121,22 @@ public class DatabaseBackupServiceTest {
 
     }
 
+    @Test
+    public void import6KCSVTest(){
+        File file = new File(getClass().getClassLoader().getResource("6ktest.csv").getFile());
+        MeasuringTransmittingUnit mockMTU =  new MeasuringTransmittingUnit();
+        mockMTU.setId("MAIN");
+        when(dailyEnergyDataDAO.findOne(anyString(), anyLong())).thenReturn(null);
+        when(measuringTransmittingUnitDAO.findByName(anyString())).thenReturn(mockMTU);
+
+        databaseBackupService.import6KCSV(file);
+        verify(dailyEnergyDataDAO, times(5)).insert(any());
+
+        when(dailyEnergyDataDAO.findOne(anyString(), anyLong())).thenReturn(new DailyEnergyData());
+        databaseBackupService.import6KCSV(file);
+        verify(dailyEnergyDataDAO, times(5)).update(any());
+
+    }
 
     public static void touch(File file) throws IOException{
         long timestamp = System.currentTimeMillis();

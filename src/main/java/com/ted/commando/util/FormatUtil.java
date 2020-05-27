@@ -21,6 +21,7 @@ package com.ted.commando.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -103,5 +104,20 @@ public class FormatUtil {
         }
         return "";
 
+    }
+
+    public static Long convertSimpleDateToEnergyDate(String field) {
+        try {
+            String fields[] = field.split("/");
+            if (fields.length == 3) {
+                StringBuilder value = new StringBuilder(fields[2]).append(fields[0]).append(fields[1]);
+                return Long.parseLong(value.toString());
+            } else {
+                return null;
+            }
+        } catch (NumberFormatException e) {
+            LOGGER.error("[convertSimpleDateToEnergyDate] Parse Exception:{}", field, e);
+            return null;
+        }
     }
 }
