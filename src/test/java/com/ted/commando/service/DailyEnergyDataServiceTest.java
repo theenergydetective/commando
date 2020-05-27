@@ -191,7 +191,6 @@ public class DailyEnergyDataServiceTest {
         reset(dailyEnergyDataDAO);
         when(measuringTransmittingUnitDAO.findOne("TEST")).thenReturn(null);
         when(measuringTransmittingUnitDAO.findByName("TEST")).thenReturn(null);
-        when(dailyEnergyDataDAO.findOne(anyString(), anyLong())).thenReturn(null);
         dailyEnergyDataService.update(dailyEnergyData);
         verify(dailyEnergyDataDAO, times(0)).insert(any());
         verify(dailyEnergyDataDAO, times(0)).update(any());

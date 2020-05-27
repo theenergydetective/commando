@@ -76,6 +76,7 @@ public class MeasuringTransmittingUnitDAOTest {
         measuringTransmittingUnitDAO.insert(mtu);
         assertEquals("TEST2", measuringTransmittingUnitDAO.findOne(TEST_ID).getName());
         assertNotNull(measuringTransmittingUnitDAO.findByName("test2"));
+        assertNull(measuringTransmittingUnitDAO.findByName("FAKEMTUNAME"));
 
         mtu.setLastPost(123456789L);
         mtu.setLastValue(new BigDecimal(200000.0));
