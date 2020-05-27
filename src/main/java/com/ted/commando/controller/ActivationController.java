@@ -26,7 +26,10 @@ import com.ted.commando.service.KeyService;
 import com.ted.commando.service.UserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
+
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
@@ -50,6 +53,11 @@ public class ActivationController {
     @Inject
     KeyService keyService;
 
+
+    @Autowired
+    Environment environment;
+
+
     /**
      * Allows and ECC or  MTU to get its security code so it can begin posting to the system,
      *
@@ -59,6 +67,7 @@ public class ActivationController {
      * @throws Exception
      */
     @RequestMapping(consumes = "application/xml",
+            produces = {"application/xml", "text/xml"},
             method = RequestMethod.POST)
     public
     @ResponseBody
@@ -68,6 +77,7 @@ public class ActivationController {
             LOGGER.info("[activate] Processing Request {}", activationRequest);
 
             String activationKey = userDetailsService.getActivationKey();
+
 
             boolean validActivationKey = activationKey == null || activationKey.isEmpty() || activationKey.equals(activationRequest.unique);
 
@@ -85,7 +95,17 @@ public class ActivationController {
                 }
 
                 ActivationResponse activationResponse = new ActivationResponse();
-                activationResponse.PostServer = userDetailsService.getServerName();
+                String url = userDetailsService.getServerName();
+                if (url.contains(":")) {
+                    String v[] = url.split(":");
+                    activationResponse.PostServer = v[0];
+                    activationResponse.PostPort = Integer.parseInt(v[1]);
+                } else {
+                    activationResponse.PostServer = userDetailsService.getServerName();
+                    activationResponse.PostPort = Integer.parseInt(environment.getProperty("local.server.port"));
+
+                }
+
                 activationResponse.AuthToken = ecc.getSecurityKey();
                 activationResponse.PostRate = 1;
                 LOGGER.debug("[activate] Returning activation response:{}", activationResponse);

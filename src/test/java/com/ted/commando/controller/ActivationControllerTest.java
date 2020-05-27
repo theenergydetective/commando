@@ -24,15 +24,14 @@ import com.ted.commando.model.ActivationResponse;
 import com.ted.commando.model.EnergyControlCenter;
 import com.ted.commando.service.KeyService;
 import com.ted.commando.service.UserDetailsService;
-import com.ted.commando.service.VersionService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.core.env.Environment;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.junit.Assert.*;
@@ -54,6 +53,9 @@ public class ActivationControllerTest {
     @Mock
     UserDetailsService userDetailsService;
 
+    @Mock
+    Environment environment;
+
     @InjectMocks
     ActivationController activationController;
 
@@ -68,15 +70,27 @@ public class ActivationControllerTest {
     public void activateTest() throws Exception{
         when(userDetailsService.getActivationKey()).thenReturn(TEST_ACTIVATION_KEY);
         when(energyControlCenterDAO.findOne(TEST_ECC_ID)).thenReturn(null);
+        when(environment.getProperty("local.server.port")).thenReturn("1234");
 
         ActivationRequest activationRequest = new ActivationRequest();
         activationRequest.gateway = TEST_ECC_ID;
         activationRequest.unique = TEST_ACTIVATION_KEY;
         HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
 
-        //Test adding a new ECC
+        //Test adding a new ECC (No port Specified)
+        when(userDetailsService.getServerName()).thenReturn("127.0.0.1");
         ActivationResponse goodActivationResponse = activationController.activate(activationRequest, httpServletResponse);
         assertNotNull(goodActivationResponse);
+        assertEquals(1234, goodActivationResponse.PostPort);
+        verify(energyControlCenterDAO).findOne(TEST_ECC_ID);
+        verify(energyControlCenterDAO).insert(any());
+
+        //Port Specified
+        when(userDetailsService.getServerName()).thenReturn("127.0.0.1:8888");
+        reset(energyControlCenterDAO);
+        goodActivationResponse = activationController.activate(activationRequest, httpServletResponse);
+        assertNotNull(goodActivationResponse);
+        assertEquals(8888, goodActivationResponse.PostPort);
         verify(energyControlCenterDAO).findOne(TEST_ECC_ID);
         verify(energyControlCenterDAO).insert(any());
 

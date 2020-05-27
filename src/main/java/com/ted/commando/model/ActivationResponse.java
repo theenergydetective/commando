@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 
-@XmlRootElement
+@XmlRootElement(name = "ted5000ActivationResponse")
 public class ActivationResponse {
     @XmlElement
     public String PostServer;
@@ -46,5 +46,19 @@ public class ActivationResponse {
 
     @XmlElement
     public String Spyder = "T";
+
+    @Override
+    public String toString() {
+        return "ActivationResponse{" +
+                "PostServer='" + PostServer + '\'' +
+                ", UseSSL='" + UseSSL + '\'' +
+                ", PostPort=" + PostPort +
+                ", PostURL='" + PostURL + '\'' +
+                ", AuthToken='" + AuthToken + '\'' +
+                ", PostRate=" + PostRate +
+                ", HighPrec='" + HighPrec + '\'' +
+                ", Spyder='" + Spyder + '\'' +
+                '}';
+    }
 }
 

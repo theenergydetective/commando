@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 
-@XmlRootElement
+@XmlRootElement(name = "ted5000Activation")
 public class ActivationRequest {
 
     @XmlElement(name = "Gateway")

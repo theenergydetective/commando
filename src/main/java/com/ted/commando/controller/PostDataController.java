@@ -51,8 +51,7 @@ public class PostDataController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value = "/postData",
-            consumes = "application/xml",
+    @RequestMapping(consumes = "application/xml",
             method = RequestMethod.POST)
     public void postData(@RequestBody EnergyPost energyPost, HttpServletResponse response) throws Exception {
 
