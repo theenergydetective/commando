@@ -151,13 +151,14 @@ export class HomeComponent implements AfterContentInit {
   }
 
   calcStartYear(mtuList: Array<MeasuringTransmittingUnit>) {
-    let oldestDate = Math.floor(new Date().getTime() / 1000);
+    let oldestDate = new Date().getFullYear();
 
     for (let m = 0; m < mtuList.length; m++) {
       let mtu = mtuList[m];
-      if (oldestDate > mtu.created) oldestDate = mtu.created;
+      let created:number = Math.floor(mtu.created/10000);
+      if ((created > 0) && (oldestDate > created)) oldestDate = created;
     }
-    return new Date(oldestDate * 1000).getFullYear();
+    return oldestDate;
   }
 
   validateForm() {

@@ -49,7 +49,10 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
     };
 
 
-    private static String BASE_QUERY = "select " + generateFields("m.", FIELDS, 0) + " from mtu m ";
+    private static String BASE_QUERY = "select " +
+            generateFields("m.", FIELDS, 0)
+            + ",(select min(energy_date) from daily_energy_data where mtu_id=m.id) as first_post "
+            + " from mtu m ";
     private static String FIND_ONE = BASE_QUERY + " where m.id = :id";
     private static String FIND_BY_NAME = BASE_QUERY + " where LOWER(m.name) = :name";
 
@@ -73,7 +76,7 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
             dto.setLastDayValue(rs.getBigDecimal("last_day_value"));
             dto.setTimezone(rs.getString("timezone"));
             dto.setEnabled(rs.getBoolean("enabled"));
-            dto.setCreated(rs.getLong("created"));
+            dto.setCreated(rs.getLong("first_post"));
             return dto;
         }
     };
