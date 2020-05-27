@@ -7,8 +7,8 @@ TED Commando is a simple web server application to allow TED 5000, TED Home, and
 
 ### Hosting Requirements
 For cloud hosting the commando server, we suggest using  [Digital Ocean](https://www.digitalocean.com)  as a host.  For most installations, the following [Droplet Configuration](https://www.digitalocean.com/docs/droplets/how-to/create/)  should work: 
- -  Basic Plan  ($5/mo as of May 2020)
- -  1GB/1CPU
+ - Basic Plan  ($5/mo as of May 2020)
+ - 1GB/1CPU
  - 25 GB SSD Disk
  - 1000 GB Transfer
  - Operating System: Ubuntu 18.04.xx LTS 
@@ -66,6 +66,11 @@ When you first access the web page, you will be presented with the following scr
 For the **Domain**, this can either be the fully qualified domain name (**FQDN**) of the server, or the public IP address if you have a floating IP assigned. If operating the server on a LAN, this can be the LAN IP address of the server.
 
 The **Activation Key** is optional. Specifying this key will allow you to restrict which TED units can post to this server. If it is left blank, any TED device can use 3rd party activation to post to this server.  Please refer to the product manuals for instructions on how to configure the TED device to use 3rd Party posting. 
+
+## Password Reset
+If you need to reset your password on the server, you will need to:
+- log into the server console
+- Run the following script: **_`sudo /opt/commando/lib/reset_admin.sh`_**
 
 ## Developer Notes
 

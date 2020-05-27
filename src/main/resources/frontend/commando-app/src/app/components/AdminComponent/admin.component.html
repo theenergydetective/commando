@@ -27,7 +27,7 @@
       <div class="caption">
         Please type in the username and password you will be using as the Administrator for this
         system. <b>This password can not be recovered online</b>. If you forget your password,
-        you will need to follow the <b>Admin Instructions</b> to reset the password directly
+        you will need to follow the <b><a href="https://github.com/theenergydetective/commando">Admin Instructions</a></b> to reset the password directly
         on the server.
       </div>
 
@@ -36,33 +36,36 @@
           <mat-label>Username</mat-label>
           <input matInput type="text" id="username" formControlName="username" placeholder="Username" required>
         </mat-form-field>
-
+      <div style="height:12px"></div>
       <mat-form-field>
         <mat-label>Confirm Username</mat-label>
         <input matInput type="text" id="confirmUsername" formControlName="confirmUsername" placeholder="Confirm Username" required>
       </mat-form-field>
-
+      <div style="height:12px"></div>
         <mat-form-field>
           <mat-label>Password</mat-label>
           <input matInput type="password" id="password" formControlName="password" placeholder="Password" required>
         </mat-form-field>
-
+      <div style="height:12px"></div>
       <mat-form-field>
         <mat-label>Confirm Password</mat-label>
         <input matInput type="password" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm Password" required>
       </mat-form-field>
-
+      <div style="height:12px"></div>
       <mat-form-field>
         <mat-label>Domain</mat-label>
         <input matInput type="text" id="domain" formControlName="domain" placeholder="FQDN or IP Address">
+        <mat-hint>Specify the port number if not using the default port of 80 (e.g. 127.0.0.1:8888)</mat-hint>
       </mat-form-field>
 
-
+      <div style="height:12px"></div>
       <mat-form-field>
         <mat-label>Activation Key</mat-label>
         <input matInput maxlength="10" type="text" id="activationKey" formControlName="activationKey" placeholder="Activation Key">
+        <mat-hint>Option. Leave blank to allow any TED Pro to activate against the server</mat-hint>
       </mat-form-field>
 
+      <div style="height:12px"></div>
       <mat-form-field>
         <mat-label>Timezone</mat-label>
         <mat-select formControlName="timezone" id="timezone">

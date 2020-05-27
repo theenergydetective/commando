@@ -26,6 +26,11 @@ a2enmod rewrite
 rm -rf /etc/apache2/commando.apache.conf
 wget https://raw.githubusercontent.com/theenergydetective/commando/master/scripts/commando.apache.conf -O /etc/apache2/conf-enabled/commando.apache.conf
 
+#Reset admin script
+wget https://raw.githubusercontent.com/theenergydetective/commando/master/scripts/reset_admin.sh -O /opt/commando/lib/reset_admin.sh
+chmod 755 /opt/commando/lib/reset_admin.sh
+dos2unix /opt/commando/lib/reset_admin.sh
+
 #Set up the keepalive script
 wget https://raw.githubusercontent.com/theenergydetective/commando/master/scripts/keep_alive.sh -O /opt/commando/lib/keep_alive.sh
 chmod 755 /opt/commando/lib/keep_alive.sh

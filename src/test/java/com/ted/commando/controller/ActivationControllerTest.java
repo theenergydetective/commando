@@ -81,7 +81,7 @@ public class ActivationControllerTest {
         when(userDetailsService.getServerName()).thenReturn("127.0.0.1");
         ActivationResponse goodActivationResponse = activationController.activate(activationRequest, httpServletResponse);
         assertNotNull(goodActivationResponse);
-        assertEquals(1234, goodActivationResponse.PostPort);
+        assertEquals(80, goodActivationResponse.PostPort);
         verify(energyControlCenterDAO).findOne(TEST_ECC_ID);
         verify(energyControlCenterDAO).insert(any());
 

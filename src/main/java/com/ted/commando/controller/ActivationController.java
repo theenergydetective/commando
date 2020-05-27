@@ -101,7 +101,7 @@ public class ActivationController {
                     activationResponse.PostPort = Integer.parseInt(v[1]);
                 } else {
                     activationResponse.PostServer = userDetailsService.getServerName();
-                    activationResponse.PostPort = Integer.parseInt(environment.getProperty("local.server.port"));
+                    activationResponse.PostPort = 80;
 
                 }
 
