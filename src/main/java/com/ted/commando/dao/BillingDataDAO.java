@@ -23,7 +23,6 @@ import com.ted.commando.model.BillingFormParameters;
 import com.ted.commando.model.CycleBillingData;
 import com.ted.commando.model.DayBillingData;
 import com.ted.commando.util.FormatUtil;
-import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,7 +33,6 @@ import org.springframework.stereotype.Repository;
 import javax.inject.Inject;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

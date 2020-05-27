@@ -18,7 +18,6 @@
 package com.ted.commando.dao;
 
 import com.ted.commando.Application;
-import com.ted.commando.model.EnergyControlCenter;
 import com.ted.commando.model.MeasuringTransmittingUnit;
 import org.junit.After;
 import org.junit.Before;

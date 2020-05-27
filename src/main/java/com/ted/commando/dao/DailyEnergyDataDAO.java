@@ -17,9 +17,7 @@
 
 package com.ted.commando.dao;
 
-import com.ted.commando.model.BillingFormParameters;
 import com.ted.commando.model.DailyEnergyData;
-import com.ted.commando.model.MeasuringTransmittingUnit;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -27,8 +25,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
-import javax.servlet.ServletOutputStream;
-import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;

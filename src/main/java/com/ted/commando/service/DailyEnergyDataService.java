@@ -33,8 +33,10 @@ import javax.inject.Inject;
 import javax.servlet.ServletOutputStream;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Service for handling the access to daily energy data

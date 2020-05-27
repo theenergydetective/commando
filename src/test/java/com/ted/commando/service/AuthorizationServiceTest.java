@@ -17,11 +17,6 @@
 
 package com.ted.commando.service;
 
-import com.ted.commando.dao.DailyEnergyDataDAO;
-import com.ted.commando.dao.MeasuringTransmittingUnitDAO;
-import com.ted.commando.model.DailyEnergyData;
-import com.ted.commando.model.MeasuringTransmittingUnit;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,9 +26,8 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
-import java.math.BigDecimal;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)

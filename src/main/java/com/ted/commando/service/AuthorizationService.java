@@ -18,28 +18,13 @@
 package com.ted.commando.service;
 
 
-import com.ted.commando.dao.DailyEnergyDataDAO;
-import com.ted.commando.dao.MeasuringTransmittingUnitDAO;
-import com.ted.commando.model.BillingFormParameters;
-import com.ted.commando.model.DailyEnergyData;
-import com.ted.commando.model.MeasuringTransmittingUnit;
-import com.ted.commando.util.FormatUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import javax.servlet.ServletOutputStream;
-import java.io.PrintWriter;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Service for handling Authorization checks outside of spring boot (mostly used for downloads).

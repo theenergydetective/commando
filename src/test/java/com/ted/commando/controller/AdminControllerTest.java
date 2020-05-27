@@ -18,10 +18,6 @@
 package com.ted.commando.controller;
 
 import com.ted.commando.model.AdminRequest;
-import com.ted.commando.model.EnergyCumulativePost;
-import com.ted.commando.model.EnergyMTUPost;
-import com.ted.commando.model.EnergyPost;
-import com.ted.commando.service.EnergyPostService;
 import com.ted.commando.service.UserDetailsService;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,8 +27,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;

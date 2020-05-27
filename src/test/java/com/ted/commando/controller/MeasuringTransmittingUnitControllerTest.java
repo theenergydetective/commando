@@ -17,14 +17,8 @@
 
 package com.ted.commando.controller;
 
-import com.ted.commando.dao.EnergyControlCenterDAO;
 import com.ted.commando.dao.MeasuringTransmittingUnitDAO;
-import com.ted.commando.model.ActivationRequest;
-import com.ted.commando.model.ActivationResponse;
-import com.ted.commando.model.EnergyControlCenter;
 import com.ted.commando.model.MeasuringTransmittingUnit;
-import com.ted.commando.service.KeyService;
-import com.ted.commando.service.UserDetailsService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,12 +26,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.servlet.http.HttpServletResponse;
-
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)

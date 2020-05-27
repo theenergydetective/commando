@@ -18,11 +18,8 @@
 package com.ted.commando.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.ted.commando.enums.ExportType;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DayBillingData {

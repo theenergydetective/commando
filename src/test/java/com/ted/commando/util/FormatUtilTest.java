@@ -17,26 +17,13 @@
 
 package com.ted.commando.util;
 
-import com.ted.commando.controller.PostDataController;
-import com.ted.commando.model.EnergyCumulativePost;
-import com.ted.commando.model.EnergyMTUPost;
-import com.ted.commando.model.EnergyPost;
-import com.ted.commando.service.EnergyPostService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FormatUtilTest {

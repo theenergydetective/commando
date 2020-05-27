@@ -19,7 +19,6 @@ package com.ted.commando.dao;
 
 import com.ted.commando.Application;
 import com.ted.commando.model.DailyEnergyData;
-import com.ted.commando.model.EnergyControlCenter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +31,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.math.BigDecimal;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

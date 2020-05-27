@@ -21,7 +21,6 @@ package com.ted.commando.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;

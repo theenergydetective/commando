@@ -20,7 +20,6 @@ package com.ted.commando.dao.callbackHandler;
 import com.ted.commando.dao.BillingDataDAO;
 import com.ted.commando.model.BillingFormParameters;
 import com.ted.commando.model.CycleBillingData;
-import com.ted.commando.model.DayBillingData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowCallbackHandler;

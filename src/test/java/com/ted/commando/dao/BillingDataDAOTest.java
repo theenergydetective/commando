@@ -19,7 +19,6 @@ package com.ted.commando.dao;
 
 import com.ted.commando.Application;
 import com.ted.commando.model.BillingFormParameters;
-import com.ted.commando.model.DailyEnergyData;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,10 +30,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.PrintWriter;
-import java.math.BigDecimal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
