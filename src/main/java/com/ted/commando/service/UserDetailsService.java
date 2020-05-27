@@ -73,7 +73,7 @@ public class UserDetailsService implements org.springframework.security.core.use
     }
 
     static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsService.class);
-    static final String PROP_PATH = "/opt/data/commando.user.properties";
+    static final String PROP_PATH = "/opt/commando/data/commando.user.properties";
 
 
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
