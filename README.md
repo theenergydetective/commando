@@ -48,7 +48,7 @@ Once complete, the server will be configured, and you will be able to access it 
  
 #### Upgrade
 If you have alreay installed Commando and would like to run the latest version, you can run the following commands:
- - **_`wget https://raw.githubusercontent.com/theenergydetective/commando/master/scripts/install.sh`_**  
+ - **_`wget https://raw.githubusercontent.com/theenergydetective/commando/master/scripts/upgrade.sh`_**  
  - **_`chmod 777 upgrade.sh`_**  
  - **_`sudo ./upgrade.sh`_**  
  
