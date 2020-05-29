@@ -29,9 +29,17 @@ import {DailyEnergyData} from "../../../models/daily-energy-data";
 
 export class DeviceEditFieldComponent {
 
-  @Input()
-  public dailyEnergyData:DailyEnergyData = new DailyEnergyData();
 
+  private _dailyEnergyData;
+  public energyDate:string;
+  public energyValue:string = '0.000';
+
+  @Input()
+  set dailyEnergyData(dailyEnergyData:DailyEnergyData){
+    this._dailyEnergyData = dailyEnergyData;
+    this.energyDate = dailyEnergyData.formattedDate;
+    this.energyValue = (dailyEnergyData.energyValue / 1000.0).toFixed(3);
+  }
 
   constructor(private authService: AuthService,
               private dailyEnergyService:DailyEnergyService,
@@ -39,9 +47,10 @@ export class DeviceEditFieldComponent {
   }
 
   onChange() {
-    if (this.dailyEnergyData != null) {
-      this.logger.debug("[onChange] Value: " + JSON.stringify(this.dailyEnergyData));
-      this.dailyEnergyService.update(this.dailyEnergyData);
+    if (this._dailyEnergyData != null) {
+      this._dailyEnergyData.energyValue = parseFloat(this.energyValue) * 1000.0;
+      this.logger.debug("[onChange] Value: " + JSON.stringify(this._dailyEnergyData));
+      this.dailyEnergyService.update(this._dailyEnergyData);
     }
 
   }

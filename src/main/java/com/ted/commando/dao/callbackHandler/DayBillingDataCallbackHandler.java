@@ -35,7 +35,7 @@ public class DayBillingDataCallbackHandler implements RowCallbackHandler {
 
     final PrintWriter printWriter;
     final BillingFormParameters billingFormParameters;
-    final static String DAY_HEADER = "Device Id, Device Name, Start Date, End Date, Usage (kwh), KWH Cost";
+    final static String DAY_HEADER = "Device Id, Device Name, Start Date, End Date, Usage (kWh), Cost";
     final String startDate;
     final String endDate;
 

@@ -34,7 +34,7 @@ public class CycleBillingDataCallbackHandler implements RowCallbackHandler {
 
     final PrintWriter printWriter;
     final BillingFormParameters billingFormParameters;
-    final static String CYCLE_HEADER = "Device Id, Device Name, Billing Cycle Month, Billing Cycle Year, Usage (kwh), KWH Cost";
+    final static String CYCLE_HEADER = "Device Id, Device Name, Billing Cycle Month, Billing Cycle Year, Usage (kWh), Cost";
     final static String MONTHS[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
     DecimalFormat usageFormat = new DecimalFormat("0.0");
