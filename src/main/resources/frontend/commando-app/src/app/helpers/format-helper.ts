@@ -47,8 +47,15 @@ export class FormatHelper {
   static removeCSVQuotes(field: string) {
     field=field.trim();
     if (field.length > 0) {
-      if (field[0] == '"') field = field.substring(1);
-      if (field[field.length - 1] == '"') field = field.substring(0, field.length - 1);
+
+      //Editing a csv in excel can sometimes cause the quotes to be wrapped multiple times.
+      //we repeat until we no longer have surrounding quotes.
+      while (field.length > 0 &&  (field[0] == '"' && field[field.length - 1] == '"')) {
+        console.error("QUOTE FOUND: " + field);
+        field = field.substring(1, (field.length - 1));
+        console.error("AFTER: " + field);
+      }
+
     }
     return field;
   }

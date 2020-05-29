@@ -67,7 +67,7 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
     private RowMapper<MeasuringTransmittingUnit> rowMapper = new RowMapper<MeasuringTransmittingUnit>() {
         public MeasuringTransmittingUnit mapRow(ResultSet rs, int rowNum) throws SQLException {
             MeasuringTransmittingUnit dto = new MeasuringTransmittingUnit();
-            dto.setId(rs.getString("id"));
+            dto.setId(fixId(rs.getString("id")));
             dto.setLastPost(rs.getLong("last_post"));
             dto.setLastValue(rs.getBigDecimal("last_value"));
             dto.setName(rs.getString("name"));
@@ -81,10 +81,16 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
         }
     };
 
+    private String fixId(String id){
+        while(id.startsWith("0")){
+            id = id.substring(1);
+        }
+        return id.toUpperCase();
+    }
 
     private MapSqlParameterSource createMap(MeasuringTransmittingUnit dto) {
         MapSqlParameterSource map = new MapSqlParameterSource();
-        map.addValue("id", dto.getId());
+        map.addValue("id", fixId(dto.getId()));
         map.addValue("last_post", dto.getLastPost());
         map.addValue("last_value", dto.getLastValue());
         map.addValue("name", dto.getName());
@@ -101,7 +107,7 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
     public MeasuringTransmittingUnit findOne(String id) {
         try {
             MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-            parameterSource.addValue("id", id);
+            parameterSource.addValue("id", fixId(id));
             return namedParameterJdbcTemplate.queryForObject(FIND_ONE, parameterSource, rowMapper);
         } catch (EmptyResultDataAccessException ex) {
             return null;
@@ -138,7 +144,7 @@ public class MeasuringTransmittingUnitDAO extends SimpleAbstractDAO {
     //Check if we need to process the batch
     public void delete(String id) {
         MapSqlParameterSource map = new MapSqlParameterSource();
-        map.addValue("id", id);
+        map.addValue("id", fixId(id));
         namedParameterJdbcTemplate.update(DELETE, map);
     }
 

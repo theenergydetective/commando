@@ -80,8 +80,12 @@ export class ImportDevicesDialogComponent implements AfterContentInit{
         console.error(JSON.stringify(values));
 
         let mtu:MeasuringTransmittingUnit = new MeasuringTransmittingUnit();
-        mtu.id=FormatHelper.removeCSVQuotes(values[0])
-        mtu.name=FormatHelper.removeCSVQuotes(values[1])
+        mtu.id=FormatHelper.removeCSVQuotes(values[0]);
+
+        //If it contains wrapping quotes, remove it.
+        mtu.name=FormatHelper.removeCSVQuotes(values[1]).trim();
+
+
         mtu.rate=parseFloat(FormatHelper.removeCSVQuotes(values[2]));
         mtu.enabled=FormatHelper.removeCSVQuotes(values[3]).toLowerCase() != 'false';
         this.mtuService.updateSettings(mtu)
