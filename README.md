@@ -44,7 +44,13 @@ To install a basic server (no-HTTPS/TLS), you can run the following commands:
  - **_`chmod 777 install.sh`_**  
  - **_`sudo ./install.sh`_**  
   
-Once complete, the server will be configured and you will be able to access it via: `http://<ip of server>`
+Once complete, the server will be configured, and you will be able to access it via: `http://<ip of server>`
+ 
+#### Upgrade
+If you have alreay installed Commando and would like to run the latest version, you can run the following commands:
+ - **_`wget https://raw.githubusercontent.com/theenergydetective/commando/master/scripts/install.sh`_**  
+ - **_`chmod 777 upgrade.sh`_**  
+ - **_`sudo ./upgrade.sh`_**  
  
   
 #### TLS Configuration  
