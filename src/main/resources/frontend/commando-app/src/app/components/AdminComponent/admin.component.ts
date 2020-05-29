@@ -32,6 +32,7 @@ import {AdminRequest} from "../../models/admin-request";
 export class AdminComponent implements OnInit, AfterViewInit, OnDestroy  {
   form: FormGroup;
   timezones:Array<string> = [];
+  loading:boolean = true;
 
   constructor(private authService: AuthService,
               private formBuilder: FormBuilder,
@@ -42,6 +43,7 @@ export class AdminComponent implements OnInit, AfterViewInit, OnDestroy  {
 
 
   ngOnInit() {
+    this.loading = true;
     this.authService.logOut();
     this.form = this.formBuilder.group({
       username: [null, [Validators.required]],
@@ -70,15 +72,21 @@ export class AdminComponent implements OnInit, AfterViewInit, OnDestroy  {
     this.form.get('activationKey').setValue('');
     this.form.get('domain').setValue('');
 
+
     //this.form.get('timezone').setValue('America/New_York');
     this.authService.getTimeZones().then((tzList:Array<string>)=>{
       this.timezones = tzList;
       this.authService.getAdminRequest().then((ar:AdminRequest)=>{
-        this.form.get('timezone').setValue(ar.timezone);
-        this.form.get('domain').setValue(ar.domain);
-        this.form.get('username').setValue(ar.username);
-        this.form.get('confirmUsername').setValue(ar.username);
-        this.form.get('activationKey').setValue(ar.activationKey);
+        if (!ar.adminSetup){
+          this.router.navigate(['/login']);
+        } else {
+          this.loading = false;
+          this.form.get('timezone').setValue(ar.timezone);
+          this.form.get('domain').setValue(ar.domain);
+          this.form.get('username').setValue(ar.username);
+          this.form.get('confirmUsername').setValue(ar.username);
+          this.form.get('activationKey').setValue(ar.activationKey);
+        }
       });
     })
 
