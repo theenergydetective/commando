@@ -5,13 +5,13 @@ echo "Upgrading server for Commando installation"
 
 service commando stop
 
-rm -rf /opt/commando/lib/commando-1.0.1.jar
-wget https://raw.githubusercontent.com/theenergydetective/commando/master/builds/commando-1.0.1.jar -O /opt/commando/lib/commando-1.0.1.jar
+rm -rf /opt/commando/lib/commando-1.0.2.jar
+wget https://raw.githubusercontent.com/theenergydetective/commando/master/builds/commando-1.0.2.jar -O /opt/commando/lib/commando-1.0.2.jar
 echo "USE_START_STOP_DAEMON=false" > /opt/commando/lib/commando-1.0.conf
-chmod 755 /opt/commando/lib/commando-1.0.1.jar
+chmod 755 /opt/commando/lib/commando-1.0.2.jar
 
 rm -rf /etc/init.d/commando
-ln -s /opt/commando/lib/commando-1.0.1.jar /etc/init.d/commando
+ln -s /opt/commando/lib/commando-1.0.2.jar /etc/init.d/commando
 /bin/systemctl daemon-reload
 update-rc.d commando defaults
 
