@@ -21,7 +21,6 @@ package com.ted.commando.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -94,15 +93,22 @@ public class FormatUtil {
     }
 
     public static String simpleFormatEnergyDate(String energyDateString) {
+        Date parsedDate = convertEnergyDateToDate(energyDateString);
+        if (parsedDate != null) return simpleFormat.format(parsedDate);
+        return "";
+    }
+
+
+    public static Date convertEnergyDateToDate(String energyDateString) {
         energyDateString = energyDateString.replace("-", "").trim();
         if (energyDateString.length() == 8) {
             int year = Integer.parseInt(energyDateString.substring(0, 4));
             int month = Integer.parseInt(energyDateString.substring(4, 6));
             int date = Integer.parseInt(energyDateString.substring(6, 8));
             Date parsedDate = new Date(year - 1900, month - 1, date, 0, 0, 0);
-            return simpleFormat.format(parsedDate);
+            return parsedDate;
         }
-        return "";
+        return null;
 
     }
 

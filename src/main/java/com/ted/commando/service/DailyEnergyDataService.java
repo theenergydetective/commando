@@ -185,7 +185,7 @@ public class DailyEnergyDataService {
     public void writeDailyData(BillingFormParameters billingFormParameters, ServletOutputStream outputStream) {
         LOGGER.debug("[writeDailyData] Generating Data for {}", billingFormParameters);
         try (PrintWriter p = new PrintWriter(outputStream)) {
-            billingDataDAO.exportDailyData(billingFormParameters, p);;
+            billingDataDAO.exportDailyData(billingFormParameters, outputStream);;
         } catch (Exception ex) {
             LOGGER.error("[writeDailyData] Error writing data for: {}", billingFormParameters, ex);
         }

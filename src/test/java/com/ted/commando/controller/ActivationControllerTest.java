@@ -70,7 +70,7 @@ public class ActivationControllerTest {
     public void activateTest() throws Exception{
         when(userDetailsService.getActivationKey()).thenReturn(TEST_ACTIVATION_KEY);
         when(energyControlCenterDAO.findOne(TEST_ECC_ID)).thenReturn(null);
-        when(environment.getProperty("local.server.port")).thenReturn("1234");
+
 
         ActivationRequest activationRequest = new ActivationRequest();
         activationRequest.gateway = TEST_ECC_ID;

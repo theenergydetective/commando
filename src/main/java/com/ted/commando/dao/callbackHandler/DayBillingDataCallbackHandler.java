@@ -25,38 +25,43 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowCallbackHandler;
 
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.Date;
 
-public class DayBillingDataCallbackHandler implements RowCallbackHandler {
+public class DayBillingDataCallbackHandler extends ExcelRowCallbackHandler implements RowCallbackHandler {
     final static Logger LOGGER = LoggerFactory.getLogger(DayBillingDataCallbackHandler.class);
 
-    final PrintWriter printWriter;
+
     final BillingFormParameters billingFormParameters;
-    final static String DAY_HEADER = "Device Id, Device Name, Start Date, End Date, Usage (kWh), Cost";
-    final String startDate;
-    final String endDate;
+    final static String DAY_HEADER[] = {"Device Id", "Device Name", "Start Date", "End Date", "Usage (kWh)", "Cost"};
+    final Date startDate;
+    final Date endDate;
 
     DecimalFormat usageFormat = new DecimalFormat("0.0");
     DecimalFormat currencyFormat = new DecimalFormat("0.00");
+
+    //Handle to the output stream
+    final OutputStream outputStream;
+    int rowNumber = 1;
 
 
     /**
      * Constructs a new callback
      *
      * @param billingFormParameters
-     * @param printWriter
+     * @param outputStream
+     *
+     *
      */
-    public DayBillingDataCallbackHandler(BillingFormParameters billingFormParameters, PrintWriter printWriter) {
-        this.printWriter = printWriter;
+    public DayBillingDataCallbackHandler(BillingFormParameters billingFormParameters, OutputStream outputStream) {
+        super(DAY_HEADER);
+        this.outputStream = outputStream;
         this.billingFormParameters = billingFormParameters;
-        this.startDate = FormatUtil.simpleFormatEnergyDate(billingFormParameters.getStartDate());
-        this.endDate = FormatUtil.simpleFormatEnergyDate(billingFormParameters.getEndDate());
-        LOGGER.debug("[constructor] Writing {}", DAY_HEADER);
-        printWriter.println(DAY_HEADER);
-
+        this.startDate = FormatUtil.convertEnergyDateToDate(billingFormParameters.getStartDate());
+        this.endDate = FormatUtil.convertEnergyDateToDate(billingFormParameters.getEndDate());
     }
 
     @Override
@@ -64,14 +69,16 @@ public class DayBillingDataCallbackHandler implements RowCallbackHandler {
         //Create the DTO
         DayBillingData billingData = BillingDataDAO.DAY_ROW_MAPPER.mapRow(resultSet, 0);
 
-        StringBuilder row = new StringBuilder(billingData.getId()).append(",")
-                .append("\"").append(billingData.getMtuName()).append("\"").append(",")
-                .append(startDate).append(",")
-                .append(endDate).append(",")
-                .append(usageFormat.format(billingData.getKwhUsage())).append(",")
-                .append(currencyFormat.format(billingData.getKwhCost()));
-        LOGGER.debug("[processRow] Writing:{}", row);
-        printWriter.println(row.toString());
+
+        int columnNumber = 0;
+        writeStringCell(rowNumber, columnNumber++, billingData.getId());
+        writeStringCell(rowNumber, columnNumber++, billingData.getMtuName());
+        writeDateCell(rowNumber, columnNumber++, startDate);
+        writeDateCell(rowNumber, columnNumber++, endDate);
+        writeUsageCell(rowNumber, columnNumber++, billingData.getKwhUsage());
+        writeCostCell(rowNumber, columnNumber++, billingData.getKwhCost());
+        rowNumber++;
+
     }
 }
 

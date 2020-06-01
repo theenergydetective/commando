@@ -87,24 +87,19 @@ public class BillingDataDAOTest {
 
     @Test
     public void exportDailyDataTest(){
-        PrintWriter printWriter = mock(PrintWriter.class);
         BillingFormParameters billingFormParameters = new BillingFormParameters();
         billingFormParameters.getSelectedDevices().add(TEST_PREFIX + 1);
         billingFormParameters.getSelectedDevices().add(TEST_PREFIX + 2);
         billingFormParameters.setStartDate("2020-04-20");
         billingFormParameters.setEndDate("2020-04-25");
-
-        billingDataDAO.exportDailyData(billingFormParameters, printWriter);
-        verify(printWriter, times(3)).println(anyString());
-
-
+        billingDataDAO.exportDailyData(billingFormParameters, OutputStream.nullOutputStream());
     }
 
 
 
     @Test
     public void exportCycleDataTest(){
-        OutputStream outputStream = mock(OutputStream.class);
+
         BillingFormParameters billingFormParameters = new BillingFormParameters();
         billingFormParameters.getSelectedDevices().add(TEST_PREFIX + 1);
         billingFormParameters.getSelectedDevices().add(TEST_PREFIX + 2);
@@ -113,7 +108,7 @@ public class BillingDataDAOTest {
         billingFormParameters.setMeterReadDate(15);
 
         CycleBillingDataCallbackHandler handler = mock(CycleBillingDataCallbackHandler.class);
-        billingDataDAO.exportBillingCycleData(billingFormParameters, outputStream);
+        billingDataDAO.exportBillingCycleData(billingFormParameters, OutputStream.nullOutputStream());
     }
 
 }

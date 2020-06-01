@@ -32,7 +32,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -108,8 +107,8 @@ public class BillingDataDAO extends SimpleAbstractDAO {
     };
 
 
-    public void exportDailyData(BillingFormParameters billingFormParameters, PrintWriter printWriter){
-        DayBillingDataCallbackHandler callbackHandler = new DayBillingDataCallbackHandler(billingFormParameters, printWriter);
+    public void exportDailyData(BillingFormParameters billingFormParameters, OutputStream outputStream){
+        DayBillingDataCallbackHandler callbackHandler = new DayBillingDataCallbackHandler(billingFormParameters, outputStream);
         MapSqlParameterSource map = new MapSqlParameterSource();
         Long startDate = FormatUtil.parseEnergyDateString(billingFormParameters.getStartDate());
         Long endDate = FormatUtil.parseEnergyDateString(billingFormParameters.getEndDate());
@@ -117,6 +116,7 @@ public class BillingDataDAO extends SimpleAbstractDAO {
         map.addValue("start_date", startDate);
         map.addValue("end_date", endDate);
         namedParameterJdbcTemplate.query(DAY_QUERY, map, callbackHandler);
+        callbackHandler.writeToOutputStream(outputStream);
     }
 
 

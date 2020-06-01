@@ -48,6 +48,7 @@ public abstract class ExcelRowCallbackHandler implements RowCallbackHandler {
     final XSSFCellStyle headerStyle;
 
     final XSSFCellStyle stringDataStyle;
+    final XSSFCellStyle dateDataStyle;
     final XSSFCellStyle usageDataStyle;
     final XSSFCellStyle costDataStyle;
     final XSSFCellStyle integerDataStyle;
@@ -110,6 +111,13 @@ public abstract class ExcelRowCallbackHandler implements RowCallbackHandler {
         integerDataStyle.setDataFormat(wb.createDataFormat().getFormat("0"));
         setSolidBorder(integerDataStyle);
 
+        dateDataStyle = (XSSFCellStyle) wb.createCellStyle();
+        dateDataStyle.setFont(dataFont);
+        dateDataStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        dateDataStyle.setAlignment(HorizontalAlignment.RIGHT);
+        dateDataStyle.setDataFormat(wb.createDataFormat().getFormat("m/d/yyyy"));
+        setSolidBorder(dateDataStyle);
+
         sh = wb.createSheet("Billing");
         sh.trackAllColumnsForAutoSizing();
 
@@ -166,7 +174,7 @@ public abstract class ExcelRowCallbackHandler implements RowCallbackHandler {
             if (row == null) row = sh.createRow(rowNumber);
             Cell cell = row.createCell(columnNumber);
             cell.setCellValue(value);
-            cell.setCellStyle(stringDataStyle);
+            cell.setCellStyle(dateDataStyle);
         } catch (Exception ex){
             LOGGER.error("[writeCell] Exception Caught: sheet:{}, row:{} column:{}, value:{}", sh.getSheetName(), rowNumber, columnNumber, value, ex);
         }
