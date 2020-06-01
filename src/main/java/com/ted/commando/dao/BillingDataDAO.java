@@ -31,6 +31,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -119,8 +120,8 @@ public class BillingDataDAO extends SimpleAbstractDAO {
     }
 
 
-    public void exportBillingCycleData(BillingFormParameters billingFormParameters, PrintWriter printWriter) {
-        CycleBillingDataCallbackHandler callbackHandler = new CycleBillingDataCallbackHandler(billingFormParameters, printWriter);
+    public void exportBillingCycleData(BillingFormParameters billingFormParameters, OutputStream outputStream) {
+        CycleBillingDataCallbackHandler callbackHandler = new CycleBillingDataCallbackHandler(billingFormParameters, outputStream);
         MapSqlParameterSource map = new MapSqlParameterSource();
         Long startDate = FormatUtil.parseCycleDateString(billingFormParameters.getStartDate());
         Long endDate = FormatUtil.parseCycleDateString(billingFormParameters.getEndDate());
@@ -129,6 +130,7 @@ public class BillingDataDAO extends SimpleAbstractDAO {
         map.addValue("start_date", startDate);
         map.addValue("end_date", endDate);
         namedParameterJdbcTemplate.query(CYCLE_QUERY, map, callbackHandler);
+        callbackHandler.writeToOutputStream(outputStream);
 
     }
 }

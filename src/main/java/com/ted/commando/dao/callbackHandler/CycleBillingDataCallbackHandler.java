@@ -20,39 +20,46 @@ package com.ted.commando.dao.callbackHandler;
 import com.ted.commando.dao.BillingDataDAO;
 import com.ted.commando.model.BillingFormParameters;
 import com.ted.commando.model.CycleBillingData;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowCallbackHandler;
 
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
-public class CycleBillingDataCallbackHandler implements RowCallbackHandler {
+public class CycleBillingDataCallbackHandler extends ExcelRowCallbackHandler implements RowCallbackHandler {
     final static Logger LOGGER = LoggerFactory.getLogger(CycleBillingDataCallbackHandler.class);
 
-    final PrintWriter printWriter;
+
+
     final BillingFormParameters billingFormParameters;
-    final static String CYCLE_HEADER = "Device Id, Device Name, Billing Cycle Month, Billing Cycle Year, Usage (kWh), Cost";
+    final static String CYCLE_HEADER[] = {"Device Id", "Device Name", "Billing Cycle Month", "Billing Cycle Year", "Usage (kWh)", "Cost"};
     final static String MONTHS[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
-    DecimalFormat usageFormat = new DecimalFormat("0.0");
-    DecimalFormat currencyFormat = new DecimalFormat("0.00");
+
+    //Handle to the output stream
+    final OutputStream outputStream;
+
+    int rowNumber = 1;
+
 
 
     /**
      * Constructs a new callback
      *
      * @param billingFormParameters
-     * @param printWriter
+     * @param outputStream
      */
-    public CycleBillingDataCallbackHandler(BillingFormParameters billingFormParameters, PrintWriter printWriter) {
-        this.printWriter = printWriter;
+    public CycleBillingDataCallbackHandler(BillingFormParameters billingFormParameters, OutputStream outputStream) {
+        super(CYCLE_HEADER);
+        this.outputStream = outputStream;
         this.billingFormParameters = billingFormParameters;
-        LOGGER.debug("[constructor] Writing {}", CYCLE_HEADER);
-        printWriter.println(CYCLE_HEADER);
-
     }
 
     @Override
@@ -62,14 +69,14 @@ public class CycleBillingDataCallbackHandler implements RowCallbackHandler {
 
         String monthString = MONTHS[billingData.getBillingCycleMonth()-1];
 
-        StringBuilder row = new StringBuilder(billingData.getId()).append(",")
-                .append("\"").append(billingData.getMtuName()).append("\"").append(",")
-                .append(monthString).append(",")
-                .append(billingData.getBillingCycleYear()).append(",")
-                .append(usageFormat.format(billingData.getKwhUsage())).append(",")
-                .append(currencyFormat.format(billingData.getKwhCost()));
-        LOGGER.debug("[processRow] Writing:{}", row);
-        printWriter.println(row.toString());
+        int columnNumber = 0;
+        writeStringCell(rowNumber, columnNumber++, billingData.getId());
+        writeStringCell(rowNumber, columnNumber++, billingData.getMtuName());
+        writeStringCell(rowNumber, columnNumber++, monthString);
+        writeIntegerCell(rowNumber, columnNumber++, billingData.getBillingCycleYear());
+        writeUsageCell(rowNumber, columnNumber++, billingData.getKwhUsage());
+        writeCostCell(rowNumber, columnNumber++, billingData.getKwhCost());
+        rowNumber++;
     }
 }
 

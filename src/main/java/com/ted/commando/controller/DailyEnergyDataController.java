@@ -78,7 +78,7 @@ public class DailyEnergyDataController {
                 //Setup the filename and response headers for download
                 StringBuilder fileName = new StringBuilder("Export-")
                         .append(System.currentTimeMillis())
-                        .append(".csv");
+                        .append(".xlsx");
 
 
                 try {

@@ -18,6 +18,7 @@
 package com.ted.commando.dao;
 
 import com.ted.commando.Application;
+import com.ted.commando.dao.callbackHandler.CycleBillingDataCallbackHandler;
 import com.ted.commando.model.BillingFormParameters;
 import org.junit.After;
 import org.junit.Before;
@@ -29,10 +30,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.io.OutputStream;
 import java.io.PrintWriter;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.replace;
+import static org.powermock.configuration.ConfigurationType.PowerMock;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -99,7 +104,7 @@ public class BillingDataDAOTest {
 
     @Test
     public void exportCycleDataTest(){
-        PrintWriter printWriter = mock(PrintWriter.class);
+        OutputStream outputStream = mock(OutputStream.class);
         BillingFormParameters billingFormParameters = new BillingFormParameters();
         billingFormParameters.getSelectedDevices().add(TEST_PREFIX + 1);
         billingFormParameters.getSelectedDevices().add(TEST_PREFIX + 2);
@@ -107,10 +112,8 @@ public class BillingDataDAOTest {
         billingFormParameters.setEndDate("2020-05-01");
         billingFormParameters.setMeterReadDate(15);
 
-        billingDataDAO.exportBillingCycleData(billingFormParameters, printWriter);
-        verify(printWriter, times(5)).println(anyString());
-
-
+        CycleBillingDataCallbackHandler handler = mock(CycleBillingDataCallbackHandler.class);
+        billingDataDAO.exportBillingCycleData(billingFormParameters, outputStream);
     }
 
 }

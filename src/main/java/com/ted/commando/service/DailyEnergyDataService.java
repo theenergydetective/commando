@@ -178,11 +178,8 @@ public class DailyEnergyDataService {
 
     public void writeBillingCycleData(BillingFormParameters billingFormParameters, ServletOutputStream outputStream) {
         LOGGER.debug("[writeBillingCyleData] Generating Data for {}", billingFormParameters);
-        try (PrintWriter p = new PrintWriter(outputStream)) {
-            billingDataDAO.exportBillingCycleData(billingFormParameters, p);;
-        } catch (Exception ex) {
-            LOGGER.error("[writeBillingCycleData] Error writing data for: {}", billingFormParameters, ex);
-        }
+        billingDataDAO.exportBillingCycleData(billingFormParameters, outputStream);;
+
     }
 
     public void writeDailyData(BillingFormParameters billingFormParameters, ServletOutputStream outputStream) {
