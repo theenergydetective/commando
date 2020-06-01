@@ -20,18 +20,13 @@ package com.ted.commando.dao.callbackHandler;
 import com.ted.commando.dao.BillingDataDAO;
 import com.ted.commando.model.BillingFormParameters;
 import com.ted.commando.model.CycleBillingData;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowCallbackHandler;
 
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 
 public class CycleBillingDataCallbackHandler extends ExcelRowCallbackHandler implements RowCallbackHandler {
     final static Logger LOGGER = LoggerFactory.getLogger(CycleBillingDataCallbackHandler.class);
