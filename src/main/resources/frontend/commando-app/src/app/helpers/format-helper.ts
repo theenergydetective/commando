@@ -66,6 +66,7 @@ export class FormatHelper {
    */
   static convertToEnergyDate(dateValue:string):number{
     let v:Array<string> = dateValue.split('/');
+    if (v.length < 3) return null;
     let s=this.padZeros(v[2],4);
     s+=this.padZeros(v[0],2);
     s+=this.padZeros(v[1],2);

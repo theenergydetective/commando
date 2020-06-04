@@ -61,7 +61,7 @@ export class ImportDataDialogComponent implements AfterContentInit{
         this.processNextLine(lines, lines.length);
         for (let i=0; i < lines.length; i++){
           this.progress = i/lines.length * 100;
-          console.error(lines[i]);
+          //console.error(lines[i]);
         }
         //Split and Post Lines with progress bar
 
@@ -78,21 +78,29 @@ export class ImportDataDialogComponent implements AfterContentInit{
       //this.logger.debug('PROCESSING ' + line);
       if (line.length > 0){
         let values:Array<string> = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-        console.error(JSON.stringify(values));
+        //console.error(JSON.stringify(values));
 
         let ded:DailyEnergyData = new DailyEnergyData();
         ded.mtuId=FormatHelper.removeCSVQuotes(values[0]);
         ded.energyDate=FormatHelper.convertToEnergyDate(FormatHelper.removeCSVQuotes(values[1]));
         ded.energyValue=parseFloat(FormatHelper.removeCSVQuotes(values[2]).toLowerCase()) * 1000.0;
-        this.dailyEnergyService.update(ded)
-          .then((ded:DailyEnergyData)=>{
-            this.progress = Math.ceil(((total-lines.length)/total) * 100);
-            this.processNextLine(lines, total);
-          })
-          .catch((err)=>{
-            this.progress = Math.ceil(((total-lines.length)/total) * 100);
-            this.processNextLine(lines, total);
-          })
+
+        if (ded.energyDate == null){
+          console.warn('[processNextLine] Skipping ' + line);
+          this.progress = Math.ceil(((total-lines.length)/total) * 100);
+          this.processNextLine(lines, total);
+        } else {
+          console.debug('[processNextLine] Importing ' + line);
+          this.dailyEnergyService.update(ded)
+            .then((ded: DailyEnergyData) => {
+              this.progress = Math.ceil(((total - lines.length) / total) * 100);
+              this.processNextLine(lines, total);
+            })
+            .catch((err) => {
+              this.progress = Math.ceil(((total - lines.length) / total) * 100);
+              this.processNextLine(lines, total);
+            })
+        }
       } else {
         this.progress = Math.ceil(((total-lines.length)/total) * 100);
         this.processNextLine(lines, total);
